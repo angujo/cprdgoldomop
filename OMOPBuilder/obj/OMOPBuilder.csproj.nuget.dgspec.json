@@ -1,0 +1,132 @@
+{
+  "format": 1,
+  "restore": {
+    "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj": {}
+  },
+  "projects": {
+    "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj",
+        "projectName": "CPRDGOLD",
+        "projectPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {
+              "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj": {
+                "projectPath": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj"
+              },
+              "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+                "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    },
+    "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj",
+        "projectName": "DBMS",
+        "projectPath": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {
+              "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+                "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj"
+              }
+            }
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    },
+    "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj",
+        "projectName": "OMOPBuilder",
+        "projectPath": "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj",
+        "packagesPath": "C:\\Users\\bomondi\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\obj\\",
+        "projectStyle": "PackageReference",
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bomondi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net6.0"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net6.0": {
+            "targetAlias": "net6.0",
+            "projectReferences": {
+              "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj": {
+                "projectPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj"
+              }
+            }
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        }
+      },
+      "frameworks": {
+        "net6.0": {
+          "targetAlias": "net6.0",
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            }
+          },
+          "imports": [
+            "net461",
+            "net462",
+            "net47",
+            "net471",
+            "net472",
+            "net48"
+          ],
+          "assetTargetFallback": true,
+          "warn": true,
+          "frameworkReferences": {
+            "Microsoft.NETCore.App": {
+              "privateAssets": "all"
+            }
+          },
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.201\\RuntimeIdentifierGraph.json"
+        }
+      }
+    },
+    "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+      "restore": {
+        "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj",
+        "projectName": "Util",
+        "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj",
+        "frameworks": {
+          "net48": {
+            "projectReferences": {}
+          }
+        }
+      },
+      "frameworks": {
+        "net48": {}
+      }
+    }
+  }
+}

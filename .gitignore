@@ -3,3 +3,10 @@
 ################################################################################
 
 /Util/obj
+/bin/Debug
+/CPRDGOLD/bin/Debug
+/CPRDGOLD/obj
+/OMOPBuilder/bin/Debug/net6.0
+/TestProject/bin/Debug/net6.0
+/TestProject/obj
+/Util/bin/Debug

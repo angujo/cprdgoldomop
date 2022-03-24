@@ -1,0 +1,46 @@
+{
+  "Version": 1,
+  "ProjectMap": {
+    "94c78b1e-0a22-4ee3-890b-1181effab340": {
+      "ProjectGuid": "94c78b1e-0a22-4ee3-890b-1181effab340",
+      "DisplayName": "OMOPBuilder",
+      "ColorIndex": 0
+    },
+    "e1e49c25-238c-461b-b123-887f8ce5d8bc": {
+      "ProjectGuid": "e1e49c25-238c-461b-b123-887f8ce5d8bc",
+      "DisplayName": "CPRDGOLD",
+      "ColorIndex": 1
+    },
+    "9f2d86a3-28c8-4ac9-a2ed-5f2bfa9c710d": {
+      "ProjectGuid": "9f2d86a3-28c8-4ac9-a2ed-5f2bfa9c710d",
+      "DisplayName": "ClassLibrary1",
+      "ColorIndex": 2
+    },
+    "9bca6f36-0060-47b3-b5b4-785310629fea": {
+      "ProjectGuid": "9bca6f36-0060-47b3-b5b4-785310629fea",
+      "DisplayName": "CPRDGOLD",
+      "ColorIndex": 3
+    },
+    "93f5df5a-170a-4fd8-b5be-665c97b85352": {
+      "ProjectGuid": "93f5df5a-170a-4fd8-b5be-665c97b85352",
+      "DisplayName": "Util",
+      "ColorIndex": 4
+    },
+    "810f0d0e-ba29-4977-b0ba-e60f6834a614": {
+      "ProjectGuid": "810f0d0e-ba29-4977-b0ba-e60f6834a614",
+      "DisplayName": "DBMS",
+      "ColorIndex": 5
+    },
+    "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3": {
+      "ProjectGuid": "a2fe74e1-b743-11d0-ae1a-00a0c90fffc3",
+      "DisplayName": "Miscellaneous Files",
+      "ColorIndex": -1
+    },
+    "cbd824ca-49b7-4d88-a560-6e730d900eed": {
+      "ProjectGuid": "cbd824ca-49b7-4d88-a560-6e730d900eed",
+      "DisplayName": "TestProject",
+      "ColorIndex": 6
+    }
+  },
+  "NextColorIndex": 7
+}
