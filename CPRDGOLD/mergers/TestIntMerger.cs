@@ -14,15 +14,14 @@ namespace CPRDGOLD.mergers
         protected TestIntMerger(Chunk chunk) : base(chunk) { }
         public TestIntMerger() : base() { }
 
-        protected override void Load()
+        protected override void LoadData()
         {
-          //  string ename;// = EntityLoader.dataFieldFilter(new int[] { 7, 8, 4 });
+            //  string ename;// = EntityLoader.dataFieldFilter(new int[] { 7, 8, 4 });
             Entity entity;
             TestLoader.LoopAll(chunk, test =>
             {
-                Medical med = MedicalLoader.ByMedcode(test.medcode);
                 Lookup lu = LookupLoader.ByCodeType(test.data1, new long[] { 85, 56 });
-                if (null==med || null == lu || 0 == med.medcode || 0 == lu.lookup_type_id ||
+                if (0 == lu.lookup_type_id ||
                 null == (entity = (85 == lu.lookup_type_id ? EntityLoader.ByDataFieldType(new int[] { 7, 8 }, test.enttype) : EntityLoader.ByDataFieldType(4, test.enttype)))) return;
                 TestInt ti = new TestInt
                 {
@@ -30,9 +29,9 @@ namespace CPRDGOLD.mergers
                     eventdate = test.eventdate,
                     consid = test.consid,
                     staffid = test.staffid,
-                    read_code = med.read_code,
+                    read_code = test.med_read_code,
                     medcode = test.medcode,
-                    read_description = med.desc,
+                    read_description = test.read_description,
                     map_value = entity.enttype + "-" + entity.description,
                     enttype = test.enttype,
                     enttype_desc = entity.description,
@@ -43,6 +42,8 @@ namespace CPRDGOLD.mergers
                     value_as_concept_id = "0" != test.data1 ? lu.text : "",
                     range_low = test.data2,
                     range_high = test.data3,
+                    ss_source_concept_id = test.ss_source_concept_id,
+                    st_source_concept_id = test.st_source_concept_id
                 };
                 if (56 == lu.lookup_type_id)
                 {

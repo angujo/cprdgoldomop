@@ -1,5 +1,7 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
+using DBMS;
+using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,7 +17,7 @@ namespace CPRDGOLD.mergers
 
         public AddInMerger() { }
 
-        protected override void Load() { }
+        protected override void LoadData() { }
 
         public static void prepare(Chunk chunk)
         {
@@ -35,8 +37,23 @@ namespace CPRDGOLD.mergers
                 ()=>GetMe(chunk).Union9(),
                 ()=>GetMe(chunk).Union10(),
                 ()=>GetMe(chunk).Union11(),
-                        };
+            };
             Parallel.ForEach(unions, union => union());
+            Log.Info("Looping AddIn Source to standards");
+            Dictionary<string, SourceToStandard> sourceStds = new Dictionary<string, SourceToStandard>();
+            DB.Source.RunFactory("source_to_standard", (query, schema_name) =>
+            {
+                sourceStds = query.WhereIn("source_code", AddInMerger.GetData(chunk).Select(d => d.source_value).Distinct())
+                .Where("source_vocabulary_id", "JNJ_CPRD_ADD_ENTTYPE").WhereNull("target_invalid_reason").Where("target_standard_concept", "S")
+                .Select("source_value", "source_concept_id")
+                .Get<SourceToStandard>().ToDictionary(s => s.source_code, s => s);
+            });
+            foreach (AddIn dt in AddInMerger.GetData(chunk))
+            {
+                dt.st_source_concept_id = sourceStds.ContainsKey(dt.source_value) ? sourceStds[dt.source_value].source_concept_id : null;
+            }
+            Log.Info("Finished Looping AddIn Source to standards");
+
             Log.Info($"Finished AddIn Table");
         }
 

@@ -1,6 +1,7 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -13,14 +14,15 @@ namespace CPRDGOLD.mergers
     {
 
 
-        private Dictionary<int, List<AddInBase>> unions = new Dictionary<int, List<AddInBase>>();
+        private ConcurrentDictionary<int, List<AddInBase>> unions = new ConcurrentDictionary<int, List<AddInBase>>();
         protected AddInBaseMerger(Chunk chunk) : base(chunk) { chunk.AddCleaner(() => unions.Clear()); }
         // string[] MED_PRD_DICT = new string[] { MED_DICT, PRD_DICT };
         public AddInBaseMerger() { }
-        protected override void Load() { }
+        protected override void LoadData() { }
 
         public static void prepare(Chunk chunk)
         {
+            ClinicalLoader.Prepare(chunk);
             //  if (0 < data.Count) return;
             Log.Info("Starting AddInBase Loader!");
             for (int i = 0; i < 7; i++) GetMe(chunk).unions[i + 1] = new List<AddInBase>();
@@ -28,7 +30,7 @@ namespace CPRDGOLD.mergers
             {
                 Clinical cl = ClinicalLoader.ByPatientAdId(chunk, addt.adid, addt.patid);
                 if (null == cl || null == cl.eventdate) return;
-                Entity entity = EntityLoader.ByType(addt.enttype)??new Entity();
+                Entity entity = EntityLoader.ByType(addt.enttype) ?? new Entity();
                 AddInBase addInBase = new AddInBase
                 {
                     patid = addt.patid,
@@ -85,8 +87,15 @@ namespace CPRDGOLD.mergers
 
         public static void LoopUnion(Chunk chunk, int union, Action<AddInBase> abAct)
         {
-            if (!GetMe(chunk).unions.ContainsKey(union)) return;
-            foreach (var item in GetMe(chunk).unions[union]) abAct(item);
+            if (!GetMe(chunk).unions.ContainsKey(union))
+            {
+                Log.Info($"Union {union} Was not Loaded. Skipped!");
+                return;
+            }
+            Log.Info($"Started Loading Union #{union}!");
+            Parallel.ForEach(GetMe(chunk).unions[union], abAct);
+            // foreach (var item in GetMe(chunk).unions[union]) abAct(item);
+            Log.Info($"Finished Loading Union #{union}!");
         }
 
         private void ForUnion1(AddInBase addInBase)

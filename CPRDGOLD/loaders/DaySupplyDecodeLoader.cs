@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     public class DaySupplyDecodeLoader : FullLoader<DaySupplyDecodeLoader, DaySupplyDecode>
     {
         public DaySupplyDecodeLoader() : base("daysupply_decodes") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<DaySupplyDecode> items = null)
         {
             ParallelChunk(new List<Action<DaySupplyDecode>>
             {
                 item =>AddChunkByKeys(item,new decimal[]{item.prodcode, (decimal)item.qty, (decimal)item.daily_dose, (decimal)item.numpacks }.Select(k=>$"{k}").ToArray()),       // ProdCode
-            });
+            },items);
         }
         public static DaySupplyDecode ByAll(int code, int? ddose, int? qty, int? npack)
         {

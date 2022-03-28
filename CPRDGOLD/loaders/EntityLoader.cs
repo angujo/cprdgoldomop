@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class EntityLoader : FullLoader<EntityLoader, Entity>
     {
         public EntityLoader() : base("entity") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Entity> items = null)
         {
             ParallelChunk(new List<Action<Entity>>
             {
                 item =>AddChunkByKeys(item,new int[]{item.enttype,item.data_fields,}.Select(k=>$"{k}").ToArray()),       // DataFields & Enttype
-            });
+            },items);
         }
 
         public static Entity ByDataFieldType(int[] dfields, int e_type, string name = null)

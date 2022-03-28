@@ -13,12 +13,12 @@ namespace CPRDGOLD.loaders
     public class CommonDosageLoader : FullLoader<CommonDosageLoader, CommonDosage>
     {
         public CommonDosageLoader() : base("commondosages") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<CommonDosage> items = null)
         {
             ParallelChunk(new List<Action<CommonDosage>>
             {
                 sstd =>AddChunkByKeys(sstd,new string[]{null,sstd.dosageid}),        // DosageId
-            });
+            },items);
         }
 
         public static CommonDosage ByDoseId(string cd_id)

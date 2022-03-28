@@ -14,13 +14,13 @@ namespace CPRDGOLD.loaders
     {
         public LookupLoader() : base("lookup") { }
 
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Lookup> items = null)
         {
             ParallelChunk(new List<Action<Lookup>>
             {
                 sstd => AddChunkByKeys(sstd, new string[]{$"{sstd.code}",sstd.name}),
                 sstd => AddChunkByKeys(sstd, $"{sstd.code}",$"{sstd.lookup_type_id}")
-            });
+            },items);
         }
 
         public static Lookup ByNameCode(string name, string code)

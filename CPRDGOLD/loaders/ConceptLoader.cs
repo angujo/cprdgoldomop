@@ -13,13 +13,13 @@ namespace CPRDGOLD.loaders
     internal class ConceptLoader : FullLoader<ConceptLoader, Concept>
     {
         public ConceptLoader() : base(DB.Target, "concept") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Concept> items = null)
         {
             ParallelChunk(new List<Action<Concept>>
             {
                 item => AddChunkByKeys(item,new string[]{item.concept_code,item.vocabulary_id,item.standard_concept}),      // Concept Code 
                 item => AddChunkByKeys(item,new string[]{"concname",item.concept_name,item.domain_id,item.standard_concept}),      // Concept Code 
-            });
+            },items);
         }
 
         public static Concept ByCode(string code)

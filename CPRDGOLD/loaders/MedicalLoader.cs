@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class MedicalLoader : FullLoader<MedicalLoader, Medical>
     {
         public MedicalLoader() : base("medical") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Medical> items = null)
         {
             ParallelChunk(new List<Action<Medical>>
             {
                 item =>AddChunkByKeys(item,null,$"{item.medcode}"),       //  Medcode
-            });
+            },items);
         }
 
         public static Medical ByMedcode(string medcode)

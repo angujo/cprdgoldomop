@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class ScoreMethodLoader : FullLoader<ScoreMethodLoader, ScoreMethod>
     {
         public ScoreMethodLoader() : base("scoremethod") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<ScoreMethod> items = null)
         {
             ParallelChunk(new List<Action<ScoreMethod>>
             {
                 item =>AddChunkByKeys(item,null,$"{item.code}"),       //  Medcode
-            });
+            },items);
         }
 
         public static ScoreMethod ByCode(string code)

@@ -27,5 +27,7 @@ namespace CPRDGOLD.mergers
         public string unit { get; set; }
         public string value_as_concept_id { get; set; }
         public string value_as_number { get; set; }
+        public int? st_source_concept_id { get; set; }
+        public int? ss_source_concept_id { get; set; }
     }
 }

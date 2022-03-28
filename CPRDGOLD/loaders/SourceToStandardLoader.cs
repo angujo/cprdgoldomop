@@ -13,13 +13,13 @@ namespace CPRDGOLD.loaders
     {
         public SourceToStandardLoader() : base("source_to_standard") { }
 
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<SourceToStandard> items = null)
         {
             ParallelChunk(new List<Action<SourceToStandard>>
             {
                 sstd =>AddChunkByKeys(sstd, new string[]{sstd.source_code, "tvocab",sstd.target_vocabulary_id}),  // SourceCode and Target Vocabulary     
                 sstd =>AddChunkByKeys(sstd, new string[]{sstd.source_code, "svocab",sstd.source_vocabulary_id}),           // SourceCode and Source Vocabulary
-            });
+            }, items);
         }
 
         public static SourceToStandard BySourceCodeTargetVocab(string code, string vocab) => BySourceCodeTargetVocab(code, new string[] { vocab });

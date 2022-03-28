@@ -13,7 +13,7 @@ namespace CPRDGOLD.mergers
     {
         protected StemTableMerger(Chunk chunk) : base(chunk) { }
         public StemTableMerger() : base() { }
-        protected override void Load() { }
+        protected override void LoadData() { }
 
         public static void Prepare(Chunk chunk)
         {
@@ -27,6 +27,7 @@ namespace CPRDGOLD.mergers
                 ()=>GetMe(chunk).Therapy(),
             };
             Parallel.ForEach(actions, action => action());
+            Log.Info($"Total Data StemTable [{GetMe(chunk).data.Count}]");
             Log.Info($"Finished StemTable Creator");
         }
 
@@ -35,10 +36,12 @@ namespace CPRDGOLD.mergers
             AddInMerger.prepare(chunk);
 
             Log.Info($"Starting StemTable #Additional");
+            int count = 0;
             AddInMerger.LoopAll(chunk, add_in =>
             {
                 SourceToStandard std = SourceToStandardLoader.BySourceCodeTargetVocab(add_in.source_value, "JNJ_CPRD_ADD_ENTTYPE");
                 if (null == std) return;
+                count++;
                 Concept concept = ConceptLoader.ByCode(add_in.source_value) ?? new Concept();
                 Concept concUcum = ConceptLoader.ByStdCodeVocab(add_in.unit_source_value, "UCUM") ?? new Concept();
                 Add(new StemTable
@@ -60,6 +63,7 @@ namespace CPRDGOLD.mergers
                     value_as_string = add_in.value_as_string,
                 });
             });
+            Log.Info($"Total Data StemTable [{count}] #Additional");
             Log.Info($"Finished StemTable #Additional");
         }
 
@@ -68,21 +72,16 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting StemTable #Clinical");
             ClinicalLoader.LoopAll(chunk, clinical =>
             {
-                Medical med = MedicalLoader.ByMedcode(clinical.medcode);
-                if (null == med) return;
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeSourceVocab(med.read_code, "Read");
-                if (null == std) return;
-                Concept concept = ConceptLoader.ByStdCode(med.read_code) ?? new Concept();
-                SourceToSource ssource = SourceToSourceLoader.BySourceCodeSourceVocab(med.read_code, "Read") ?? new SourceToSource();
+                Concept concept = ConceptLoader.ByStdCode(clinical.med_read_code) ?? new Concept();
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = clinical.patid,
                     provider_id = clinical.staffid,
                     start_datetime = clinical.eventdate,
-                    concept_id = std.source_concept_id,
-                    source_value = med.read_code,
-                    source_concept_id = ssource.source_concept_id ?? 0,
+                    concept_id =clinical.st_source_concept_id,
+                    source_value =clinical.med_read_code,
+                    source_concept_id = clinical.ss_source_concept_id ?? 0,
                     type_concept_id = 32827,
                     start_date = clinical.eventdate,
                 });
@@ -95,21 +94,16 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting StemTable #Immunisation");
             ImmunisationLoader.LoopAll(chunk, imm =>
             {
-                Medical med = MedicalLoader.ByMedcode(imm.medcode);
-                if (null == med) return;
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeSourceVocab(med.read_code, "Read");
-                if (null == std) return;
-                Concept concept = ConceptLoader.ByStdCode(med.read_code) ?? new Concept();
-                SourceToSource ssource = SourceToSourceLoader.BySourceCodeSourceVocab(med.read_code, "Read") ?? new SourceToSource();
+                Concept concept = ConceptLoader.ByStdCode(imm.med_read_code) ?? new Concept();
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = imm.patid,
                     provider_id = imm.staffid,
                     start_datetime = imm.eventdate,
-                    concept_id = std.source_concept_id,
-                    source_value = med.read_code,
-                    source_concept_id = ssource.source_concept_id,
+                    concept_id = imm.st_source_concept_id,
+                    source_value = imm.med_read_code,
+                    source_concept_id = imm.ss_source_concept_id,
                     type_concept_id = 32827,
                     start_date = imm.eventdate,
                 });
@@ -122,21 +116,16 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting StemTable #Referral");
             ReferralLoader.LoopAll(chunk, reff =>
             {
-                Medical med = MedicalLoader.ByMedcode(reff.medcode);
-                if (null == med) return;
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeSourceVocab(med.read_code, "Read");
-                if (null == std) return;
-                Concept concept = ConceptLoader.ByStdCode(med.read_code) ?? new Concept();
-                SourceToSource ssource = SourceToSourceLoader.BySourceCodeSourceVocab(med.read_code, "Read") ?? new SourceToSource();
+                Concept concept = ConceptLoader.ByStdCode(reff.med_read_code) ?? new Concept();
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = reff.patid,
                     provider_id = reff.staffid,
                     start_datetime = reff.eventdate,
-                    concept_id = std.source_concept_id,
-                    source_value = med.read_code,
-                    source_concept_id = ssource.source_concept_id,
+                    concept_id = reff.st_source_concept_id,
+                    source_value = reff.med_read_code,
+                    source_concept_id = reff.ss_source_concept_id,
                     type_concept_id = 32842,
                     start_date = reff.eventdate,
                 });
@@ -149,21 +138,18 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting StemTable #Test");
             TestIntMerger.LoopAll(chunk, test =>
             {
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeTargetVocab(test.read_code, "JNJ_CPRD_TEST_ENT");
-                if (null == std) return;
                 Concept concept = ConceptLoader.ByStdCode(test.read_code) ?? new Concept();
                 Concept concUcum = ConceptLoader.ByStdCodeVocab(test.unit, "UCUM") ?? new Concept();
                 Concept concVal = ConceptLoader.ByStdNameDomain(test.value_as_concept_id, "Meas Value") ?? new Concept();
-                SourceToSource ssource = SourceToSourceLoader.BySourceCodeSourceVocab(test.read_code, "Read") ?? new SourceToSource();
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = test.patid,
                     provider_id = test.staffid,
                     start_datetime = test.eventdate,
-                    concept_id = std.source_concept_id,
+                    concept_id = test.st_source_concept_id,
                     source_value = test.read_code,
-                    source_concept_id = ssource.source_concept_id,
+                    source_concept_id = test.ss_source_concept_id,
                     type_concept_id = 32856,
                     start_date = test.eventdate,
                     operator_concept_id = (string)(test.Operator == "<=" ? 4171754.ToString() : (test.Operator == ">=" ? 4171755.ToString() : (test.Operator == "<" ? 4171756.ToString() : (test.Operator == "=" ? 4172703.ToString() : (test.Operator == ">" ? 4172704.ToString() : null))))),
@@ -184,23 +170,20 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting StemTable #Therapy");
             TherapyLoader.LoopAll(chunk, ther =>
             {
-                Product prod = ProductLoader.ByProdcode(ther.prodcode) ?? new Product();
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeTargetVocab(prod.gemscriptcode, "gemscript");
                 CommonDosage cdosage = CommonDosageLoader.ByDoseId(ther.dosageid);
-                if (null == std || null == prod || null == cdosage) return;
-                Concept concept = ConceptLoader.ByStdCode(prod.gemscriptcode) ?? new Concept();
-                SourceToSource ssource = SourceToSourceLoader.BySourceCodeSourceVocab(prod.gemscriptcode, "gemscript") ?? new SourceToSource();
-                DaySupplyDecode ddecode = DaySupplyDecodeLoader.ByAll((int)ther.prodcode, (int?)cdosage.daily_dose, (int?)ther.qty, (int?)ther.numpacks);
-                DaySupplyMode dmode = DaySupplyModeLoader.ByProdcode((int)ther.prodcode);
+                if (null == cdosage) return;
+                Concept concept = ConceptLoader.ByStdCode(ther.prod_gemscriptcode) ?? new Concept();
+                DaySupplyDecode ddecode = DaySupplyDecodeLoader.ByAll((int)ther.prodcode, (int?)cdosage.daily_dose, (int?)ther.qty, (int?)ther.numpacks) ?? new DaySupplyDecode();
+                DaySupplyMode dmode = DaySupplyModeLoader.ByProdcode((int)ther.prodcode) ?? new DaySupplyMode();
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = ther.patid,
                     provider_id = ther.staffid,
                     start_datetime = ther.eventdate,
-                    concept_id = std.source_concept_id,
-                    source_value = prod.gemscriptcode,
-                    source_concept_id = ssource.source_concept_id,
+                    concept_id = ther.st_source_concept_id,
+                    source_value = ther.prod_gemscriptcode,
+                    source_concept_id = ther.ss_source_concept_id,
                     type_concept_id = 32838,
                     start_date = ther.eventdate,
                     end_date = ther.eventdate.AddDays((double)(null != ther.numdays && 0 < ther.numdays && 365 > ther.numdays ? ther.numdays : (0 != ddecode.numdays ? ddecode.numdays : dmode.numdays))).ToString(),

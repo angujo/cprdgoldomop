@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CPRDGOLD
     internal abstract class ADataLoader<T> where T : new()
     {
         protected static T me;
-        protected List<T> data = new List<T>();
+        protected ConcurrentBag<T> data = new ConcurrentBag<T>();
 
         protected abstract void LoadData();
 
@@ -21,12 +22,13 @@ namespace CPRDGOLD
             Log.Info($"Starting Data Load [{typeof(T).Name}]");
             ((ADataLoader<T>)(object)me).LoadData();
             Log.Info($"Finished Data Load [{typeof(T).Name}]");
+
             return me;
         }
 
-        public static List<T> GetData() => ((ADataLoader<T>)(object)GetMe()).data;
+        public static ConcurrentBag<T> GetData() => ((ADataLoader<T>)(object)GetMe()).data;
         public void Add(T obj) => data.Add(obj);
 
-        public void Clean() => data.Clear();
+        public void Clean() => data = new ConcurrentBag<T>();
     }
 }

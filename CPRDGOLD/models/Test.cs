@@ -32,5 +32,9 @@ namespace CPRDGOLD.models
         public int? sctmapversion { get; set; }
         public long staffid { get; set; }
         public DateTime sysdate { get; set; }
+        public string read_description { get; set; }
+        public string med_read_code { get; set; }
+        public int? st_source_concept_id { get; set; }
+        public int? ss_source_concept_id { get; set; }
     }
 }

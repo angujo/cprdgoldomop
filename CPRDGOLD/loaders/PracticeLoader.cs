@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class PracticeLoader: FullLoader<PracticeLoader,Practice>
     {
         public PracticeLoader() : base("practice") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Practice> items = null)
         {
             ParallelChunk(new List<Action<Practice>>
             {
              //   item =>AddChunkByKey(item,$"medcode{item.medcode}"),       //  Medcode
-            });
+            },items);
         }
     }
 }

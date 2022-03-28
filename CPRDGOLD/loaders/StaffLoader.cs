@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class StaffLoader : FullLoader<StaffLoader, Staff>
     {
         public StaffLoader() : base("staff") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Staff> items = null)
         {
             ParallelChunk(new List<Action<Staff>>
             {
                 //         item =>AddChunkByKey(item,$"scodesvocab{item.source_code}{item.source_vocabulary_id}"),
-            });
+            },items);
         }
     }
 }

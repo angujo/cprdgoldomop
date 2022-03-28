@@ -24,5 +24,8 @@ namespace CPRDGOLD.models
         public decimal? qty { get; set; }
         public long staffid { get; set; }
         public DateTime sysdate { get; set; }
+        public string prod_gemscriptcode { get; set; }
+        public int? st_source_concept_id { get; set; }
+        public int? ss_source_concept_id { get; set; }
     }
 }

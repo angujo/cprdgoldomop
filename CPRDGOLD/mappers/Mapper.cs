@@ -25,18 +25,18 @@ namespace CPRDGOLD.mappers
             List<object[]> values = new List<object[]>();
             PropertyInfo[] props = typeof(T).GetProperties();
             var db = DB.Target;
-            Action insert = () =>
+            void insert()
             {
-                var cols = props.Select(p => p.Name).ToArray();
-                var vals = values.ToArray();
                 db.RunFactory(table_name, (query, sch) =>
                 {
-                    query.Insert(cols, vals);
+                    query.Insert(
+                        props.Select(p => p.Name).ToArray(),
+                        values.ToArray());
                 });
 
                 values.Clear();
-            };
-            Log.Info($"Starting inserts for {table_name}. ");
+            }
+            Log.Info($"Starting inserts for {table_name}. #{typeof(T).Name}");
 
             foreach (var set in data)
             {
@@ -50,7 +50,7 @@ namespace CPRDGOLD.mappers
             }
 
             if (0 < values.Count) insert();
-            Log.Info($"Finished inserts for {table_name}. ");
+            Log.Info($"Finished inserts for {table_name}. #{typeof(T).Name}");
         }
     }
 }

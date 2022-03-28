@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Collections.Concurrent;
+using System.Linq;
 
 namespace Util
 {
@@ -80,6 +81,17 @@ namespace Util
 
                 return builder.ToString();
             }
+        }
+
+        public static bool LooselySameAs(this string[] arr1, string[] arr2)
+        {
+            if (arr1.Length != arr2.Length) return false;
+            for (var i = 0; i < arr1.Length; i++)
+            {
+                var vals = new string[] { arr1[i], arr2[i] };
+                if (!(null!=arr1[i] && null!=arr2[i] && arr1[i] != arr2[i]) || (!vals.Contains(Consts.TUPLE_MISS))) return false;
+            }
+            return true;
         }
     }
 }

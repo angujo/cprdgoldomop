@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class ProductLoader : FullLoader<ProductLoader, Product>
     {
         public ProductLoader() : base("product") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<Product> items = null)
         {
             ParallelChunk(new List<Action<Product>>
             {
                 sstd =>AddChunkByKeys(sstd,null,$"{sstd.prodcode}"),       // ProdCode
-            });
+            },items);
         }
 
         public static Product ByProdcode(string prodcode)

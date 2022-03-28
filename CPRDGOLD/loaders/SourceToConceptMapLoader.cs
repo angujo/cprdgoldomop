@@ -12,12 +12,12 @@ namespace CPRDGOLD.loaders
     internal class SourceToConceptMapLoader: FullLoader<SourceToConceptMapLoader,SourceToConceptMap>
     {
         public SourceToConceptMapLoader() : base("source_to_concept_map") { }
-        public override void ChunkData()
+        public override void ChunkData(IEnumerable<SourceToConceptMap> items = null)
         {
             ParallelChunk(new List<Action<SourceToConceptMap>>
             {
             //    item =>AddChunkByKey(item,$"medcode{item.medcode}"),       //  Medcode
-            });
+            },items);
         }
     }
 }

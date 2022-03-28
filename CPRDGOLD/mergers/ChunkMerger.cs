@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +11,7 @@ namespace CPRDGOLD.mergers
     internal abstract class ChunkMerger<T, C> where T : new()
     {
         protected Chunk chunk;
-        protected List<C> data = new List<C>();
+        protected ConcurrentBag<C> data = new ConcurrentBag<C>();
         protected static T me;
         protected ChunkMerger(Chunk chunk) { this.chunk = chunk; chunk.AddCleaner(Clear); }
 
@@ -18,9 +19,9 @@ namespace CPRDGOLD.mergers
 
         protected void Add(C c) { data.Add(c); }
 
-        public static List<C> GetData(Chunk chunk) => ((ChunkMerger<T, C>)(object)GetMe(chunk)).data;
+        public static ConcurrentBag<C> GetData(Chunk chunk) => ((ChunkMerger<T, C>)(object)GetMe(chunk)).data;
 
-        public void Clear() { data.Clear(); me = default; }
+        public void Clear() { data = new ConcurrentBag<C>(); me = default; }
 
         protected static T GetMe(Chunk chunk)
         {
@@ -28,7 +29,7 @@ namespace CPRDGOLD.mergers
             me = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });
             ((ChunkMerger<T, C>)(object)me).chunk = chunk;
             Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
-            ((ChunkMerger<T, C>)(object)me).Load();
+            ((ChunkMerger<T, C>)(object)me).LoadData();
             Log.Info($"Finished Data Load #ChunkMerger [{typeof(T).Name}]");
             return me;
         }
@@ -37,10 +38,12 @@ namespace CPRDGOLD.mergers
         {
             Log.Info($"Starting LoopAll #{typeof(T).Name}");
             var m = (ChunkMerger<T, C>)(object)GetMe(chunk);
-            foreach (C c in m.data) looper(c);
+            Log.Info($"Total Data To LoopAll [{m.data.Count}] #{typeof(T).Name}");
+            Parallel.ForEach(m.data, looper);
+            // foreach (C c in m.data) looper(c);
             Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 
-        protected abstract void Load();
+        protected abstract void LoadData();
     }
 }
