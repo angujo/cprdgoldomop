@@ -1,6 +1,7 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
 using DBMS;
+using DBMS.models;
 using SqlKata.Execution;
 using System;
 using System.Collections.Generic;
@@ -39,18 +40,23 @@ namespace CPRDGOLD.mergers
                 ()=>GetMe(chunk).Union11(),
             };
             Parallel.ForEach(unions, union => union());
-            Log.Info("Looping AddIn Source to standards");
-            Dictionary<string, SourceToStandard> sourceStds = new Dictionary<string, SourceToStandard>();
-            DB.Source.RunFactory("source_to_standard", (query, schema_name) =>
+            Log.Info($"Total AddIn Table Data: {GetMe(chunk).data.Count}");
+            if (0 == AddInMerger.GetData(chunk).Count) Log.Info("No AddIn Data for Source to standards");
+            else
             {
-                sourceStds = query.WhereIn("source_code", AddInMerger.GetData(chunk).Select(d => d.source_value).Distinct())
-                .Where("source_vocabulary_id", "JNJ_CPRD_ADD_ENTTYPE").WhereNull("target_invalid_reason").Where("target_standard_concept", "S")
-                .Select("source_value", "source_concept_id")
-                .Get<SourceToStandard>().ToDictionary(s => s.source_code, s => s);
-            });
-            foreach (AddIn dt in AddInMerger.GetData(chunk))
-            {
-                dt.st_source_concept_id = sourceStds.ContainsKey(dt.source_value) ? sourceStds[dt.source_value].source_concept_id : null;
+                Log.Info("Looping AddIn Source to standards");
+                Dictionary<string, SourceToStandard> sourceStds = new Dictionary<string, SourceToStandard>();
+                DB.Source.RunFactory("source_to_standard", (query, schema_name) =>
+                {
+                    sourceStds = query.WhereIn("source_code", AddInMerger.GetData(chunk).Select(d => d.source_value).Distinct())
+                    .Where("source_vocabulary_id", "JNJ_CPRD_ADD_ENTTYPE").WhereNull("target_invalid_reason").Where("target_standard_concept", "S")
+                    .Select("source_code", "source_concept_id")
+                    .Get<SourceToStandard>().ToDictionary(s => s.source_code, s => s);
+                });
+                foreach (AddIn dt in AddInMerger.GetData(chunk))
+                {
+                    dt.st_source_concept_id = sourceStds.ContainsKey(dt.source_value) ? sourceStds[dt.source_value].source_concept_id : null;
+                }
             }
             Log.Info("Finished Looping AddIn Source to standards");
 

@@ -1,4 +1,6 @@
-﻿using SqlKata;
+﻿using Dapper;
+using DBMS.models;
+using SqlKata;
 using SqlKata.Compilers;
 using SqlKata.Execution;
 using System;
@@ -14,10 +16,22 @@ namespace DBMS.systems
     public abstract class DBMSSystem : IDBMSSystem
     {
         public DBSchema schema;
+        protected string conn_string;
         QueryFactory qf;
-        public DBMSSystem(DBSchema schema) { this.schema = schema; }
+        protected DBMSSystem()
+        {
+            var resolver = new SimpleCRUDResolver();
+            SimpleCRUD.SetColumnNameResolver(resolver);
+            SimpleCRUD.SetTableNameResolver(resolver);
+        }
+
+        public DBMSSystem(DBSchema schema) : this() { this.schema = schema; }
+        public DBMSSystem(string conn_string) : this() { this.conn_string = conn_string; }
 
         public abstract string ConnectionString();
+
+        public abstract void BinaryCopy(DBMSSystem toSchema, string fromQuery, string toQuery);
+
         public abstract Compiler GetCompiler();
         public abstract IDbConnection GetConnection();
 
@@ -49,6 +63,15 @@ namespace DBMS.systems
             }
         }
 
+        public int RunQuery(string query)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                return new QueryFactory(conn, GetCompiler()).Statement(query);
+            }
+        }
+
         public void RunConnection(Action<IDbConnection> action)
         {
             using (var conn = GetConnection())
@@ -61,6 +84,28 @@ namespace DBMS.systems
         private string Dot(string schema, string table)
         {
             return string.Join(".", new string[] { schema, table });
+        }
+
+        public T Load<T>(object args)
+        {
+            if (args.IsNumber())
+            {
+                using (var conn = GetConnection())
+                {
+                    conn.Open();
+                    return conn.Get<T>(args);
+                }
+            }
+            return QueryFactory().Query(typeof(T).Name.ToLower()).Where(args).First<T>();
+        }
+
+        public IEnumerable<T> GetAll<T>(object args)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                return conn.GetList<T>(args);
+            }
         }
     }
 }

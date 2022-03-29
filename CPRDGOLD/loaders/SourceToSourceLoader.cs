@@ -14,16 +14,9 @@ namespace CPRDGOLD.loaders
         public SourceToSourceLoader() : base("source_to_source") { }
         public override void ChunkData(IEnumerable<SourceToSource> items = null)
         {
-            ParallelChunk(new List<Action<SourceToSource>>
-            {
-                item =>AddChunkByKeys(item,new string[]{item.source_code,item.source_vocabulary_id}),
-            },items);
+            ParallelChunk(item => new string[] { item.source_code, item.source_vocabulary_id }, items);
         }
         public static SourceToSource BySourceCodeSourceVocab(string code, string vocab) => BySourceCodeSourceVocab(code, new string[] { vocab });
-        public static SourceToSource BySourceCodeSourceVocab(string code, string[] vocab)
-        {
-            //  return GetMe().searchOne(st => st.source_code == code && vocab.Contains(st.source_vocabulary_id), $"sctv{code}{string.Join(".", vocab)}");
-            return ChunkValue(vocab.Select(v => new string[] { code, v }));
-        }
+        public static SourceToSource BySourceCodeSourceVocab(string code, string[] vocab) => ChunkValue(vocab.Select(v => new string[] { code, v }));
     }
 }

@@ -1,4 +1,5 @@
 ﻿using DBMS;
+using DBMS.models;
 using DBMS.systems;
 using SqlKata;
 using SqlKata.Execution;
@@ -31,6 +32,8 @@ namespace CPRDGOLD.loaders
         protected Loader(DBMSSystem qf, string table) { db = qf; table_name = table; }
 
         public void Add(C obj) { data.Add(obj); }
+
+        public static List<C> GetData(Chunk chunk) => null != ((Loader<T, C>)(object)GetMe()).GetType().GetMethod("GetChunk") ? ((Loader<T, C>)(object)GetMe()).tupleChunk.Select(tc => tc.Value).ToList() : ((Loader<T, C>)(object)GetMe()).data;
 
         protected void LoadData()
         {
@@ -137,7 +140,9 @@ namespace CPRDGOLD.loaders
         {
             var m = (Loader<T, C>)(object)GetMe();
             Log.Info($"Starting Looping Through All #{typeof(T).Name}");
-            foreach (C c in m.data)
+            var data = null == m.GetType().GetMethod("ChunkData") ? m.data : m.tupleChunk.Select(tc => tc.Value).ToList();
+            Log.Info($"Total Data Chunk to LoopAll [{data.Count}] [{typeof(T).Name}]");
+            foreach (C c in data)
             {
                 looper(c);
             }
@@ -152,29 +157,6 @@ namespace CPRDGOLD.loaders
 
         #region ChunkData
 
-        protected void AddChunkByKeys(C item, params long[] keys) => AddChunkByKeys(item, keys.Select(k => $"{k}").ToArray());
-        protected void AddChunkByKeys(C item, params string[] keys)
-        {
-            //Skip if all chunk variables are null or no key shared
-            if (keys.Length <= 0 || keys.Where(k => null != k).Count() == 0) return;
-            multiChunks.AddValue(item, CKeys(keys));
-        }
-
-        protected void AddChunkByKey(C item, string key)
-        {
-            if (!chunks.ContainsKey(key)) chunks[key] = new List<C> { item };
-            else chunks[key].Add(item);
-        }
-
-        protected static C ChunkItem(string key) => ChunkItem(new string[] { key });
-        protected static C ChunkItem(IEnumerable<string> keys) => ChunkItem(keys.ToArray());
-
-        protected static C ChunkItem(string[] keys)
-        {
-            var me = ((Loader<T, C>)(object)GetMe());
-            var res = keys.Where(k => me.chunks.ContainsKey(k)).Select(k => me.chunks[k].First());
-            return res.Count() > 0 ? res.First() : default;
-        }
         protected static C ChunkValue(params string[] keys) => ChunkValue(new string[][] { keys });
         protected static C ChunkValue(IEnumerable<string[]> keys) => ChunkValue(keys.ToArray());
         protected static C ChunkValue(string[][] keys) => ((Loader<T, C>)(object)GetMe()).IChunkValue(keys);
@@ -185,14 +167,15 @@ namespace CPRDGOLD.loaders
             foreach (var iKeys in keys)
             {
                 if (iKeys.Length <= 0 || iKeys.Where(k => !string.IsNullOrEmpty(k)).Count() == 0) continue;
-                if (null != (value = multiChunks.FirstValue<string, C>(CKeys(iKeys, true)))) return value;
+                if (null != (value = ChunkTupleValue(iKeys))) return value;
             }
             return default;
         }
 
-        protected void ParallelChunk(List<Action<C>> actions, IEnumerable<C> items = null)
+        protected void ParallelChunk(Func<C, string[]> getKeys, IEnumerable<C> items = null) => ParallelChunk(c => new string[][] { getKeys(c) }, items);
+        protected void ParallelChunk(Func<C, string[][]> getKeys, IEnumerable<C> items = null)
         {
-            if (actions == null || 0 >= actions.Count)
+            if (getKeys == null)
             {
                 Log.Info($"No Data Chunk Actions For #{typeof(T).Name}");
                 if (null != items) data.AddRange(items);
@@ -201,29 +184,29 @@ namespace CPRDGOLD.loaders
             Log.Info($"Starting Data Chunk #{typeof(T).Name}");
             Log.Info($"DataChunk Stats: Total Data to Chunk: #{items.Count()} [{typeof(T).Name}]");
             int count = 0;
-            int iterations = 0;
             IEnumerable<C> cData = null != items ? items.ToArray() : data.ToArray();
             Parallel.ForEach(cData, new ParallelOptions { MaxDegreeOfParallelism = 5 }, dt =>
                {
-                   Parallel.ForEach(actions, x => x(dt));
+                   string[][] keys;
+                   if (null == (keys = getKeys(dt))) return;
+                   foreach (var _keys in keys)
+                   {
+                       if (_keys.HasNullOrEmpty()) continue;
+                       tupleChunk[Tuple.Create(_keys)] = dt;
+                   }
                    var br = Interlocked.Increment(ref count);
                    if (0 == br % Consts.LOOP_LOG_COUNT)
                    {
                        Log.Info($"Data Chunk Count {br} of {cData.Count()} #{typeof(T).Name}");
                    }
                });
-            Log.Info($"DataChunk Stats: Total Lvl 1 Chunks: #{multiChunks.Count} [{typeof(T).Name}]");
+            Log.Info($"DataChunk Stats: Total Chunks: #{tupleChunk.Count}/{cData.Count()} [{typeof(T).Name}]");
             Log.Info($"Finished Data Chunk #{typeof(T).Name}");
         }
 
-        private string[] CKeys(string[] keys, bool forVal = false)
+        protected C ChunkTupleValue(string[] keys)
         {
-            return ((2 > keys.Length) && !forVal ? keys = CKeys(new string[] { ChunkPrefixKey, keys[0] }) : keys).Select(k => k ?? ChunkPrefixKey).ToArray();
-        }
-
-        protected C ChunkTuple(string[] keys)
-        {
-            return GetTupleKey(keys) is Tuple<string[]> tKey ? tupleChunk[tKey] : default;
+            return !keys.HasNullOrEmpty() && Tuple.Create(keys) is Tuple<string[]> tKey && tupleChunk.ContainsKey(tKey) ? tupleChunk[tKey] : default;
         }
 
         private Tuple<string[]> GetTupleKey(string[] keys)

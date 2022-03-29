@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace CPRDGOLD.mappers
 {
-    internal class VisitOccurrence
+    internal class VisitOccurrence : Mapper<VisitOccurrence>
     {
         public long admitted_from_concept_id { get; set; }
         public string admitted_from_source_value { get; set; }
@@ -29,5 +29,27 @@ namespace CPRDGOLD.mappers
         public DateTime visit_start_date { get; set; }
         public DateTime? visit_start_datetime { get; set; }
         public int visit_type_concept_id { get; set; }
+
+        protected override void LoadData()
+        {
+            var details = VisitDetail.GetData().GroupBy(dt => new { dt.person_id, dt.visit_detail_start_date }).Select(ds => ds.First());
+            foreach (var item in details)
+            {
+                Add(new VisitOccurrence
+                {
+                    person_id = item.person_id,
+                    visit_concept_id = 9202,
+                    visit_start_date = item.visit_detail_start_date,
+                    visit_start_datetime = item.visit_detail_start_datetime,
+                    visit_end_date = item.visit_detail_end_date,
+                    visit_end_datetime = item.visit_detail_end_datetime,
+                    visit_type_concept_id = 32827,
+                    provider_id = item.provider_id,
+                    care_site_id = item.care_site_id,
+                    visit_source_value = item.visit_detail_source_value,
+                    visit_source_concept_id = 0
+                });
+            }
+        }
     }
 }

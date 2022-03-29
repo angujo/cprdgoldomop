@@ -3,6 +3,8 @@
 
 using CPRDGOLD;
 using Util;
+using System.Configuration;
+using System.Collections.Specialized;
 
 Log.Info("Starting the app...");
-CPRDGOLDMap.Run();
+ CPRDGOLDMap.Run();

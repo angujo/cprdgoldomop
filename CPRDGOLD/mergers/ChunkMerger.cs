@@ -1,8 +1,10 @@
-﻿using System;
+﻿using DBMS.models;
+using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Util;
 
@@ -39,7 +41,16 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting LoopAll #{typeof(T).Name}");
             var m = (ChunkMerger<T, C>)(object)GetMe(chunk);
             Log.Info($"Total Data To LoopAll [{m.data.Count}] #{typeof(T).Name}");
-            Parallel.ForEach(m.data, looper);
+            var count = 0;
+            Parallel.ForEach(m.data, cd =>
+             {
+                 looper(cd);
+                 var br = Interlocked.Increment(ref count);
+                 if (0 == br % Consts.LOOP_LOG_COUNT)
+                 {
+                     Log.Info($"ChunkMerger Count {br} of {m.data.Count} #{typeof(T).Name}");
+                 }
+             });
             // foreach (C c in m.data) looper(c);
             Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }

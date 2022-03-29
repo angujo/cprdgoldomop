@@ -14,22 +14,11 @@ namespace CPRDGOLD.loaders
         public ScoreMethodLoader() : base("scoremethod") { }
         public override void ChunkData(IEnumerable<ScoreMethod> items = null)
         {
-            ParallelChunk(new List<Action<ScoreMethod>>
-            {
-                item =>AddChunkByKeys(item,null,$"{item.code}"),       //  Medcode
-            },items);
+            ParallelChunk(item => new string[] { $"{item.code}" }, items);
         }
 
-        public static ScoreMethod ByCode(string code)
-        {
-            if (!long.TryParse(code, out long mc)) return new ScoreMethod();
-            return ByCode(mc);
-        }
+        public static ScoreMethod ByCode(string code) => long.TryParse(code, out long mc) ? ByCode(mc) : null;
 
-        public static ScoreMethod ByCode(long code)
-        {
-            //  return GetMe().searchOne(m => m.code == code, $"code{code}") ?? new ScoreMethod();
-            return ChunkValue(null,$"{code}");
-        }
+        public static ScoreMethod ByCode(long code) => ChunkValue($"{code}");
     }
 }

@@ -1,5 +1,6 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
+using DBMS.models;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -82,6 +83,7 @@ namespace CPRDGOLD.mergers
                  };
                 Parallel.ForEach(actions, action => action());
             });
+            foreach (var un in GetMe(chunk).unions) Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
             Log.Info("Finished AddInBase Loader!");
         }
 
@@ -92,7 +94,7 @@ namespace CPRDGOLD.mergers
                 Log.Info($"Union {union} Was not Loaded. Skipped!");
                 return;
             }
-            Log.Info($"Started Loading Union #{union}!");
+            Log.Info($"Started Loading Union #{union} Data: [{GetMe(chunk).unions[union].Count}]!");
             Parallel.ForEach(GetMe(chunk).unions[union], abAct);
             // foreach (var item in GetMe(chunk).unions[union]) abAct(item);
             Log.Info($"Finished Loading Union #{union}!");

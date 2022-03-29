@@ -14,22 +14,11 @@ namespace CPRDGOLD.loaders
         public ProductLoader() : base("product") { }
         public override void ChunkData(IEnumerable<Product> items = null)
         {
-            ParallelChunk(new List<Action<Product>>
-            {
-                sstd =>AddChunkByKeys(sstd,null,$"{sstd.prodcode}"),       // ProdCode
-            },items);
+            ParallelChunk(sstd => new string[] { $"{sstd.prodcode}" }, items);
         }
 
-        public static Product ByProdcode(string prodcode)
-        {
-            return (!long.TryParse(prodcode, out long mc)) ? null : ByProdcode(mc);
-        }
+        public static Product ByProdcode(string prodcode) => (!long.TryParse(prodcode, out long mc)) ? null : ByProdcode(mc);
 
-        public static Product ByProdcode(long prodcode)
-        {
-            // return GetMe().searchOne(m => m.prodcode == prodcode, $"prodcode{prodcode}") ?? new Product();
-            // return GetMe().QuerySearchOne("prodcode = ?", new object[] { prodcode }, m => m.prodcode == prodcode);
-            return ChunkValue(null,$"{prodcode}");
-        }
+        public static Product ByProdcode(long prodcode) => ChunkValue($"{prodcode}");
     }
 }

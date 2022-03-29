@@ -9,15 +9,14 @@ using Util;
 
 namespace CPRDGOLD.loaders
 {
-    internal class SourceToConceptMapLoader: FullLoader<SourceToConceptMapLoader,SourceToConceptMap>
+    internal class SourceToConceptMapLoader : FullLoader<SourceToConceptMapLoader, SourceToConceptMap>
     {
         public SourceToConceptMapLoader() : base("source_to_concept_map") { }
         public override void ChunkData(IEnumerable<SourceToConceptMap> items = null)
         {
-            ParallelChunk(new List<Action<SourceToConceptMap>>
-            {
-            //    item =>AddChunkByKey(item,$"medcode{item.medcode}"),       //  Medcode
-            },items);
+            ParallelChunk(item => new string[] { item.source_code }, items);
         }
+
+        public static SourceToConceptMap BySourceCode(string code) => ChunkValue(code);
     }
 }

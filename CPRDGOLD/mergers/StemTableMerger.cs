@@ -1,9 +1,12 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
+using DBMS.models;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using Util;
 
@@ -11,6 +14,7 @@ namespace CPRDGOLD.mergers
 {
     internal class StemTableMerger : ChunkMerger<StemTableMerger, StemTable>
     {
+        Stopwatch stopWatch = new Stopwatch();
         protected StemTableMerger(Chunk chunk) : base(chunk) { }
         public StemTableMerger() : base() { }
         protected override void LoadData() { }
@@ -36,12 +40,8 @@ namespace CPRDGOLD.mergers
             AddInMerger.prepare(chunk);
 
             Log.Info($"Starting StemTable #Additional");
-            int count = 0;
             AddInMerger.LoopAll(chunk, add_in =>
             {
-                SourceToStandard std = SourceToStandardLoader.BySourceCodeTargetVocab(add_in.source_value, "JNJ_CPRD_ADD_ENTTYPE");
-                if (null == std) return;
-                count++;
                 Concept concept = ConceptLoader.ByCode(add_in.source_value) ?? new Concept();
                 Concept concUcum = ConceptLoader.ByStdCodeVocab(add_in.unit_source_value, "UCUM") ?? new Concept();
                 Add(new StemTable
@@ -49,7 +49,7 @@ namespace CPRDGOLD.mergers
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
                     person_id = add_in.patid,
                     start_datetime = add_in.eventdate,
-                    concept_id = std.source_concept_id,
+                    concept_id = add_in.st_source_concept_id,
                     source_value = add_in.source_value,
                     source_concept_id = 0,
                     type_concept_id = 32851,
@@ -63,7 +63,6 @@ namespace CPRDGOLD.mergers
                     value_as_string = add_in.value_as_string,
                 });
             });
-            Log.Info($"Total Data StemTable [{count}] #Additional");
             Log.Info($"Finished StemTable #Additional");
         }
 
@@ -79,8 +78,8 @@ namespace CPRDGOLD.mergers
                     person_id = clinical.patid,
                     provider_id = clinical.staffid,
                     start_datetime = clinical.eventdate,
-                    concept_id =clinical.st_source_concept_id,
-                    source_value =clinical.med_read_code,
+                    concept_id = clinical.st_source_concept_id,
+                    source_value = clinical.med_read_code,
                     source_concept_id = clinical.ss_source_concept_id ?? 0,
                     type_concept_id = 32827,
                     start_date = clinical.eventdate,
@@ -92,9 +91,15 @@ namespace CPRDGOLD.mergers
         private void Immunisation()
         {
             Log.Info($"Starting StemTable #Immunisation");
+            var total = ImmunisationLoader.GetData(chunk).Count;
+            var count = 0;
             ImmunisationLoader.LoopAll(chunk, imm =>
             {
+              //  stopWatch.Reset();
+               // stopWatch.Start();
                 Concept concept = ConceptLoader.ByStdCode(imm.med_read_code) ?? new Concept();
+              //  stopWatch.Stop();
+               // Log.Info($"Concept Duration: {stopWatch.ElapsedMilliseconds}ms StemTable #Immunisation");
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
@@ -107,6 +112,7 @@ namespace CPRDGOLD.mergers
                     type_concept_id = 32827,
                     start_date = imm.eventdate,
                 });
+               // Log.Info($"ID: {imm.patid} {Interlocked.Increment(ref count)}/{total} #Immunisation");
             });
             Log.Info($"Finished StemTable #Immunisation");
         }
@@ -114,9 +120,14 @@ namespace CPRDGOLD.mergers
         private void Referral()
         {
             Log.Info($"Starting StemTable #Referral");
+            var total = ImmunisationLoader.GetData(chunk).Count;
+            var count = 0;
             ReferralLoader.LoopAll(chunk, reff =>
             {
+               // stopWatch.Restart();
                 Concept concept = ConceptLoader.ByStdCode(reff.med_read_code) ?? new Concept();
+                //stopWatch.Stop();
+              //  Log.Info($"Concept Duration: {stopWatch.ElapsedMilliseconds}ms StemTable #Referral");
                 Add(new StemTable
                 {
                     domain_id = 0 == concept.concept_id ? "Observation" : concept.domain_id,
@@ -129,6 +140,7 @@ namespace CPRDGOLD.mergers
                     type_concept_id = 32842,
                     start_date = reff.eventdate,
                 });
+              //  Log.Info($"{Interlocked.Increment(ref count)}/{total} #Referral");
             });
             Log.Info($"Finished StemTable #Referral");
         }

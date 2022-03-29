@@ -14,27 +14,16 @@ namespace CPRDGOLD.loaders
         public EntityLoader() : base("entity") { }
         public override void ChunkData(IEnumerable<Entity> items = null)
         {
-            ParallelChunk(new List<Action<Entity>>
-            {
-                item =>AddChunkByKeys(item,new int[]{item.enttype,item.data_fields,}.Select(k=>$"{k}").ToArray()),       // DataFields & Enttype
-            },items);
+            ParallelChunk(item => new string[][] { 
+                new int[] { item.enttype, item.data_fields, }.Select(k => $"{k}").ToArray(),
+                new int[] { item.enttype, }.Select(k => $"{k}").ToArray(),
+            }, items);
         }
 
-        public static Entity ByDataFieldType(int[] dfields, int e_type, string name = null)
-        {
-            // return GetMe().searchOne(e => e.enttype == e_type && dfields.Contains(e.data_fields), name ?? $"datafieldstype{e_type}{string.Join(".", dfields)}");
-            return ChunkValue(dfields.Select(v => new int[] { e_type, v }.Select(k => $"{k}").ToArray()));
-        }
+        public static Entity ByDataFieldType(int[] dfields, int e_type) => ChunkValue(dfields.Select(v => new int[] { e_type, v }.Select(k => $"{k}").ToArray()));
 
-        public static Entity ByDataFieldType(int dfield, int e_type, string name = null)
-        {
-            return ByDataFieldType(new int[] { dfield }, e_type, name);
-        }
+        public static Entity ByDataFieldType(int dfield, int e_type) => ByDataFieldType(new int[] { dfield }, e_type);
 
-        public static Entity ByType(int e_type)
-        {
-            //return GetMe().searchOne(e => e.enttype == e_type, $"enttype{e_type}");
-            return ChunkValue($"{e_type}");
-        }
+        public static Entity ByType(int e_type) => ChunkValue( $"{e_type}");
     }
 }

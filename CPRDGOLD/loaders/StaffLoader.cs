@@ -14,10 +14,7 @@ namespace CPRDGOLD.loaders
         public StaffLoader() : base("staff") { }
         public override void ChunkData(IEnumerable<Staff> items = null)
         {
-            ParallelChunk(new List<Action<Staff>>
-            {
-                //         item =>AddChunkByKey(item,$"scodesvocab{item.source_code}{item.source_vocabulary_id}"),
-            },items);
+          //  ParallelChunk(null, items);
         }
     }
 }

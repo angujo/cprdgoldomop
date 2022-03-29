@@ -53,8 +53,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Chunk.cs" />
     <Compile Include="NestDictionary.cs" />
+    <Compile Include="Script.cs" />
+    <Compile Include="Setting.cs" />
     <Compile Include="UtilClass.cs" />
     <Compile Include="Consts.cs" />
     <Compile Include="DictExtension.cs" />

@@ -1,4 +1,5 @@
 ﻿using DBMS;
+using DBMS.models;
 using Npgsql;
 using SqlKata.Execution;
 using System;
@@ -15,11 +16,18 @@ namespace CPRDGOLD.mappers
     {
         protected Chunk chunk;
 
-        public static void InsertSets()
+        public static void InsertSets(Chunk chunk)
         {
-            Log.Info($"Data Load started for {typeof(T).Name}. ");
-            var data = ((Mapper<T>)(object)GetMe()).data;
+            var me = (Mapper<T>)(object)GetMe();
             var table_name = typeof(T).Name.ToSnakeCase();
+            Log.Info($"Data Load started for {typeof(T).Name}. ");
+            if (null != me.GetType().GetMethod("QueryInsert"))
+            {
+                me.GetType().GetMethod("QueryInsert").Invoke(me, null);
+                goto closeInsert;
+            }
+            me.chunk = chunk;
+            var data = me.data;
             Log.Info($"Data Loaded. Preparing inserts for {table_name}. ");
             Log.Info($"Total Data [{table_name}] {data.Count} ");
             List<object[]> values = new List<object[]>();
@@ -50,7 +58,9 @@ namespace CPRDGOLD.mappers
             }
 
             if (0 < values.Count) insert();
+            closeInsert:
             Log.Info($"Finished inserts for {table_name}. #{typeof(T).Name}");
+            if (null != me.GetType().GetMethod("Dependency")) me.GetType().GetMethod("Dependency").Invoke(me, null);
         }
     }
 }

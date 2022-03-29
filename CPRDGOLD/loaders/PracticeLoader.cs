@@ -14,10 +14,7 @@ namespace CPRDGOLD.loaders
         public PracticeLoader() : base("practice") { }
         public override void ChunkData(IEnumerable<Practice> items = null)
         {
-            ParallelChunk(new List<Action<Practice>>
-            {
-             //   item =>AddChunkByKey(item,$"medcode{item.medcode}"),       //  Medcode
-            },items);
+          //  ParallelChunk(null,items);
         }
     }
 }

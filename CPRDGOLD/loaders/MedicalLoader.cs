@@ -14,22 +14,11 @@ namespace CPRDGOLD.loaders
         public MedicalLoader() : base("medical") { }
         public override void ChunkData(IEnumerable<Medical> items = null)
         {
-            ParallelChunk(new List<Action<Medical>>
-            {
-                item =>AddChunkByKeys(item,null,$"{item.medcode}"),       //  Medcode
-            },items);
+            ParallelChunk(item => new string[] { $"{item.medcode}" }, items);
         }
 
-        public static Medical ByMedcode(string medcode)
-        {
-            if (!long.TryParse(medcode, out long mc)) return new Medical();
-            return ByMedcode(mc);
-        }
+        public static Medical ByMedcode(string medcode) => long.TryParse(medcode, out long mc) ? ByMedcode(mc) : null;
 
-        public static Medical ByMedcode(long medcode)
-        {
-            // return GetMe().searchOne(m => m.medcode == medcode, $"medcode{medcode}") ?? new Medical();
-            return ChunkValue(null, $"{medcode}");
-        }
+        public static Medical ByMedcode(long medcode) => ChunkValue($"{medcode}");
     }
 }

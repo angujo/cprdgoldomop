@@ -19,36 +19,47 @@ namespace DBMS
         public static DBMSSystem Target { get { return GetSchema(SchemaType.TARGET); } }
         public static DBMSSystem Source { get { return GetSchema(SchemaType.SOURCE); } }
         public static DBMSSystem Vocabulary { get { return GetSchema(SchemaType.VOCABULARY); } }
+        public static DBMSSystem Internal { get { return GetSchema(SchemaType.INTERNAL); } }
 
         private static DBMSSystem GetSchema(SchemaType sType)
         {
             if (holder.ContainsKey(sType.GetStringValue())) return holder[sType.GetStringValue()];
-            string sname;
+            string conn_string;
+            string schema_name;
             switch (sType)
             {
-                case SchemaType.TARGET: sname = "target"; break;
-                case SchemaType.SOURCE: sname = "source"; break;
+                case SchemaType.TARGET: conn_string = Setting.TargetConnection; schema_name = Setting.TargetSchema; break;
+                case SchemaType.SOURCE: conn_string = Setting.SourceConnection; schema_name = Setting.SourceSchema; break;
+                case SchemaType.INTERNAL: conn_string = Setting.AppConnection; schema_name = Setting.AppSchema; break;
                 case SchemaType.VOCABULARY:
-                default: sname = "vocabulary"; break;
+                default: conn_string = Setting.VocabConnection; schema_name = Setting.VocabSchema; break;
             }
             var sch = new DBSchema
             {
-                DBName = "cdmapp",
-                Port = 5432,
-                SchemaName = sname,
-                Password = "postgres",
-                Server = "localhost",
-                Username = "postgres",
+                SchemaName = schema_name,
             };
             //Switch depending on DBMS System
-            return holder[sType.GetStringValue()] = new PostgreSQL(sch);
+            return holder[sType.GetStringValue()] = new PostgreSQL(conn_string) { schema = sch };
         }
     }
 
-    public class iDBMS
+    public static class FileQueryHelper
     {
-        public QueryFactory DB;
-        public Compiler CP;
+        const string PH_SC_SOURCE = @"{ss}";
+        const string PH_SC_TARGET = @"{sc}";
+        const string PH_SC_VOCAB = @"{vs}";
+
+        public static string RemovePlaceholders(this string content, params string[][] phs)
+        {
+            foreach (var p in phs)
+            {
+                if (2 != p.Length) continue;
+                content = content.Replace(p[0], p[1]);
+            }
+            return content.Replace(PH_SC_VOCAB, DB.Vocabulary.schema.SchemaName)
+                .Replace(PH_SC_TARGET, DB.Target.schema.SchemaName)
+                .Replace(PH_SC_SOURCE, DB.Source.schema.SchemaName);
+        }
     }
 
     internal enum SchemaType
@@ -58,6 +69,8 @@ namespace DBMS
         [StringValue("source")]
         SOURCE,
         [StringValue("vocabulary")]
-        VOCABULARY
+        VOCABULARY,
+        [StringValue("internal")]
+        INTERNAL
     }
 }

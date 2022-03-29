@@ -30,5 +30,8 @@ namespace CPRDGOLD.models
         public short toreason { get; set; }
         public long vmid { get; set; }
         public short yob { get; set; }
+        public DateTime? op_start_date { get; set; }
+        public DateTime? op_end_date { get; set; }
+        public int pt_concept_id { get; set; }
     }
 }

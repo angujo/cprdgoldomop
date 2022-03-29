@@ -11,7 +11,21 @@ namespace Util
     {
         private const UInt64 gbBytes = 1073741824;
 
-        public static object TestDict<K, V>(this ConcurrentDictionary<K, V> dict) => "NULL RESULT";
+        public static bool IsNumber(this object value)
+        {
+            return value is sbyte
+                    || value is byte
+                    || value is short
+                    || value is ushort
+                    || value is int
+                    || value is uint
+                    || value is long
+                    || value is ulong
+                    || value is float
+                    || value is double
+                    || value is decimal;
+        }
+
         public static string GetStringValue(this Enum value)
         {
             // Get the type
@@ -83,13 +97,15 @@ namespace Util
             }
         }
 
+        public static bool HasNullOrEmpty(this string[] arr) => arr.Count(i => string.IsNullOrEmpty(i)) > 0;
+
         public static bool LooselySameAs(this string[] arr1, string[] arr2)
         {
             if (arr1.Length != arr2.Length) return false;
             for (var i = 0; i < arr1.Length; i++)
             {
                 var vals = new string[] { arr1[i], arr2[i] };
-                if (!(null!=arr1[i] && null!=arr2[i] && arr1[i] != arr2[i]) || (!vals.Contains(Consts.TUPLE_MISS))) return false;
+                if (!(null != arr1[i] && null != arr2[i] && arr1[i] != arr2[i]) || (!vals.Contains(Consts.TUPLE_MISS))) return false;
             }
             return true;
         }

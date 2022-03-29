@@ -1,4 +1,8 @@
+using DBMS;
+using DBMS.models;
+using DBMS.systems;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using SqlKata;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -13,6 +17,60 @@ namespace TestProject
     public class UnitTest1
     {
         private Stopwatch stopwatch = new();
+
+        [TestMethod]
+        public void TestSimple()
+        {
+            var conn = Setting.AppConnection;
+
+        }
+
+        [TestMethod]
+        public void TestCompiler()
+        {
+            var chunk = new Chunk
+            {
+                column = "patient_id",
+                ordinal = 0,
+                relationColumn = "patid",
+                tableName = "_chunk",
+                dbms = DB.Target,
+                ordinalColumn = "ordinal",
+                relationTableName = "consultation",
+            };
+            var schema_name = "source";
+            DBMSSystem db = (DBMSSystem)chunk.dbms;
+            var query = new Query(string.Join(".", new string[] { db.schema.SchemaName, chunk.tableName, }));
+            query.Join(Dot(db.schema.SchemaName, chunk.relationTableName), Dot(chunk.relationTableName, chunk.relationColumn), Dot(chunk.tableName, chunk.column))
+                .SelectRaw(Dot(chunk.relationTableName, "*"))
+                .Where(Dot(chunk.tableName, chunk.ordinalColumn), chunk.ordinal);
+
+            var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
+                        .Where("ordinal", chunk.ordinal).Select("patient_id");
+            var clinical = new Query("chunks")
+                .Join($"{schema_name}.clinical", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                .Select("patid", "eventdate", "consid", "staffid");
+            var referral = new Query("chunks")
+                .Join($"{schema_name}.referral", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                .Select("patid", "eventdate", "consid", "staffid");
+            var test = new Query("chunks")
+                .Join($"{schema_name}.test", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                .Select("patid", "eventdate", "consid", "staffid");
+            var immunisation = new Query("chunks")
+                .Join($"{schema_name}.immunisation", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                .Select("patid", "eventdate", "consid", "staffid");
+            var therapy = new Query("chunks")
+                .Join($"{schema_name}.therapy", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                .Select("patid", "eventdate", "consid", "staffid");
+            query.With("chunks", withChunk)
+                 .Join(clinical.UnionAll(referral).UnionAll(test).UnionAll(immunisation).UnionAll(therapy).As("u"),
+                 j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));
+            var q = new Query("_chunks").Where("id", 21);
+            var compiler = DB.Target.GetCompiler();
+
+            string sql = compiler.Compile(query).Sql;
+
+        }
 
         [TestMethod]
         public void TestMethod1()
@@ -55,7 +113,14 @@ namespace TestProject
             var arrays = new string[][] {
             new string[] { "job",Consts.TUPLE_MISS},
             new string[] { "job","doe"},
+            new string[] { "job",null},
+            new string[] { "","doe"},
             };
+            bool[] hasNE = new bool[arrays.Length];
+            for (var i = 0; i < arrays.Length; i++)
+            {
+                hasNE[i] = arrays[i].HasNullOrEmpty();
+            }
 
             var ss = arrays[0].LooselySameAs(arrays[1]);
             List<Tuple<string>> ts = new List<Tuple<string>>
@@ -141,6 +206,22 @@ namespace TestProject
             });
         }
 
+        [TestMethod]
+        public void TestKeyRef()
+        {
+            Tuple<string> t1 = Tuple.Create("joe1");
+            Tuple<string> t2 = Tuple.Create("joe2");
+
+            Dictionary<Tuple<string>, TestClass> dict = new Dictionary<Tuple<string>, TestClass>();
+            TestClass test = new TestClass { Description = "My God", Name = "I Work" };
+            dict.Add(t1, test);
+            dict.Add(t2, test);
+
+            dict[t1].Description = "May be";
+
+            var desc = dict[t2].Description;
+
+        }
         private void TimeLapse(Action act)
         {
             stopwatch.Start();
@@ -155,5 +236,15 @@ namespace TestProject
                 ts.Milliseconds);
             Console.WriteLine("RunTime " + elapsedTime);
         }
+        private string Dot(string schema, string table)
+        {
+            return string.Join(".", new string[] { schema, table });
+        }
+    }
+
+    internal class TestClass
+    {
+        public string Name { get; set; }
+        public string Description { get; set; }
     }
 }

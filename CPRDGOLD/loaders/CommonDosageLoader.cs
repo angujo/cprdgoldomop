@@ -15,17 +15,9 @@ namespace CPRDGOLD.loaders
         public CommonDosageLoader() : base("commondosages") { }
         public override void ChunkData(IEnumerable<CommonDosage> items = null)
         {
-            ParallelChunk(new List<Action<CommonDosage>>
-            {
-                sstd =>AddChunkByKeys(sstd,new string[]{null,sstd.dosageid}),        // DosageId
-            },items);
+            ParallelChunk(sstd => new string[] { sstd.dosageid }, items);
         }
 
-        public static CommonDosage ByDoseId(string cd_id)
-        {
-            //return GetMe().searchOne(cd => cd.dosageid == cd_id, $"dosageid{cd_id}".ToSnakeCase());
-            //  return GetMe().QuerySearchOne("dosageid = ?", new object[] { cd_id },cd => cd.dosageid == cd_id);
-            return ChunkValue(null, cd_id);
-        }
+        public static CommonDosage ByDoseId(string cd_id) => ChunkValue(cd_id);
     }
 }

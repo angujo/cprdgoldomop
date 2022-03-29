@@ -1,10 +1,17 @@
 {
   "version": 2,
-  "dgSpecHash": "UwafcrwWLSn9kddFYCLNVvQJH2FkFRCLTBIVljBonG1EwqdCLLebnkS3hiSiU7CXPTioQjZmh/F298Lt3R5pJw==",
+  "dgSpecHash": "voazCXmFQeFxkLG3x3fP0IklK+a7P5oUtKS98dy22IrovYFf1adV++BGVhr56mSw9kNpoYTtLEGoOjfgseVMEg==",
   "success": true,
   "projectFilePath": "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\bomondi\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512"
+    "C:\\Users\\bomondi\\.nuget\\packages\\dapper\\2.0.123\\dapper.2.0.123.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\microsoft.win32.systemevents\\6.0.0\\microsoft.win32.systemevents.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.configuration.configurationmanager\\6.0.0\\system.configuration.configurationmanager.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.drawing.common\\6.0.0\\system.drawing.common.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.security.accesscontrol\\6.0.0\\system.security.accesscontrol.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.security.cryptography.protecteddata\\6.0.0\\system.security.cryptography.protecteddata.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.security.permissions\\6.0.0\\system.security.permissions.6.0.0.nupkg.sha512",
+    "C:\\Users\\bomondi\\.nuget\\packages\\system.windows.extensions\\6.0.0\\system.windows.extensions.6.0.0.nupkg.sha512"
   ],
   "logs": []
 }

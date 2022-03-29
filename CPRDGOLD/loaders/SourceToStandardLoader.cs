@@ -15,26 +15,12 @@ namespace CPRDGOLD.loaders
 
         public override void ChunkData(IEnumerable<SourceToStandard> items = null)
         {
-            ParallelChunk(new List<Action<SourceToStandard>>
-            {
-                sstd =>AddChunkByKeys(sstd, new string[]{sstd.source_code, "tvocab",sstd.target_vocabulary_id}),  // SourceCode and Target Vocabulary     
-                sstd =>AddChunkByKeys(sstd, new string[]{sstd.source_code, "svocab",sstd.source_vocabulary_id}),           // SourceCode and Source Vocabulary
-            }, items);
+            ParallelChunk(item => new string[] { item.source_code, item.target_vocabulary_id, item.source_vocabulary_id }, items);
         }
 
         public static SourceToStandard BySourceCodeTargetVocab(string code, string vocab) => BySourceCodeTargetVocab(code, new string[] { vocab });
-        public static SourceToStandard BySourceCodeTargetVocab(string code, string[] vocab)
-        {
-            // return GetMe().searchOne(st => st.source_code == code && vocab.Contains(st.target_vocabulary_id), $"sctv{code}{string.Join(".", vocab)}");
-            // return GetMe().QuerySearchOne("source_code = ? AND target_vocabulary_id IN (?)", new object[] { code, vocab }, st => st.source_code == code && vocab.Contains(st.target_vocabulary_id));
-            return ChunkValue(vocab.Select(v => new string[] { code, "tvocab", v }));
-        }
+        public static SourceToStandard BySourceCodeTargetVocab(string code, string[] vocab) => ChunkValue(vocab.Select(v => new string[] { code, v, Consts.TUPLE_MISS }));
         public static SourceToStandard BySourceCodeSourceVocab(string code, string vocab) => BySourceCodeSourceVocab(code, new string[] { vocab });
-        public static SourceToStandard BySourceCodeSourceVocab(string code, string[] vocab)
-        {
-            //  return GetMe().searchOne(st => st.source_code == code && vocab.Contains(st.source_vocabulary_id), $"sctv{code}{string.Join(".", vocab)}");
-            //  return GetMe().QuerySearchOne("source_code = ? AND source_vocabulary_id IN (?)", new object[] { code, vocab }, st => st.source_code == code && vocab.Contains(st.source_vocabulary_id));
-            return ChunkValue(vocab.Select(v => new string[] { code, "svocab", v }));
-        }
+        public static SourceToStandard BySourceCodeSourceVocab(string code, string[] vocab) => ChunkValue(vocab.Select(v => new string[] { code, Consts.TUPLE_MISS, v }));
     }
 }

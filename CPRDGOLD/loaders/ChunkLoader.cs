@@ -1,4 +1,5 @@
 ﻿using DBMS;
+using DBMS.models;
 using DBMS.systems;
 using SqlKata;
 using SqlKata.Execution;
@@ -37,6 +38,37 @@ namespace CPRDGOLD.loaders
         {
             switch (table_name)
             {
+                case "consultation":
+                    // When Loading visit_detail, the following merge is irrelevant 
+                   /* DBMSSystem db = (DBMSSystem)chunk.dbms;
+                    var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
+                        .Where("ordinal", chunk.ordinal).Select("patient_id");
+                    var clinical = new Query("chunks")
+                        .Join($"{schema_name}.clinical", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                        .Select("patid", "eventdate", "consid", "staffid");
+                    var referral = new Query("chunks")
+                        .Join($"{schema_name}.referral", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                        .Select("patid", "eventdate", "consid", "staffid");
+                    var test = new Query("chunks")
+                        .Join($"{schema_name}.test", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                        .Select("patid", "eventdate", "consid", "staffid");
+                    var immunisation = new Query("chunks")
+                        .Join($"{schema_name}.immunisation", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                        .Select("patid", "eventdate", "consid", "staffid");
+                    var therapy = new Query("chunks")
+                        .Join($"{schema_name}.therapy", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                        .Select("patid", "eventdate", "consid", "staffid");
+                    query.With("chunks", withChunk)
+                        .Join(clinical.UnionAll(referral).UnionAll(test).UnionAll(immunisation).UnionAll(therapy).As("u"),
+                        j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));*/
+                    break;
+                case "patient":
+                    if ("ActivePatientLoader" == typeof(T).Name)
+                        query.WhereRaw("accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 AND (deathdate IS NULL OR deathdate >= crd)");
+                    else
+                        query.Join($"practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
+                            .SelectRaw("greatest(p.frd,r.uts) AS op_start_date, least(p.tod,r.lcd, p.crd) AS op_end_date, 32880 AS pt_concept_id");
+                    break;
                 case "clinical":
                     query.Join($"{schema_name}.medical", "medical.medcode", "clinical.medcode")
                         .Join($"{schema_name}.source_to_standard",
@@ -47,7 +79,7 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
-                        .SelectRaw("clinical.*, source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case "immunisation":
@@ -60,7 +92,7 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
-                        .SelectRaw("immunisation.*, source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case "referral":
@@ -73,7 +105,7 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
-                        .SelectRaw("referral.*, source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case "test":
@@ -86,8 +118,8 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
-                        .SelectRaw("test.*, source_to_standard.source_concept_id as st_source_concept_id," +
-                        " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code, medical.description as read_description");
+                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                        " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code, medical.desc as read_description");
                     break;
                 case "therapy":
                     query.Join($"{schema_name}.product", "product.prodcode", "therapy.prodcode")
@@ -100,7 +132,7 @@ namespace CPRDGOLD.loaders
                             j => j.On("source_to_source.source_code", "product.gemscriptcode")
                             .Where("source_to_source.source_vocabulary_id", "gemscript"))
                         .WhereRaw("therapy.eventdate between source_to_standard.source_valid_start_date and source_to_standard.source_valid_end_date")
-                        .SelectRaw("therapy.*, product.gemscriptcode AS prod_gemscriptcode, source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw("product.gemscriptcode AS prod_gemscriptcode, source_to_standard.source_concept_id as st_source_concept_id," +
                         " source_to_source.source_concept_id as ss_source_concept_id");
                     break;
             }
@@ -121,7 +153,12 @@ namespace CPRDGOLD.loaders
         {
             Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
             var m = (ChunkLoader<T, C>)(object)GetMe(chunk);
-            foreach (C c in m.data) looper(c);
+            var data = null == m.GetType().GetMethod("ChunkData") ? m.data : m.tupleChunk.Select(tc => tc.Value).ToList();
+            Log.Info($"Total Data Chunk to LoopAll [{data.Count}] [{typeof(T).Name}]");
+            foreach (C c in data)
+            {
+                looper(c);
+            }
             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 

@@ -14,15 +14,8 @@ namespace CPRDGOLD.loaders
         public DaySupplyModeLoader() : base("daysupply_modes") { }
         public override void ChunkData(IEnumerable<DaySupplyMode> items = null)
         {
-            ParallelChunk(new List<Action<DaySupplyMode>>
-            {
-                item =>AddChunkByKeys(item,new string[]{null,$"{item.prodcode}"}),       // ProdCode
-            },items);
+            ParallelChunk(item => new string[] { $"{item.prodcode}" }, items);
         }
-        public static DaySupplyMode ByProdcode(int code)
-        {
-            //return GetMe().searchOne(cd => cd.prodcode == code, $"prodcode{code}".ToSnakeCase());
-            return ChunkValue(null, $"{code}");
-        }
+        public static DaySupplyMode ByProdcode(int code) => ChunkValue($"{code}");
     }
 }

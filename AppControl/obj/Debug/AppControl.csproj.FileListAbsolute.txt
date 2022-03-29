@@ -1,0 +1,7 @@
+D:\VSProjects\OMOPBuilder\AppControl\bin\Debug\AppControl.dll.config
+D:\VSProjects\OMOPBuilder\AppControl\bin\Debug\AppControl.dll
+D:\VSProjects\OMOPBuilder\AppControl\bin\Debug\AppControl.pdb
+D:\VSProjects\OMOPBuilder\AppControl\obj\Debug\AppControl.csproj.AssemblyReference.cache
+D:\VSProjects\OMOPBuilder\AppControl\obj\Debug\AppControl.csproj.CoreCompileInputs.cache
+D:\VSProjects\OMOPBuilder\AppControl\obj\Debug\AppControl.dll
+D:\VSProjects\OMOPBuilder\AppControl\obj\Debug\AppControl.pdb
