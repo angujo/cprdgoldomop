@@ -9,12 +9,12 @@ using Util;
 
 namespace CPRDGOLD.loaders
 {
-    internal class PracticeLoader: FullLoader<PracticeLoader,Practice>
+    internal class PracticeLoader : FullLoader<PracticeLoader, Practice>
     {
         public PracticeLoader() : base("practice") { }
         public override void ChunkData(IEnumerable<Practice> items = null)
         {
-          //  ParallelChunk(null,items);
+            ParallelChunk(items);
         }
     }
 }

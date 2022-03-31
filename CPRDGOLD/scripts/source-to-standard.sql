@@ -1,5 +1,10 @@
 /** SourceToStandard */
-INSERT INTO {sc}.source_to_standard
+DROP INDEX IF EXISTS {ss}.idx_sstandard_source_code;
+DROP INDEX IF EXISTS {ss}.idx_sstandard_source_vocab_id;
+DROP INDEX IF EXISTS {ss}.idx_sstandard_target_inv_reason;
+DROP INDEX IF EXISTS {ss}.idx_sstandard_target_stconcept;
+
+INSERT INTO {ss}.source_to_standard
 (source_code, source_concept_id, source_code_description, source_vocabulary_id, source_domain_id, source_concept_class_id, source_valid_start_date, 
 source_valid_end_date, source_invalid_reason, target_concept_id, target_concept_name, target_vocabulary_id, target_domain_id, target_concept_class_id, 
 target_invalid_reason, target_standard_concept)
@@ -30,7 +35,7 @@ target_invalid_reason, target_standard_concept)
 );
 
 
-CREATE INDEX idx_sstandard_source_code ON {sc}.source_to_standard USING btree (source_code);
-CREATE INDEX idx_sstandard_source_vocab_id ON {sc}.source_to_standard USING btree (source_vocabulary_id);
-CREATE INDEX idx_sstandard_target_inv_reason ON {sc}.source_to_standard USING btree (target_invalid_reason);
-CREATE INDEX idx_sstandard_target_stconcept ON {sc}.source_to_standard USING btree (target_standard_concept);
+CREATE INDEX idx_sstandard_source_code ON {ss}.source_to_standard USING btree (source_code);
+CREATE INDEX idx_sstandard_source_vocab_id ON {ss}.source_to_standard USING btree (source_vocabulary_id);
+CREATE INDEX idx_sstandard_target_inv_reason ON {ss}.source_to_standard USING btree (target_invalid_reason);
+CREATE INDEX idx_sstandard_target_stconcept ON {ss}.source_to_standard USING btree (target_standard_concept);

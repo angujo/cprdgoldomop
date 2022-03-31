@@ -15,77 +15,139 @@ namespace CPRDGOLD
 {
     public static class CPRDGOLDMap
     {
+        private static AppDBMS appDBMS;
+
         public static void Run()
         {
-            AppDBMS.Set();
-            ///  InitializeLoaders();
-            int[] ids = { 0 };
-            foreach (int id in ids)
-            {
-                //  ChunkBased(new Chunk() { ordinal = id });
-            }
-        }
+            appDBMS = new AppDBMS();
+            if (null == appDBMS.workload) return;
 
-        private static void Tester()
-        {
+            Chunk.WorkLoadId = (long)appDBMS.workload.Id;
+            appDBMS.StartQueue();
+
+            Setups();
+
+            InitializeLoaders();
+
+            SingleRuns();
+
+            var ordinals = appDBMS.ChunkOrdinals().ToArray();
+
+            //   Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = 2 }, chunkOrdinal =>
+            //  {
+            Chunk chunk = new Chunk { ordinal = ordinals.First() };
+            chunk.Start();
+
+            //  StemTableUsers(chunk);
+            ChunkBased(chunk);
+
+            chunk.Stop();
+            chunk.Clean();
+            // });
+
+            appDBMS.StopQueue();
         }
 
         private static void ChunkBased(Chunk chunk)
         {
             Log.Info("Starting for Chunk entries...");
-            Person.InsertSets(chunk);
-            ObservationPeriod.InsertSets(chunk);
-            VisitDetail.InsertSets(chunk);
-            Death.InsertSets(chunk);
+            chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk));
+            // chunk.Implement(LoadType.OBSERVATIONPERIOD, () => ObservationPeriod.InsertSets(chunk));
+            // chunk.Implement(LoadType.VISITDETAIL, () => VisitDetail.InsertSets(chunk));
+            //  chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk));
             Log.Info("Finished Chunk entries!");
         }
 
         //Are all dependant on the StemTable virtual existance
         private static void StemTableUsers(Chunk chunk)
         {
+            //It is cheaper to check than to load stem tables and not use
+            if (!chunk.Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE)) return;
             StemTableMerger.Prepare(chunk);
 
-            ConditionOccurrence.InsertSets(chunk);
-            DeviceExposure.InsertSets(chunk);
-            Specimen.InsertSets(chunk);
-            Observation.InsertSets(chunk);
-            DrugExposure.InsertSets(chunk);
-            Measurement.InsertSets(chunk);
-            ProcedureOccurrence.InsertSets(chunk);
+            chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk));
+            chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk));
+            chunk.Implement(LoadType.SPECIMEN, () => Specimen.InsertSets(chunk));
+            chunk.Implement(LoadType.OBSERVATION, () => Observation.InsertSets(chunk));
+            chunk.Implement(LoadType.DRUGEXPOSURE, () => DrugExposure.InsertSets(chunk));
+            chunk.Implement(LoadType.MEASUREMENT, () => Measurement.InsertSets(chunk));
+            chunk.Implement(LoadType.PROCEDUREEXPOSURE, () => ProcedureOccurrence.InsertSets(chunk));
         }
 
         //Only runs once in the life of the app
         private static void SingleRuns()
         {
-            Provider.InsertSets(null);
-            CareSite.InsertSets(null);
-            Location.InsertSets(null);
-            CdmSource.InsertSets(null);
-            CohortDefinition.InsertSets(null);
+            List<Action> actions = new List<Action>();
+            actions.Add(() => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets(null)));
+            actions.Add(() => Chunk.SUImplement(LoadType.CARESITE, () => CareSite.InsertSets(null)));
+            actions.Add(() => Chunk.SUImplement(LoadType.LOCATION, () => Location.InsertSets(null)));
+            actions.Add(() => Chunk.SUImplement(LoadType.CDMSOURCE, () => CdmSource.InsertSets(null)));
+            actions.Add(() => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets(null)));
+
+            Parallel.ForEach(actions, action => action());
         }
 
         private static void Setups()
         {
-            var decodes = new DaySupplyDecodeSetup();
-            var modes = new DaySupplyModeSetup();
-            var source = new SourceToSourceSetup();
-            var standard = new SourceToStandardSetup();
-            var tables = new TablesSetup();
+            Chunk.SUImplement(LoadType.CREATETABLES, () =>
+            {
+                var tables = new TablesSetup();
+                tables.Create();
+                tables.Run();
+            });
 
-            decodes.Create();
-            decodes.Run();
+            Chunk.SUImplement(LoadType.CHUNKSETUP, () =>
+            {
+                var chunks = new ChunkSetup();
+                chunks.Create();
+                chunks.ChunkLoad(appDBMS.workload.ChunkSize);
+            });
 
-            modes.Create();
-            modes.Run();
+            Chunk.SUImplement(LoadType.CHUNKLOAD, () =>
+            {
+                var chunks = new ChunkSetup();
+                chunks.ChunkOrdinate((long)appDBMS.workload.Id);
+            });
 
-            source.Create();
-            source.Run();
+            //From below we can run parallel, they are independent of each other
+            List<Action> actions = new List<Action>();
 
-            standard.Create();
-            standard.Run();
+            actions.Add(() =>
+            Chunk.SUImplement(LoadType.DAYSUPPLYDECODESETUP, () =>
+            {
+                var decodes = new DaySupplyDecodeSetup();
+                decodes.Create();
+                decodes.Run();
+            }));
 
-            tables.Create();
-            tables.Run();
+
+            actions.Add(() =>
+            Chunk.SUImplement(LoadType.DAYSUPPLYMODESETUP, () =>
+            {
+                var modes = new DaySupplyModeSetup();
+                modes.Create();
+                modes.Run();
+            }));
+
+
+            actions.Add(() =>
+            Chunk.SUImplement(LoadType.SOURCETOSOURCE, () =>
+            {
+                var source = new SourceToSourceSetup();
+                source.Create();
+                source.Run();
+            }));
+
+
+            actions.Add(() =>
+            Chunk.SUImplement(LoadType.SOURCETOSTANDARD, () =>
+            {
+                var standard = new SourceToStandardSetup();
+                standard.Create();
+                standard.Run();
+            }));
+
+            Parallel.ForEach(actions, action => action());
         }
 
         private static void InitializeLoaders()
@@ -93,7 +155,7 @@ namespace CPRDGOLD
             Log.Info("Starting Full Initializers...");
             List<Action> actions = new List<Action>{
                ()=>CommonDosageLoader.Initialize(),
-                ()=>ConceptLoader.Initialize(),
+              //  ()=>ConceptLoader.Initialize(),
                 ()=>DaySupplyDecodeLoader.Initialize(),
                 ()=>DaySupplyModeLoader.Initialize(),
                 ()=>EntityLoader.Initialize(),

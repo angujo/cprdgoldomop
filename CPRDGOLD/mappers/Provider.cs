@@ -28,9 +28,9 @@ namespace CPRDGOLD.mappers
         {
             StaffLoader.LoopAll(staff =>
             {
-                Lookup lu = LookupLoader.ByCodeType(staff.role == null ? null : staff.role.ToString(), 76);
+                Lookup lu = LookupLoader.ByCodeType(staff.role == 0 ? null : staff.role.ToString(), 76);
+                SourceToConceptMap sconcept = SourceToConceptMapLoader.BySourceCode(staff.role == 0 ? null : staff.role.ToString());
                 if (null == lu) return;
-                SourceToConceptMap sconcept = SourceToConceptMapLoader.BySourceCode(staff.role == null ? null : staff.role.ToString());
                 if (null == sconcept) return;
                 Add(new Provider
                 {

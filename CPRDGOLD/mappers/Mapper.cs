@@ -15,10 +15,21 @@ namespace CPRDGOLD.mappers
     internal abstract class Mapper<T> : ADataLoader<T> where T : new()
     {
         protected Chunk chunk;
+        protected string Delimiter = "\t";
 
         public static void InsertSets(Chunk chunk)
         {
-            var me = (Mapper<T>)(object)GetMe();
+            var _me = new T();
+            var me = (Mapper<T>)(object)_me;
+            if (null != chunk)
+            {
+                me.chunk = chunk;
+                me.chunk.AddCleaner(() => me.Clean());
+            }
+            Log.Info($"Starting Data Load [{typeof(T).Name}]");
+            me.LoadData();
+            Log.Info($"Finished Data Load [{typeof(T).Name}]");
+
             var table_name = typeof(T).Name.ToSnakeCase();
             Log.Info($"Data Load started for {typeof(T).Name}. ");
             if (null != me.GetType().GetMethod("QueryInsert"))
@@ -26,21 +37,15 @@ namespace CPRDGOLD.mappers
                 me.GetType().GetMethod("QueryInsert").Invoke(me, null);
                 goto closeInsert;
             }
-            me.chunk = chunk;
             var data = me.data;
             Log.Info($"Data Loaded. Preparing inserts for {table_name}. ");
             Log.Info($"Total Data [{table_name}] {data.Count} ");
             List<object[]> values = new List<object[]>();
-            PropertyInfo[] props = typeof(T).GetProperties();
-            var db = DB.Target;
+
             void insert()
             {
-                db.RunFactory(table_name, (query, sch) =>
-                {
-                    query.Insert(
-                        props.Select(p => p.Name).ToArray(),
-                        values.ToArray());
-                });
+                Log.Info($"Progress inserts for {table_name}. #{typeof(T).Name}");
+                DB.Target.Insert<T>(table_name, values.ToArray());
 
                 values.Clear();
             }
@@ -48,12 +53,7 @@ namespace CPRDGOLD.mappers
 
             foreach (var set in data)
             {
-                var row = new object[props.Length];
-                for (int i = 0; i < props.Length; i++)
-                {
-                    row[i] = props[i].GetValue(set, null);
-                }
-                values.Add(row);
+                values.Add(DB.Target.ColumnNames<T>(set));
                 if (DB.VALUE_ROWS == values.Count) insert();
             }
 

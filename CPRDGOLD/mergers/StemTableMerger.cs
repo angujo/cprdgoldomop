@@ -14,7 +14,6 @@ namespace CPRDGOLD.mergers
 {
     internal class StemTableMerger : ChunkMerger<StemTableMerger, StemTable>
     {
-        Stopwatch stopWatch = new Stopwatch();
         protected StemTableMerger(Chunk chunk) : base(chunk) { }
         public StemTableMerger() : base() { }
         protected override void LoadData() { }

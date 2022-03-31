@@ -4,7 +4,7 @@ using Util;
 
 namespace DBMS.models
 {
-    internal class WorkQueue : CRUDModel
+    public class WorkQueue : CRUDModel<WorkQueue>
     {
         public long WorkLoadId { get; set; }
         public string Name { get; set; }

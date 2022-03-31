@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util;
 
 namespace DBMS
 {
@@ -21,6 +22,7 @@ namespace DBMS
         private string Content()
         {
             if (!File.Exists(_filePath)) return null;
+            Log.Info($"Execution content from file {_filePath}");
             return File.ReadAllText(_filePath).RemovePlaceholders(PH_Others);
         }
 
@@ -28,6 +30,7 @@ namespace DBMS
         {
             string sql = Content();
             if (null == sql) return null;
+            // Log.Info($"content For Execution: {sql}");
             return DB.Target.RunQuery(sql);
         }
 

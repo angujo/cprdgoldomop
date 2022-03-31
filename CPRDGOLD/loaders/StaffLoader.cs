@@ -14,7 +14,7 @@ namespace CPRDGOLD.loaders
         public StaffLoader() : base("staff") { }
         public override void ChunkData(IEnumerable<Staff> items = null)
         {
-          //  ParallelChunk(null, items);
+            ParallelChunk(items);
         }
     }
 }

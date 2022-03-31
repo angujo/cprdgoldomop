@@ -15,7 +15,7 @@ namespace DBMS
     {
         static ConcurrentDictionary<string, DBMSSystem> holder = new ConcurrentDictionary<string, DBMSSystem>();
 
-        public static int VALUE_ROWS { get { return 200; } }// Modify later for custom
+        public static int VALUE_ROWS { get { return 500; } }// Modify later for custom
         public static DBMSSystem Target { get { return GetSchema(SchemaType.TARGET); } }
         public static DBMSSystem Source { get { return GetSchema(SchemaType.SOURCE); } }
         public static DBMSSystem Vocabulary { get { return GetSchema(SchemaType.VOCABULARY); } }

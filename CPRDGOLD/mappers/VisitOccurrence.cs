@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -23,6 +24,8 @@ namespace CPRDGOLD.mappers
         public int visit_concept_id { get; set; }
         public DateTime visit_end_date { get; set; }
         public DateTime? visit_end_datetime { get; set; }
+
+        [Saveable(false)]
         public long visit_occurrence_id { get; set; }
         public int? visit_source_concept_id { get; set; }
         public string visit_source_value { get; set; }

@@ -54,6 +54,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="NestDictionary.cs" />
+    <Compile Include="SaveableAttribute.cs" />
     <Compile Include="Script.cs" />
     <Compile Include="Setting.cs" />
     <Compile Include="UtilClass.cs" />

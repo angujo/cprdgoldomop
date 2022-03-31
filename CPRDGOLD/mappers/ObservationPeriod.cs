@@ -17,7 +17,7 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            PatientLoader.LoopAll(patient =>
+            PatientLoader.LoopAll(chunk,patient =>
             {
                 Add(new ObservationPeriod
                 {

@@ -4,7 +4,7 @@ using System;
 namespace DBMS.models
 {
     [Table("workload")]
-    public class WorkLoad : CRUDModel
+    public class WorkLoad : CRUDModel<WorkLoad>
     {
         public string Name { get; set; }
         public DateTime ReleaseDate { get; set; }

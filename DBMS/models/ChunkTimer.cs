@@ -3,7 +3,7 @@ using Util;
 
 namespace DBMS.models
 {
-    internal class ChunkTimer : CRUDModel
+    internal class ChunkTimer : CRUDModel<ChunkTimer>
     {
         public int ChunkId { get; set; }
         public DateTime? StartTime { get; set; }

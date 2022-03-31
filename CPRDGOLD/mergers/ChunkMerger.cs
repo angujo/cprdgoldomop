@@ -14,7 +14,7 @@ namespace CPRDGOLD.mergers
     {
         protected Chunk chunk;
         protected ConcurrentBag<C> data = new ConcurrentBag<C>();
-        protected static T me;
+        protected static ConcurrentDictionary<int, T> _instances = new ConcurrentDictionary<int, T>();
         protected ChunkMerger(Chunk chunk) { this.chunk = chunk; chunk.AddCleaner(Clear); }
 
         public ChunkMerger() { }
@@ -23,17 +23,17 @@ namespace CPRDGOLD.mergers
 
         public static ConcurrentBag<C> GetData(Chunk chunk) => ((ChunkMerger<T, C>)(object)GetMe(chunk)).data;
 
-        public void Clear() { data = new ConcurrentBag<C>(); me = default; }
+        public void Clear() { data = new ConcurrentBag<C>(); }
 
         protected static T GetMe(Chunk chunk)
         {
-            if (me != null) return me;
-            me = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });
-            ((ChunkMerger<T, C>)(object)me).chunk = chunk;
+            if (_instances[chunk.ordinal] != null) return _instances[chunk.ordinal];
+            _instances[chunk.ordinal] = new T();
+            ((ChunkMerger<T, C>)(object)_instances[chunk.ordinal]).chunk = chunk;
             Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
-            ((ChunkMerger<T, C>)(object)me).LoadData();
+            ((ChunkMerger<T, C>)(object)_instances[chunk.ordinal]).LoadData();
             Log.Info($"Finished Data Load #ChunkMerger [{typeof(T).Name}]");
-            return me;
+            return _instances[chunk.ordinal];
         }
 
         public static void LoopAll(Chunk chunk, Action<C> looper)

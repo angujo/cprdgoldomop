@@ -1,5 +1,9 @@
 /** SourceToSource */
-INSERT INTO {sc}.source_to_source
+
+DROP INDEX IF EXISTS {ss}.idx_source_to_source_code;
+DROP INDEX IF EXISTS {ss}.idx_source_to_source_vocab_id;
+
+INSERT INTO {ss}.source_to_source
 (source_code, source_concept_id, source_code_description, source_vocabulary_id, source_domain_id, source_concept_class_id, 
 source_valid_start_date, source_valid_end_date, source_invalid_reason, target_concept_id, target_concept_name, 
 target_vocabulary_id, target_domain_id, target_concept_class_id, target_invalid_reason, target_standard_concept)
@@ -27,5 +31,5 @@ target_vocabulary_id, target_domain_id, target_concept_class_id, target_invalid_
 );
 
 
-CREATE INDEX idx_source_vocab_map_source_code ON {sc}.source_to_source USING btree (source_code);
-CREATE INDEX idx_source_vocab_map_source_vocab_id ON {sc}.source_to_source USING btree (source_vocabulary_id);
+CREATE INDEX idx_source_to_source_code ON {ss}.source_to_source USING btree (source_code);
+CREATE INDEX idx_source_to_source_vocab_id ON {ss}.source_to_source USING btree (source_vocabulary_id);

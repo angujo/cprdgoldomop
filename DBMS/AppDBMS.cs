@@ -5,21 +5,43 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Util;
 
 namespace DBMS
 {
     public class AppDBMS
     {
-        private WorkLoad workload;
+        public WorkLoad workload { get; private set; }
+        public WorkQueue workqueue { get; private set; }
 
-        protected AppDBMS()
+        public AppDBMS()
         {
             workload = DB.Internal.Load<WorkLoad>(new { cdmprocessed = false });
+            if (workload.Exists()) Chunk.WorkLoadId = (long)workload.Id;
         }
 
-        public static void Set()
+        public void StartQueue()
         {
-            var m = new AppDBMS();
+            workqueue = new WorkQueue
+            {
+                WorkLoadId = (long)workload.Id,
+                Name = Guid.NewGuid().ToString(),
+                StartTime = DateTime.Now,
+                Status = Util.Status.RUNNING,
+                
+            };
+            workqueue.Save();
+        }
+
+        public void StopQueue(Exception ex = null)
+        {
+            workqueue.Status = ex == null ? Util.Status.FINISHED : Util.Status.STOPPED;
+            workqueue.Save();
+        }
+
+        public IEnumerable<int> ChunkOrdinals()
+        {
+            foreach (var ct in DB.Internal.GetAll<ChunkTimer>("WHERE chunkid > 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)", new { WLId = workload.Id, Stat = Status.FINISHED })) yield return ct.ChunkId;
         }
 
     }

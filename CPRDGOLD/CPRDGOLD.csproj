@@ -214,6 +214,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Content Include="scripts\app-setup.sql" />
+    <Content Include="scripts\chunk-setup.sql" />
     <Content Include="scripts\condition-era.sql" />
     <Content Include="scripts\create-daysupply-modes.sql" />
     <Content Include="scripts\create-daysupply-decodes.sql" />

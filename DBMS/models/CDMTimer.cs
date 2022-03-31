@@ -1,10 +1,13 @@
 ﻿using Dapper;
 using System;
+using Util;
 
 namespace DBMS.models
 {
-    public class CDMTimer : CRUDModel
+    [Table("cdmtimer")]
+    public class CDMTimer : CRUDModel<CDMTimer>
     {
+        [Column("name")]
         public string Name { get; set; }
         public int ChunkId { get; set; }
         public string Query { get; set; }
@@ -16,10 +19,15 @@ namespace DBMS.models
 
         [Editable(false)]
         public Util.LoadType LoadType { get; set; }
+        [Editable(false)]
+        public bool IsPending { get { return Status != Status.FINISHED; } }
+        [Editable(false)]
+        public bool IsDone { get { return Status == Status.FINISHED; } }
 
         public void Start()
         {
             StartTime = DateTime.Now;
+            Status = Status.RUNNING;
             Save();
         }
 
@@ -29,6 +37,29 @@ namespace DBMS.models
             Save();
         }
 
-        public bool IsDone() => Status == Util.Status.FINISHED;
+        public void Implemented()
+        {
+            Status = Status.FINISHED;
+            Stop();
+        }
+
+        public void Implement(Action impl)
+        {
+            if (IsDone) return;
+            Start();
+            try
+            {
+                impl();
+                Implemented();
+            }
+            catch (Exception ex)
+            {
+                Status = Status.STOPPED;
+                ErrorLog = ex.Message + "\n" + ex.StackTrace;
+                Log.Error(ex);
+                Stop();
+                throw;
+            }
+        }
     }
 }

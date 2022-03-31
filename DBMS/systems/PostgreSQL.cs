@@ -8,6 +8,8 @@ using System.Threading.Tasks;
 using SqlKata.Compilers;
 using System.Data;
 using Dapper;
+using System.IO;
+using Util;
 
 namespace DBMS.systems
 {
@@ -47,7 +49,56 @@ namespace DBMS.systems
             return new PostgresCompiler();
         }
 
-        public void BinaryCopy(DBMSSystem toSchema, string fromQuery, string toQuery)
+        public override void CopyText<T>(Action<TextWriter> addData)
+        {
+            CopyText(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
+        }
+
+        public override void CopyText(string table_name, string[] cols, Action<TextWriter> addData)
+        {
+            string sql = string.Format("COPY {0}({1}) FROM STDIN", table_name, string.Join(", ", cols));
+            using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
+            {
+                conn.Open();
+                using (var writer = conn.BeginTextImport(sql))
+                {
+                    addData(writer);
+                    writer.Flush();
+                }
+            }
+        }
+
+        public override void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData)
+        {
+            CopyBinary(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
+        }
+
+        public override void CopyBinaryRows(string table_name, string[] cols, Action<Action, Action<object>> addData)
+        {
+            CopyBinary(table_name, cols, writer =>
+            {
+                addData(
+                    () => writer.StartRow(), //For starting new row
+                    value => writer.PgBinaryWrite(value) //For adding data to row
+                    );
+            });
+        }
+
+        public override void CopyBinary(string table_name, string[] cols, Action<NpgsqlBinaryImporter> addData)
+        {
+            string sql = string.Format("COPY {0}({1}) FROM STDIN (FORMAT BINARY)", table_name, string.Join(", ", cols));
+            using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
+            {
+                conn.Open();
+                using (NpgsqlBinaryImporter writer = conn.BeginBinaryImport(sql))
+                {
+                    addData(writer);
+                    writer.Complete();
+                }
+            }
+        }
+
+        public override void BinaryCopy(DBMSSystem toSchema, string fromQuery, string toQuery)
         {
             using (NpgsqlConnection f_conn = (NpgsqlConnection)GetConnection())
             {

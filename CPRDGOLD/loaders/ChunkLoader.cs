@@ -4,6 +4,7 @@ using DBMS.systems;
 using SqlKata;
 using SqlKata.Execution;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -14,23 +15,15 @@ namespace CPRDGOLD.loaders
 {
     public abstract class ChunkLoader<T, C> : Loader<T, C> where T : new()
     {
-        protected Chunk chunk;
+        private static ConcurrentDictionary<int, T> _instances = new ConcurrentDictionary<int, T>();
+        protected Chunk chunk { get; set; }
         protected string chunkColumn = "patid";
         public ChunkLoader(string table_name, Chunk chunk) : base(DB.Source, table_name) { this.chunk = chunk; chunk.AddCleaner(() => this.Clean()); }
         public ChunkLoader(string table_name) : base(DB.Source, table_name) { }
 
         public Chunk GetChunk()
         {
-            return chunk ?? (chunk = new Chunk
-            {
-                column = "patient_id",
-                ordinal = 0,
-                relationColumn = chunkColumn,
-                tableName = "_chunk",
-                dbms = DB.Target,
-                ordinalColumn = "ordinal",
-                relationTableName = table_name,
-            });
+            return chunk;
         }
 
 
@@ -40,34 +33,34 @@ namespace CPRDGOLD.loaders
             {
                 case "consultation":
                     // When Loading visit_detail, the following merge is irrelevant 
-                   /* DBMSSystem db = (DBMSSystem)chunk.dbms;
-                    var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
-                        .Where("ordinal", chunk.ordinal).Select("patient_id");
-                    var clinical = new Query("chunks")
-                        .Join($"{schema_name}.clinical", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
-                        .Select("patid", "eventdate", "consid", "staffid");
-                    var referral = new Query("chunks")
-                        .Join($"{schema_name}.referral", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
-                        .Select("patid", "eventdate", "consid", "staffid");
-                    var test = new Query("chunks")
-                        .Join($"{schema_name}.test", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
-                        .Select("patid", "eventdate", "consid", "staffid");
-                    var immunisation = new Query("chunks")
-                        .Join($"{schema_name}.immunisation", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
-                        .Select("patid", "eventdate", "consid", "staffid");
-                    var therapy = new Query("chunks")
-                        .Join($"{schema_name}.therapy", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
-                        .Select("patid", "eventdate", "consid", "staffid");
-                    query.With("chunks", withChunk)
-                        .Join(clinical.UnionAll(referral).UnionAll(test).UnionAll(immunisation).UnionAll(therapy).As("u"),
-                        j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));*/
+                    /* DBMSSystem db = (DBMSSystem)chunk.dbms;
+                     var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
+                         .Where("ordinal", chunk.ordinal).Select("patient_id");
+                     var clinical = new Query("chunks")
+                         .Join($"{schema_name}.clinical", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                         .Select("patid", "eventdate", "consid", "staffid");
+                     var referral = new Query("chunks")
+                         .Join($"{schema_name}.referral", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                         .Select("patid", "eventdate", "consid", "staffid");
+                     var test = new Query("chunks")
+                         .Join($"{schema_name}.test", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                         .Select("patid", "eventdate", "consid", "staffid");
+                     var immunisation = new Query("chunks")
+                         .Join($"{schema_name}.immunisation", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                         .Select("patid", "eventdate", "consid", "staffid");
+                     var therapy = new Query("chunks")
+                         .Join($"{schema_name}.therapy", j => j.On("patient_id", "patid").WhereNotNull("eventdate"))
+                         .Select("patid", "eventdate", "consid", "staffid");
+                     query.With("chunks", withChunk)
+                         .Join(clinical.UnionAll(referral).UnionAll(test).UnionAll(immunisation).UnionAll(therapy).As("u"),
+                         j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));*/
                     break;
                 case "patient":
                     if ("ActivePatientLoader" == typeof(T).Name)
                         query.WhereRaw("accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 AND (deathdate IS NULL OR deathdate >= crd)");
                     else
-                        query.Join($"practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
-                            .SelectRaw("greatest(p.frd,r.uts) AS op_start_date, least(p.tod,r.lcd, p.crd) AS op_end_date, 32880 AS pt_concept_id");
+                        query.Join($"{schema_name}.practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
+                            .SelectRaw("greatest(patient.frd,practice.uts) AS op_start_date, least(patient.tod,practice.lcd, patient.crd) AS op_end_date, 32880 AS pt_concept_id");
                     break;
                 case "clinical":
                     query.Join($"{schema_name}.medical", "medical.medcode", "clinical.medcode")
@@ -140,37 +133,32 @@ namespace CPRDGOLD.loaders
 
         protected static T GetMe(Chunk chunk)
         {
-            if (me != null) return me;
-            me = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
-            ((ChunkLoader<T, C>)(object)me).chunk = chunk;
+            if (_instances.ContainsKey(chunk.ordinal)) return _instances[chunk.ordinal];
+            _instances[chunk.ordinal] = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
+            ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).chunk = chunk;
             Log.Info($"Starting Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
-            ((ChunkLoader<T, C>)(object)me).LoadData();
+            ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).LoadData();
             Log.Info($"Finished Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
-            return me;
+            return _instances[chunk.ordinal];
         }
 
         public static void LoopAll(Chunk chunk, Action<C> looper)
         {
             Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
             var m = (ChunkLoader<T, C>)(object)GetMe(chunk);
-            var data = null == m.GetType().GetMethod("ChunkData") ? m.data : m.tupleChunk.Select(tc => tc.Value).ToList();
-            Log.Info($"Total Data Chunk to LoopAll [{data.Count}] [{typeof(T).Name}]");
-            foreach (C c in data)
+            Log.Info($"Total Data Chunk to LoopAll [{m.dataset.Count}] [{typeof(T).Name}]");
+            foreach (C c in m.dataset)
             {
                 looper(c);
             }
             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 
-        protected static void LoopFilter(Chunk chunk, Predicate<C> fFunc, Action<C> filtrate, string name = null)
-        {
-            var ls = ((ChunkLoader<T, C>)(object)GetMe(chunk)).searchAll(fFunc, name);
-            foreach (C c in ls) filtrate(c);
-        }
+        public static List<C> GetData(Chunk chunk) => ((ChunkLoader<T, C>)(object)GetMe(chunk)).dataset;
 
-        protected static new T GetMe() { throw new NotImplementedException(); }
-        protected static new T LoopAll(Action<C> looper) { throw new NotImplementedException(); }
-        protected static new T LoopFilter(Predicate<C> fFunc, Action<C> filtrate, string name = null) { throw new NotImplementedException(); }
+        public static new List<C> GetData() => throw new NotImplementedException();
+        protected static new T GetMe() => throw new NotImplementedException();
+        public static new T LoopAll(Action<C> looper) { throw new NotImplementedException(); }
 
         #region ChunkData
 
