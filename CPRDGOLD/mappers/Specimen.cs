@@ -1,6 +1,8 @@
 ﻿using CPRDGOLD.mergers;
+using DBMS;
 using System;
 using System.Linq;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -24,20 +26,24 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            StemTableMerger.LoopAll(chunk, stem =>
+            string[] cols = new string[] { "specimen_id", "specimen_source_value", "person_id", "specimen_date", "specimen_concept_id", "specimen_datetime",
+                "specimen_type_concept_id", "unit_concept_id", "unit_source_value",  };
+            DB.Target.CopyBinaryRows<Specimen>(cols, (row, write) =>
             {
-                if (!new string[] { "Specimen" }.Contains(stem.domain_id)) return;
-                Add(new Specimen
+                StemTableMerger.LoopAll(chunk, stem =>
                 {
-                    specimen_id = stem.id,
-                    specimen_source_value = stem.source_value,
-                    person_id = stem.person_id,
-                    specimen_date = stem.start_date,
-                    specimen_concept_id = (int)stem.concept_id,
-                    specimen_datetime = stem.start_datetime,
-                    specimen_type_concept_id = (int)stem.type_concept_id,
-                    unit_concept_id = int.TryParse(stem.unit_concept_id, out int uc) ? uc : default,
-                    unit_source_value = stem.unit_source_value,
+                    if (null == stem.domain_id || !stem.domain_id.HasString("specimen")) return;
+                    row();
+
+                    write(stem.id);
+                    write(stem.source_value);
+                    write(stem.person_id);
+                    write(stem.start_date);
+                    write(stem.concept_id);
+                    write(stem.start_datetime);
+                    write(stem.type_concept_id);
+                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                    write(stem.unit_source_value);
                 });
             });
         }

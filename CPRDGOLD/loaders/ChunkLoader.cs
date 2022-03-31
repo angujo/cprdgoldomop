@@ -22,6 +22,7 @@ namespace CPRDGOLD.loaders
             return chunk;
         }
 
+        public static void Init(Chunk chunk) => GetMe(chunk);
 
         public void CustomizeQuery(Query query, string schema_name)
         {
@@ -155,6 +156,7 @@ namespace CPRDGOLD.loaders
         public static new List<C> GetData() => throw new NotImplementedException();
         protected static new T GetMe() => throw new NotImplementedException();
         public static new T LoopAll(Action<C> looper) { throw new NotImplementedException(); }
+        public static new void Init() => throw new NotImplementedException();
 
         #region ChunkData
 

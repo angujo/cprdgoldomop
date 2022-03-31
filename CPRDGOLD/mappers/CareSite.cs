@@ -1,4 +1,5 @@
 ﻿using CPRDGOLD.loaders;
+using DBMS;
 
 namespace CPRDGOLD.mappers
 {
@@ -13,14 +14,17 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            PracticeLoader.LoopAll(pract =>
+            PracticeLoader.Init();
+            string[] cols = new string[] { "care_site_id", "place_of_service_concept_id", "location_id", "care_site_source_value", };
+            DB.Target.CopyBinaryRows<CareSite>(cols, (row, write) =>
             {
-                Add(new CareSite
+                PracticeLoader.LoopAll(pract =>
                 {
-                    care_site_id = pract.pracid,
-                    place_of_service_concept_id = pract.region,
-                    location_id = 8977,
-                    care_site_source_value = pract.pracid.ToString(),
+                    row();
+                    write(pract.pracid);
+                    write(pract.region);
+                    write((long)8977);
+                    write(pract.pracid.ToString());
                 });
             });
         }

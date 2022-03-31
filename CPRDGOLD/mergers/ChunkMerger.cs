@@ -16,15 +16,17 @@ namespace CPRDGOLD.mergers
 
         public ChunkMerger() { }
 
-        protected void Add(C c) { data.Add(c); }
+        protected void Add(C c) => data.Add(c);
+
+        public static void Init(Chunk chunk) => GetMe(chunk);
 
         public static ConcurrentBag<C> GetData(Chunk chunk) => ((ChunkMerger<T, C>)(object)GetMe(chunk)).data;
 
-        public void Clear() { data = new ConcurrentBag<C>(); }
+        public void Clear() => data = new ConcurrentBag<C>();
 
         protected static T GetMe(Chunk chunk)
         {
-            if (_instances[chunk.ordinal] != null) return _instances[chunk.ordinal];
+            if (_instances.ContainsKey(chunk.ordinal)) return _instances[chunk.ordinal];
             _instances[chunk.ordinal] = new T();
             ((ChunkMerger<T, C>)(object)_instances[chunk.ordinal]).chunk = chunk;
             Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
@@ -38,17 +40,7 @@ namespace CPRDGOLD.mergers
             Log.Info($"Starting LoopAll #{typeof(T).Name}");
             var m = (ChunkMerger<T, C>)(object)GetMe(chunk);
             Log.Info($"Total Data To LoopAll [{m.data.Count}] #{typeof(T).Name}");
-            var count = 0;
-            Parallel.ForEach(m.data, cd =>
-             {
-                 looper(cd);
-                 var br = Interlocked.Increment(ref count);
-                 if (0 == br % Consts.LOOP_LOG_COUNT)
-                 {
-                     Log.Info($"ChunkMerger Count {br} of {m.data.Count} #{typeof(T).Name}");
-                 }
-             });
-            // foreach (C c in m.data) looper(c);
+            foreach (C c in m.data) looper(c);
             Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 

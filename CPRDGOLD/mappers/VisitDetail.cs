@@ -1,4 +1,5 @@
 ﻿using CPRDGOLD.loaders;
+using DBMS;
 using System;
 
 namespace CPRDGOLD.mappers
@@ -27,25 +28,29 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            ConsultationLoader.LoopAll(chunk, consult =>
+            ConsultationLoader.Init(chunk);
+
+            string[] cols = new string[] { "person_id", "visit_detail_concept_id", "visit_detail_start_date", "visit_detail_start_datetime",
+                "visit_detail_end_date", "visit_detail_end_datetime", "visit_detail_type_concept_id", "provider_id", "care_site_id", "visit_detail_source_value",
+                "visit_detail_source_concept_id", };
+            DB.Target.CopyBinaryRows<VisitDetail>( cols, (row, write) =>
             {
-                Add(new VisitDetail
-                {
-                    person_id = consult.patid,
-                    visit_detail_concept_id = 9202,
-                    visit_detail_start_date = consult.eventdate,
-                    visit_detail_start_datetime = consult.eventdate,
-                    visit_detail_end_date = consult.eventdate,
-                    visit_detail_end_datetime = consult.eventdate,
-                    visit_detail_type_concept_id = 32827,
-                    provider_id = consult.staffid,
-                    care_site_id = consult.care_site_id,
-                    visit_detail_source_value = consult.constype.ToString(),
-                    visit_detail_source_concept_id = 0
-                });
+                ConsultationLoader.LoopAll(chunk, consult =>
+            {
+                row();
+                write(consult.patid);
+                write(9202);
+                write(consult.eventdate);
+                write(consult.eventdate);
+                write(consult.eventdate);
+                write(consult.eventdate);
+                write(32827);
+                write(consult.staffid);
+                write(consult.care_site_id);
+                write(consult.constype.ToString());
+                write(0);
+            });
             });
         }
-
-        public void Dependency() => VisitOccurrence.InsertSets(chunk);
     }
 }

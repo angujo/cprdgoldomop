@@ -27,6 +27,8 @@ namespace CPRDGOLD.loaders
 
         public void Add(C obj) { data.Add(obj); }
 
+        public static void Init() => GetMe();
+
         public static List<C> GetData() => ((Loader<T, C>)(object)GetMe()).dataset;
 
         protected void LoadData()
@@ -55,8 +57,7 @@ namespace CPRDGOLD.loaders
             if (null != this.GetType().GetMethod("GetChunk"))
             {
                 Chunk ch = (Chunk)this.GetType().GetMethod("GetChunk").Invoke(this, null);
-                ch.relationTableName = table_name;
-                db.RunFactory(ch, actn);
+                db.RunChunk(ch, table_name, actn);
             }
             else
             {

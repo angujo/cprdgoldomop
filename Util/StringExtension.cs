@@ -10,6 +10,8 @@ namespace Util
     {
         private const UInt64 gbBytes = 1073741824;
 
+        public static bool HasString(this string value, string find, bool ignoreCase = true) => 0 <= value.IndexOf(find, ignoreCase ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+
         public static bool IsNumber(this object value)
         {
             return value is sbyte

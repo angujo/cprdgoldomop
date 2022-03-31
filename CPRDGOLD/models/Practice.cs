@@ -6,8 +6,8 @@ namespace CPRDGOLD.models
     {
         public long id { get; set; }
         public DateTime lcd { get; set; }
-        public int pracid { get; set; }
-        public short region { get; set; }
+        public long pracid { get; set; }
+        public long region { get; set; }
         public DateTime uts { get; set; }
     }
 }

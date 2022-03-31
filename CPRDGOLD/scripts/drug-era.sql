@@ -22,7 +22,7 @@ WITH cteDrugTarget AS (
 		            UNION ALL
 		
 		            -- add the end dates with NULL as the row number, padding the end dates by 30 to allow a grace period for overlapping ranges.
-		            SELECT PERSON_ID, INGREDIENT_CONCEPT_ID, DRUG_EXPOSURE_END_DATE +30, 1 AS EVENT_TYPE, NULL
+		            SELECT PERSON_ID, INGREDIENT_CONCEPT_ID, DRUG_EXPOSURE_END_DATE::date +30, 1 AS EVENT_TYPE, NULL
 		            FROM cteDrugTarget
 		            ) RAWDATA
 		        ) E1

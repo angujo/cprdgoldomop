@@ -16,12 +16,20 @@ namespace DBMS.models
         public void Start()
         {
             StartTime = DateTime.Now;
+            Status = Status.RUNNING;
             Save();
         }
 
         public void Stop()
         {
             EndTime = DateTime.Now;
+            Save();
+        }
+
+        public void Implemented()
+        {
+            EndTime = DateTime.Now;
+            Status = Status.FINISHED;
             Save();
         }
     }

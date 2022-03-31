@@ -13,7 +13,7 @@ namespace CPRDGOLD.mappers
         public int death_type_concept_id { get; set; }
         public long person_id { get; set; }
 
-        public void QueryInsert() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
+        public void QueryInsert() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<Death>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
 
         protected override void LoadData()
         {

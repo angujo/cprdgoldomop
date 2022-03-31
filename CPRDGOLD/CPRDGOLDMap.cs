@@ -32,17 +32,17 @@ namespace CPRDGOLD
 
             var ordinals = appDBMS.ChunkOrdinals().ToArray();
 
-            //   Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = 2 }, chunkOrdinal =>
-            //  {
-            Chunk chunk = new Chunk { ordinal = ordinals.First() };
-            chunk.Start();
+            Parallel.ForEach(ordinals.Take(5), new ParallelOptions { MaxDegreeOfParallelism = 2 }, chunkOrdinal =>
+           {
+               Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
+               chunk.Start();
 
-            //  StemTableUsers(chunk);
-            ChunkBased(chunk);
+               StemTableUsers(chunk);
+               ChunkBased(chunk);
 
-            chunk.Stop();
-            chunk.Clean();
-            // });
+               chunk.Implemented();
+               chunk.Clean();
+           });
 
             appDBMS.StopQueue();
         }
@@ -51,9 +51,10 @@ namespace CPRDGOLD
         {
             Log.Info("Starting for Chunk entries...");
             chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk));
-            // chunk.Implement(LoadType.OBSERVATIONPERIOD, () => ObservationPeriod.InsertSets(chunk));
-            // chunk.Implement(LoadType.VISITDETAIL, () => VisitDetail.InsertSets(chunk));
-            //  chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk));
+            chunk.Implement(LoadType.OBSERVATIONPERIOD, () => ObservationPeriod.InsertSets(chunk));
+            chunk.Implement(LoadType.VISITDETAIL, () => VisitDetail.InsertSets(chunk));
+            chunk.Implement(LoadType.VISITOCCURRENCE, () => VisitOccurrence.InsertSets(chunk));
+            chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk));
             Log.Info("Finished Chunk entries!");
         }
 
@@ -63,6 +64,12 @@ namespace CPRDGOLD
             //It is cheaper to check than to load stem tables and not use
             if (!chunk.Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE)) return;
             StemTableMerger.Prepare(chunk);
+
+            Log.Info("StemTable Loaded!");
+            Log.Info("StemTable Start Stats:");
+            var stemA = StemTableMerger.GetData(chunk).OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id).ToDictionary(kv => kv.Key, kv => kv.Count());
+            foreach (var s in stemA) Log.Info($"{s.Key} = {s.Value}");
+            Log.Info("StemTable END Stats:");
 
             chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk));
             chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk));
@@ -154,7 +161,7 @@ namespace CPRDGOLD
             Log.Info("Starting Full Initializers...");
             List<Action> actions = new List<Action>{
                ()=>CommonDosageLoader.Initialize(),
-              //  ()=>ConceptLoader.Initialize(),
+                ()=>ConceptLoader.Initialize(),
                 ()=>DaySupplyDecodeLoader.Initialize(),
                 ()=>DaySupplyModeLoader.Initialize(),
                 ()=>EntityLoader.Initialize(),

@@ -1,6 +1,8 @@
 ﻿using CPRDGOLD.mergers;
+using DBMS;
 using System;
 using System.Linq;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -27,26 +29,30 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            StemTableMerger.LoopAll(chunk, stem =>
+            string[] cols = new string[] { "provider_id",  "unit_source_value", "observation_id", "observation_source_value", 
+                "person_id", "observation_source_concept_id", "observation_date", "observation_concept_id", "observation_datetime", "observation_type_concept_id",
+                "value_as_number", "value_as_concept_id", "unit_concept_id", "value_as_string", };
+            DB.Target.CopyBinaryRows<Observation>(cols, (row, write) =>
             {
-                if (!new string[] { "Measurement" }.Contains(stem.domain_id)) return;
-                Add(new Observation
+                StemTableMerger.LoopAll(chunk, stem =>
                 {
-                    provider_id = stem.provider_id,
-                    visit_occurrence_id = stem.visit_occurrence_id,
-                    unit_source_value = stem.unit_source_value,
-                    observation_id = stem.id,
-                    observation_source_value = stem.source_value,
-                    person_id = stem.person_id,
-                    observation_source_concept_id = (int)stem.source_concept_id,
-                    observation_date = stem.start_date,
-                    observation_concept_id = (int)stem.concept_id,
-                    observation_datetime = stem.start_datetime,
-                    observation_type_concept_id = (int)stem.type_concept_id,
-                    value_as_number = Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default,
-                    value_as_concept_id = int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default,
-                    unit_concept_id = int.TryParse(stem.unit_concept_id, out int uc) ? uc : default,
-                    value_as_string = stem.value_as_string,
+                    if (null == stem.domain_id || !stem.domain_id.HasString("observation")) return;
+                    row();
+
+                    write(stem.provider_id);
+                    write(stem.unit_source_value);
+                    write(stem.id);
+                    write(stem.source_value);
+                    write(stem.person_id);
+                    write(stem.source_concept_id);
+                    write(stem.start_date);
+                    write(stem.concept_id);
+                    write(stem.start_datetime);
+                    write(stem.type_concept_id);
+                    write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
+                    write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
+                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                    write(stem.value_as_string);
                 });
             });
         }

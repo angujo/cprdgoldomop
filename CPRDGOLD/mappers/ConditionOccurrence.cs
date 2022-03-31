@@ -1,4 +1,5 @@
 ﻿using CPRDGOLD.mergers;
+using DBMS;
 using System;
 using System.Linq;
 using Util;
@@ -26,29 +27,31 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            StemTableMerger.LoopAll(chunk, stem =>
+            string[] cols = new string[] { "provider_id",  "condition_occurrence_id",
+                "condition_source_value", "person_id", "condition_concept_id", "condition_start_date", "condition_source_concept_id", "condition_start_datetime",
+                "condition_end_date", "condition_end_datetime", "condition_type_concept_id", };
+            DB.Target.CopyBinaryRows<ConditionOccurrence>(cols, (row, write) =>
             {
-                if (!new string[] { "Condition", "Condition Status" }.Contains(stem.domain_id)) return;
-                Add(new ConditionOccurrence
+                StemTableMerger.LoopAll(chunk, stem =>
                 {
-                    provider_id = stem.provider_id,
-                    visit_occurrence_id = stem.visit_occurrence_id,
-                    condition_status_concept_id = null,
-                    condition_occurrence_id = stem.id,
-                    condition_source_value = stem.source_value,
-                    person_id = stem.person_id,
-                    condition_concept_id = (int)stem.concept_id,
-                    condition_start_date = stem.start_date,
-                    condition_source_concept_id = stem.source_concept_id,
-                    condition_start_datetime = stem.start_datetime,
-                    condition_end_date = string.IsNullOrEmpty(stem.end_date) ? default : DateTime.Parse(stem.end_date),
-                    condition_end_datetime = string.IsNullOrEmpty(stem.end_date) ? default : DateTime.Parse(stem.end_date),
-                    condition_type_concept_id = (int)stem.type_concept_id,
-                    stop_reason = null
+                    if (string.IsNullOrEmpty(stem.domain_id) || !stem.domain_id.ToString().HasString("condition")) return;
+                    row();
+
+                    write(stem.provider_id);
+                    write(stem.id);
+                    write(stem.source_value);
+                    write(stem.person_id);
+                    write(stem.concept_id);
+                    write(stem.start_date);
+                    write(stem.source_concept_id);
+                    write(stem.start_datetime);
+                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
+                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
+                    write(stem.type_concept_id);
                 });
             });
         }
 
-        public void Dependency() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
+        // public void Dependency() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
     }
 }

@@ -16,7 +16,7 @@ namespace CPRDGOLD.models
         public long id { get; set; }
         public int? Internal { get; set; }
         public short marital { get; set; }
-        public short mob { get; set; }
+        public int mob { get; set; }
         public long patid { get; set; }
         public long care_site_id { get { return patid.ToString().Length > 5 && long.TryParse(patid.ToString().Substring(patid.ToString().Length - 5), out long csid) ? csid : default; } }
         public int? pracid { get; set; }

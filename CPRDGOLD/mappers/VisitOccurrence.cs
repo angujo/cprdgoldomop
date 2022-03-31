@@ -1,4 +1,6 @@
-﻿using System;
+﻿using CPRDGOLD.loaders;
+using DBMS;
+using System;
 using System.Linq;
 using Util;
 
@@ -32,24 +34,29 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            var details = VisitDetail.GetData().GroupBy(dt => new { dt.person_id, dt.visit_detail_start_date }).Select(ds => ds.First());
-            foreach (var item in details)
+            ConsultationLoader.Init(chunk);
+
+            string[] cols = new string[] { "person_id", "visit_concept_id", "visit_start_date", "visit_start_datetime",
+                "visit_end_date", "visit_end_datetime", "visit_type_concept_id", "provider_id", "care_site_id", "visit_source_value",
+                "visit_source_concept_id", };
+            DB.Target.CopyBinaryRows<VisitOccurrence>( cols, (row, write) =>
             {
-                Add(new VisitOccurrence
+                ConsultationLoader.LoopAll(chunk, consult =>
                 {
-                    person_id = item.person_id,
-                    visit_concept_id = 9202,
-                    visit_start_date = item.visit_detail_start_date,
-                    visit_start_datetime = item.visit_detail_start_datetime,
-                    visit_end_date = item.visit_detail_end_date,
-                    visit_end_datetime = item.visit_detail_end_datetime,
-                    visit_type_concept_id = 32827,
-                    provider_id = item.provider_id,
-                    care_site_id = item.care_site_id,
-                    visit_source_value = item.visit_detail_source_value,
-                    visit_source_concept_id = 0
+                    row();
+                    write(consult.patid);
+                    write(9202);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(32827);
+                    write(consult.staffid);
+                    write(consult.care_site_id);
+                    write(consult.constype.ToString());
+                    write(0);
                 });
-            }
+            });
         }
     }
 }

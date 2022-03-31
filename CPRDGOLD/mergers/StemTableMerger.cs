@@ -16,6 +16,7 @@ namespace CPRDGOLD.mergers
 
         public static void Prepare(Chunk chunk)
         {
+            Init(chunk);
             Log.Info($"Starting StemTable Creator");
             List<Action> actions = new List<Action> {
                 ()=>GetMe(chunk).Additional(),

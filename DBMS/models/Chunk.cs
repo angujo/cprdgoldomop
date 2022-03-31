@@ -14,10 +14,9 @@ namespace DBMS.models
         public string column = "patient_id";
         public string ordinalColumn = "ordinal";
         public string relationColumn = "patid";
-        public string relationTableName;
+        public string relationTableName { get; set; }
         private ChunkTimer timer;
         public dynamic dbms { get; set; }
-
 
         public string[] LoadedNames { get { return Loads.Keys.Select(k => k.GetStringValue()).ToArray(); } }
 
@@ -45,6 +44,11 @@ namespace DBMS.models
         public void Stop()
         {
             if (ordinal >= 0) GetTimer().Stop();
+        }
+
+        public void Implemented()
+        {
+            if (ordinal >= 0) GetTimer().Implemented();
         }
 
         private void SetupLoads()
@@ -88,8 +92,8 @@ namespace DBMS.models
 
         public bool Implementable(params LoadType[] ltypes)
         {
-            foreach (var ltype in ltypes) if (GetLoad(ltype).IsPending) return false;
-            return true;
+            foreach (var ltype in ltypes) if (GetLoad(ltype).IsPending) return true;
+            return false;
         }
 
         public static CDMTimer SULoad(LoadType ltype) => ForSetup().GetLoad(ltype);

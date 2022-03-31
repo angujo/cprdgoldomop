@@ -40,6 +40,7 @@ namespace DBMS.systems
         public abstract void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData);
         public abstract void CopyBinary(string table_name, string[] cols, Action<NpgsqlBinaryImporter> addData);
         public abstract void CopyBinaryRows(string table_name, string[] cols, Action<Action, Action<object>> addData);
+        public abstract void CopyBinaryRows<T>(string[] cols, Action<Action, Action<object>> addData);
 
 
         public abstract Compiler GetCompiler();
@@ -59,14 +60,14 @@ namespace DBMS.systems
             }
         }
 
-        public void RunFactory(Chunk chunk, Action<Query, string> action)
+        public void RunChunk(Chunk chunk, string tbl_name, Action<Query, string> action)
         {
             using (var conn = GetConnection())
             {
                 conn.Open();
                 var query = new QueryFactory(conn, GetCompiler()).Query(string.Join(".", new string[] { DB.Source.schema.SchemaName, chunk.tableName, }));
-                query.Join(Dot(schema.SchemaName, chunk.relationTableName), Dot(chunk.relationTableName, chunk.relationColumn), Dot(chunk.tableName, chunk.column))
-                    .SelectRaw(Dot(chunk.relationTableName, "*"))
+                query.Join(Dot(schema.SchemaName, tbl_name), Dot(tbl_name, chunk.relationColumn), Dot(chunk.tableName, chunk.column))
+                    .SelectRaw(Dot(tbl_name, "*"))
                     .Where(Dot(chunk.tableName, chunk.ordinalColumn), chunk.ordinal);
                 action(query, schema.SchemaName);
             }
@@ -122,10 +123,7 @@ namespace DBMS.systems
             }
         }
 
-        public long Insert<T>(T obj)
-        {
-            return Insert(typeof(T).Name, ColumnValues<T>(obj).Where(cv => null != cv.Value));
-        }
+        public long Insert<T>(T obj) => Insert(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
 
         public long Insert(string table_name, IEnumerable<KeyValuePair<string, object>> values)
         {
@@ -133,6 +131,17 @@ namespace DBMS.systems
             {
                 conn.Open();
                 return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToLower())).InsertGetId<long>(values);
+            }
+        }
+
+        public long InsertPlain<T>(T obj) => InsertPlain(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
+
+        public long InsertPlain(string table_name, IEnumerable<KeyValuePair<string, object>> values)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToLower())).Insert(values);
             }
         }
 

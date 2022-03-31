@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBMS;
+using System;
 
 namespace CPRDGOLD.mappers
 {
@@ -17,7 +18,7 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            Add(new CdmSource
+            DB.Target.InsertPlain(new CdmSource
             {
                 cdm_source_name = "Synthea synthetic health database",
                 cdm_source_abbreviation = "Synthea",

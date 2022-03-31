@@ -19,12 +19,14 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            LoopRegions(practice =>
+            string[] cols = new string[] { "location_id", "location_source_value" };
+            DB.Target.CopyBinaryRows<Location>(cols, (row, write) =>
             {
-                Add(new Location
+                LoopRegions(practice =>
                 {
-                    location_id = practice.region,
-                    location_source_value = Enum.IsDefined(typeof(LocationType), (int)practice.region) ? ((LocationType)(int)practice.region).GetStringValue() : "Missing",
+                    row();
+                    write(practice.region);
+                    write(Enum.IsDefined(typeof(LocationType), (int)practice.region) ? ((LocationType)(int)practice.region).GetStringValue() : "Missing");
                 });
             });
         }

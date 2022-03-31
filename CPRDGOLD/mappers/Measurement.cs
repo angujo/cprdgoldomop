@@ -1,6 +1,8 @@
 ﻿using CPRDGOLD.mergers;
+using DBMS;
 using System;
 using System.Linq;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -29,29 +31,34 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            StemTableMerger.LoopAll(chunk, stem =>
+            string[] cols = new string[] { "provider_id",  "unit_source_value", "value_source_value", "measurement_id",
+                "measurement_source_value", "person_id", "measurement_source_concept_id", "measurement_date", "measurement_concept_id",
+                "measurement_datetime", "measurement_type_concept_id", "operator_concept_id", "value_as_number", "value_as_concept_id",
+                "unit_concept_id", "range_high", "range_low", };
+            DB.Target.CopyBinaryRows<Measurement>(cols, (row, write) =>
             {
-                if (!new string[] { "Measurement" }.Contains(stem.domain_id)) return;
-                Add(new Measurement
+                StemTableMerger.LoopAll(chunk, stem =>
                 {
-                    provider_id = stem.provider_id,
-                    visit_occurrence_id = stem.visit_occurrence_id,
-                    unit_source_value = stem.unit_source_value,
-                    value_source_value = stem.value_source_value,
-                    measurement_id = stem.id,
-                    measurement_source_value = stem.source_value,
-                    person_id = stem.person_id,
-                    measurement_source_concept_id = (int)stem.source_concept_id,
-                    measurement_date = stem.start_date,
-                    measurement_concept_id = (int)stem.concept_id,
-                    measurement_datetime = stem.start_datetime,
-                    measurement_type_concept_id = (int)stem.type_concept_id,
-                    operator_concept_id = int.TryParse(stem.operator_concept_id, out int cid) ? cid : default,
-                    value_as_number = int.TryParse(stem.value_as_number, out int vn) ? vn : default,
-                    value_as_concept_id = int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default,
-                    unit_concept_id = int.TryParse(stem.unit_concept_id, out int uc) ? uc : default,
-                    range_high = int.TryParse(stem.range_high, out int rh) ? rh : default,
-                    range_low = int.TryParse(stem.range_low, out int rl) ? rl : default,
+                    if (null == stem.domain_id || !stem.domain_id.HasString("measurement")) return;
+                    row();
+
+                    write(stem.provider_id);
+                    write(stem.unit_source_value);
+                    write(stem.value_source_value);
+                    write(stem.id);
+                    write(stem.source_value);
+                    write(stem.person_id);
+                    write(stem.source_concept_id);
+                    write(stem.start_date);
+                    write(stem.concept_id);
+                    write(stem.start_datetime);
+                    write(stem.type_concept_id);
+                    write(int.TryParse(stem.operator_concept_id, out int cid) ? cid : default);
+                    write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
+                    write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
+                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                    write(Decimal.TryParse(stem.range_high, out Decimal rh) ? rh : default);
+                    write(Decimal.TryParse(stem.range_low, out Decimal rl) ? rl : default);
                 });
             });
         }

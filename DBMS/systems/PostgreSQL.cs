@@ -58,7 +58,7 @@ namespace DBMS.systems
 
         public override void CopyText(string table_name, string[] cols, Action<TextWriter> addData)
         {
-            string sql = string.Format("COPY {0}({1}) FROM STDIN", table_name, string.Join(", ", cols));
+            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN", schema.SchemaName, table_name, string.Join(", ", cols));
             using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
             {
                 conn.Open();
@@ -70,10 +70,8 @@ namespace DBMS.systems
             }
         }
 
-        public override void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData)
-        {
-            CopyBinary(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
-        }
+        public override void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData) => CopyBinary(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
+        public override void CopyBinaryRows<T>(string[] cols, Action<Action, Action<object>> addData) => CopyBinaryRows(typeof(T).Name.ToSnakeCase(), cols, addData);
 
         public override void CopyBinaryRows(string table_name, string[] cols, Action<Action, Action<object>> addData)
         {
@@ -88,7 +86,8 @@ namespace DBMS.systems
 
         public override void CopyBinary(string table_name, string[] cols, Action<NpgsqlBinaryImporter> addData)
         {
-            string sql = string.Format("COPY {0}({1}) FROM STDIN (FORMAT BINARY)", table_name, string.Join(", ", cols));
+            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN (FORMAT BINARY)", schema.SchemaName, table_name, string.Join(", ", cols));
+            Log.Info($"Start SQL: {sql}");
             using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
             {
                 conn.Open();
@@ -96,6 +95,7 @@ namespace DBMS.systems
                 {
                     addData(writer);
                     writer.Complete();
+                    Log.Info($"Complete SQL: {sql}");
                 }
             }
         }
@@ -154,6 +154,11 @@ namespace DBMS.systems
     {
         public static void PgBinaryWrite(this NpgsqlBinaryImporter writer, object value)
         {
+            if (value == null)
+            {
+                writer.WriteNull();
+                return;
+            }
             var t = PostgreSQL.PgTypeCoherse(value);
             if (null == t) writer.Write(value);
             else writer.Write(value, (NpgsqlDbType)t);

@@ -21,7 +21,7 @@ namespace TestProject
         [TestMethod]
         public void TestSimple()
         {
-            var conn = Setting.AppConnection;
+            var m = "Observation".HasString("obse");
 
         }
 

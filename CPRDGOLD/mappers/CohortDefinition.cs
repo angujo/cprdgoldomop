@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DBMS;
+using System;
 
 namespace CPRDGOLD.mappers
 {
@@ -14,7 +15,7 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            Add(new CohortDefinition
+            DB.Target.InsertPlain(new CohortDefinition
             {
                 cohort_definition_id = 224,
                 cohort_definition_name = "HES Patients",

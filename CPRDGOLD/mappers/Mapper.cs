@@ -20,16 +20,15 @@ namespace CPRDGOLD.mappers
                 me.chunk.AddCleaner(() => me.Clean());
             }
             Log.Info($"Starting Data Load [{typeof(T).Name}]");
-            me.LoadData();
+            if (null != me.GetType().GetMethod("QueryInsert")) me.GetType().GetMethod("QueryInsert").Invoke(me, null);
+            else me.LoadData();
             Log.Info($"Finished Data Load [{typeof(T).Name}]");
 
             var table_name = typeof(T).Name.ToSnakeCase();
             Log.Info($"Data Load started for {typeof(T).Name}. ");
-            if (null != me.GetType().GetMethod("QueryInsert"))
-            {
-                me.GetType().GetMethod("QueryInsert").Invoke(me, null);
-                goto closeInsert;
-            }
+            //We are doing binary import
+            //Ignore below unless otherwise
+            /*
             var data = me.data;
             Log.Info($"Data Loaded. Preparing inserts for {table_name}. ");
             Log.Info($"Total Data [{table_name}] {data.Count} ");
@@ -51,7 +50,7 @@ namespace CPRDGOLD.mappers
             }
 
             if (0 < values.Count) insert();
-            closeInsert:
+            */
             Log.Info($"Finished inserts for {table_name}. #{typeof(T).Name}");
             if (null != me.GetType().GetMethod("Dependency")) me.GetType().GetMethod("Dependency").Invoke(me, null);
         }

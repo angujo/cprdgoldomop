@@ -1,5 +1,7 @@
 ﻿using CPRDGOLD.loaders;
+using DBMS;
 using System;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -13,15 +15,19 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            PatientLoader.LoopAll(chunk,patient =>
+            PatientLoader.Init(chunk);
+
+            string[] cols = { "person_id", "observation_period_end_date", "observation_period_start_date", "period_type_concept_id" };
+            DB.Target.CopyBinaryRows<ObservationPeriod>(cols, (row, write) =>
             {
-                Add(new ObservationPeriod
-                {
-                    person_id = patient.patid,
-                    observation_period_end_date = (DateTime)(null == patient.op_end_date ? null : patient.op_end_date),
-                    observation_period_start_date = (DateTime)(null == patient.op_start_date ? null : patient.op_start_date),
-                    period_type_concept_id = patient.pt_concept_id,
-                });
+                PatientLoader.LoopAll(chunk, patient =>
+                 {
+                     row();
+                     write(patient.patid);
+                     write((DateTime)(null == patient.op_end_date ? null : patient.op_end_date));
+                     write((DateTime)(null == patient.op_start_date ? null : patient.op_start_date));
+                     write(patient.pt_concept_id);
+                 });
             });
         }
     }

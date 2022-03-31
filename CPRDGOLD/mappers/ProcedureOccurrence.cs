@@ -1,6 +1,8 @@
 ﻿using CPRDGOLD.mergers;
+using DBMS;
 using System;
 using System.Linq;
+using Util;
 
 namespace CPRDGOLD.mappers
 {
@@ -23,21 +25,25 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
-            StemTableMerger.LoopAll(chunk, stem =>
+            string[] cols = new string[] { "provider_id",  "procedure_occurrence_id", "procedure_source_value",
+                "person_id", "procedure_source_concept_id", "procedure_date", "procedure_concept_id", "procedure_datetime",
+                "procedure_type_concept_id", };
+            DB.Target.CopyBinaryRows<ProcedureOccurrence>(cols, (row, write) =>
             {
-                if (!new string[] { "Procedure" }.Contains(stem.domain_id)) return;
-                Add(new ProcedureOccurrence
+                StemTableMerger.LoopAll(chunk, stem =>
                 {
-                    provider_id = stem.provider_id,
-                    visit_occurrence_id = stem.visit_occurrence_id,
-                    procedure_occurrence_id = stem.id,
-                    procedure_source_value = stem.source_value,
-                    person_id = stem.person_id,
-                    procedure_source_concept_id = (int)stem.source_concept_id,
-                    procedure_date = stem.start_date,
-                    procedure_concept_id = (int)stem.concept_id,
-                    procedure_datetime = stem.start_datetime,
-                    procedure_type_concept_id = (int)stem.type_concept_id,
+                    if (null == stem.domain_id || !stem.domain_id.HasString("procedure")) return;
+                    row();
+
+                    write(stem.provider_id);
+                    write(stem.id);
+                    write(stem.source_value);
+                    write(stem.person_id);
+                    write(stem.source_concept_id);
+                    write(stem.start_date);
+                    write(stem.concept_id);
+                    write(stem.start_datetime);
+                    write(stem.type_concept_id);
                 });
             });
         }

@@ -29,28 +29,28 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData()
         {
+            ActivePatientLoader.Init(chunk);
             string[] cols = new string[] { "person_id", "gender_concept_id", "year_of_birth", "month_of_birth", "race_concept_id", "ethnicity_concept_id", "care_site_id",
                 "person_source_value", "gender_source_value", "gender_source_concept_id", "race_source_concept_id", "ethnicity_source_concept_id" };
-            DB.Target.CopyBinaryRows("person", cols, (row, write) =>
-            {
-
-                ActivePatientLoader.LoopAll(chunk, patient =>
-                      {
-                          row();
-                          write(patient.patid);
-                          write(1 == patient.gender ? 8507 : 8532);
-                          write(patient.yob.ToString().Length < 4 ? patient.yob + 1800 : patient.yob);
-                          write(patient.mob);
-                          write(0);
-                          write(0);
-                          write(patient.care_site_id);
-                          write(patient.patid.ToString());
-                          write(patient.gender.ToString());
-                          write(0);
-                          write(0);
-                          write(0);
-                      });
-            });
+            DB.Target.CopyBinaryRows<Person>(cols, (row, write) =>
+           {
+               ActivePatientLoader.LoopAll(chunk, patient =>
+                     {
+                         row();
+                         write(patient.patid);
+                         write(1 == patient.gender ? 8507 : 8532);
+                         write(patient.yob.ToString().Length < 4 ? patient.yob + 1800 : patient.yob);
+                         write(patient.mob);
+                         write(0);
+                         write(0);
+                         write(patient.care_site_id);
+                         write(patient.patid.ToString());
+                         write(patient.gender.ToString());
+                         write(0);
+                         write(0);
+                         write(0);
+                     });
+           });
         }
     }
 }
