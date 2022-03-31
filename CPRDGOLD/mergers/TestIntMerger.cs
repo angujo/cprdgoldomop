@@ -1,11 +1,6 @@
 ﻿using CPRDGOLD.loaders;
 using CPRDGOLD.models;
 using DBMS.models;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace CPRDGOLD.mergers
 {

@@ -1,13 +1,6 @@
 ﻿using DBMS;
 using DBMS.models;
-using Npgsql;
-using SqlKata.Execution;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 using Util;
 
 namespace CPRDGOLD.mappers

@@ -1,12 +1,6 @@
 ﻿using CPRDGOLD.loaders;
 using DBMS;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using Util;
 
 namespace CPRDGOLD.mappers
 {

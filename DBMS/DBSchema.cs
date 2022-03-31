@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DBMS
+﻿namespace DBMS
 {
     public class DBSchema
     {
