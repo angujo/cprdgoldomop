@@ -35,7 +35,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData()
         {
             string[] cols = new string[] { "sig", "provider_id", "drug_exposure_id", "drug_source_value",
-                "person_id", "drug_source_concept_id", "drug_exposure_start_date", "drug_concept_id", "drug_exposure_start_datetime", 
+                "person_id", "drug_source_concept_id", "drug_exposure_start_date", "drug_concept_id", "drug_exposure_start_datetime",
                 "drug_exposure_end_date", "drug_exposure_end_datetime", "drug_type_concept_id",};
             DB.Target.CopyBinaryRows<DrugExposure>(cols, (row, write) =>
             {
@@ -60,6 +60,6 @@ namespace CPRDGOLD.mappers
             });
         }
 
-        public void Dependency() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<DrugEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
+        public void Dependency() => chunk.Implement(LoadType.DRUGERA, () => FileQuery.ExecuteFile(Script.ForCPRDGOLD<DrugEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
     }
 }

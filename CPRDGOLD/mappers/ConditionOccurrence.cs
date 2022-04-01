@@ -52,6 +52,6 @@ namespace CPRDGOLD.mappers
             });
         }
 
-        // public void Dependency() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
+        public void Dependency() => chunk.Implement(LoadType.CONDITIONERA, () => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
     }
 }

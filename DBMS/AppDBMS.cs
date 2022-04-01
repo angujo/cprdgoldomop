@@ -37,7 +37,7 @@ namespace DBMS
 
         public IEnumerable<int> ChunkOrdinals()
         {
-            foreach (var ct in DB.Internal.GetAll<ChunkTimer>("WHERE chunkid > 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)", new { WLId = workload.Id, Stat = Status.FINISHED })) yield return ct.ChunkId;
+            foreach (var ct in DB.Internal.GetAll<Chunktimer>("WHERE chunkid > 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)", new { WLId = workload.Id, Stat = Status.FINISHED })) yield return ct.ChunkId;
         }
 
     }

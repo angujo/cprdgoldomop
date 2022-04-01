@@ -4,8 +4,8 @@ using Util;
 
 namespace DBMS.models
 {
-    [Table("cdmtimer")]
-    public class CDMTimer : CRUDModel<CDMTimer>
+    [Table("cdm_timer")]
+    public class Cdmtimer : CRUDModel<Cdmtimer>
     {
         [Column("name")]
         public string Name { get; set; }

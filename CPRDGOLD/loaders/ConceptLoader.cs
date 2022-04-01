@@ -7,7 +7,7 @@ namespace CPRDGOLD.loaders
 {
     internal class ConceptLoader : FullLoader<ConceptLoader, Concept>
     {
-        public ConceptLoader() : base(DB.Target, "concept") { }
+        public ConceptLoader() : base(DB.Vocabulary, "concept") { }
         public override void ChunkData(IEnumerable<Concept> items = null)
         {
             ParallelChunk(item => new string[][] {

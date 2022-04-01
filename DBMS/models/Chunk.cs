@@ -15,12 +15,12 @@ namespace DBMS.models
         public string ordinalColumn = "ordinal";
         public string relationColumn = "patid";
         public string relationTableName { get; set; }
-        private ChunkTimer timer;
+        private Chunktimer timer;
         public dynamic dbms { get; set; }
 
         public string[] LoadedNames { get { return Loads.Keys.Select(k => k.GetStringValue()).ToArray(); } }
 
-        protected Dictionary<Util.LoadType, CDMTimer> Loads = new Dictionary<Util.LoadType, CDMTimer>();
+        protected Dictionary<Util.LoadType, Cdmtimer> Loads = new Dictionary<Util.LoadType, Cdmtimer>();
 
         protected List<Action> cleaners = new List<Action>();
 
@@ -30,9 +30,9 @@ namespace DBMS.models
 
         public void Clean() { foreach (Action action in cleaners) { action(); } cleaners.Clear(); }
 
-        public CDMTimer GetLoad(LoadType ltype) => Loads.ContainsKey(ltype) ? Loads[ltype] : null;
+        public Cdmtimer GetLoad(LoadType ltype) => Loads.ContainsKey(ltype) ? Loads[ltype] : null;
 
-        private ChunkTimer GetTimer() => timer ?? (timer = DB.Internal.Load<ChunkTimer>(new { chunkid = ordinal, workloadid = WorkLoadId }));
+        private Chunktimer GetTimer() => timer ?? (timer = DB.Internal.Load<Chunktimer>(new { chunkid = ordinal, workloadid = WorkLoadId }));
 
         public void Start()
         {
@@ -58,10 +58,10 @@ namespace DBMS.models
                 LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES,LoadType.CHUNKSETUP,LoadType.CHUNKLOAD };
             LoadType[] types = (0 > ordinal ? once : Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !once.Contains(lt))).ToArray();
             string[] names = types.Select(lt => lt.GetStringValue()).ToArray();
-            Loads = DB.Internal.GetAll<CDMTimer>(@"WHERE workloadid = @WorkLoadId AND chunkid = @ChunkId AND name = ANY(@Name)", new { WorkLoadId = WorkLoadId, ChunkId = ordinal, Name = names }).ToDictionary(ct => LoadTypeFromName(ct.Name), ct => ct);
+            Loads = DB.Internal.GetAll<Cdmtimer>("WHERE workloadid = @WorkLoadId AND chunkid = @ChunkId AND name = ANY(@Name)", new { WorkLoadId = WorkLoadId, ChunkId = ordinal, Name = names }).ToDictionary(ct => LoadTypeFromName(ct.Name), ct => ct);
 
             var missingTypes = types.Where(name => !Loads.ContainsKey(name));
-            foreach (var lkey in missingTypes) Loads[lkey] = new CDMTimer { WorkLoadId = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, ChunkId = ordinal, Status = Status.SCHEDULED };
+            foreach (var lkey in missingTypes) Loads[lkey] = new Cdmtimer { WorkLoadId = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, ChunkId = ordinal, Status = Status.SCHEDULED };
         }
 
         private void CommitLoads()
@@ -96,7 +96,7 @@ namespace DBMS.models
             return false;
         }
 
-        public static CDMTimer SULoad(LoadType ltype) => ForSetup().GetLoad(ltype);
+        public static Cdmtimer SULoad(LoadType ltype) => ForSetup().GetLoad(ltype);
 
         public static void SUImplement(LoadType ltype, Action impl)
         {

@@ -113,9 +113,9 @@
     <Compile Include="DBSchema.cs" />
     <Compile Include="FileQuery.cs" />
     <Compile Include="models\AbsTable.cs" />
-    <Compile Include="models\CDMTimer.cs" />
+    <Compile Include="models\Cdmtimer.cs" />
     <Compile Include="models\Chunk.cs" />
-    <Compile Include="models\ChunkTimer.cs" />
+    <Compile Include="models\Chunktimer.cs" />
     <Compile Include="models\WorkLoad.cs" />
     <Compile Include="models\WorkQueue.cs" />
     <Compile Include="SimpleCRUDResolver.cs" />

@@ -111,7 +111,7 @@ namespace DBMS.systems
                     return conn.Get<T>(args);
                 }
             }
-            return QueryFactory().Query(typeof(T).Name.ToLower()).Where(args).First<T>();
+            return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).First<T>();
         }
 
         public int Update<T>(T obj, object where)
@@ -119,7 +119,7 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, typeof(T).Name.ToLower())).Where(where).Update(ColumnValues(obj));
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase())).Where(where).Update(ColumnValues(obj));
             }
         }
 
@@ -141,7 +141,7 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToLower())).Insert(values);
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToSnakeCase())).Insert(values);
             }
         }
 
@@ -155,7 +155,7 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, tbl_name.ToLower())).Insert(ColumnNames<T>(), values);
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, tbl_name.ToSnakeCase())).Insert(ColumnNames<T>(), values);
             }
         }
 

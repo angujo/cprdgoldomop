@@ -8,6 +8,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Util;
 
@@ -21,8 +22,7 @@ namespace TestProject
         [TestMethod]
         public void TestSimple()
         {
-            var m = "Observation".HasString("obse");
-
+            Log.Info(12, "John DOe 101");
         }
 
         [TestMethod]
