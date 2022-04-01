@@ -43,6 +43,7 @@ namespace DBMS.systems
         public override IDbConnection GetConnection()
         {
             SimpleCRUD.SetDialect(SimpleCRUD.Dialect.PostgreSQL);
+            // Log.Info(ConnectionString());
             return new NpgsqlConnection(ConnectionString());
         }
 

@@ -10,3 +10,5 @@
 /TestProject/bin/Debug/net6.0
 /TestProject/obj
 /Util/bin/Debug
+bin/
+obj/

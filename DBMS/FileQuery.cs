@@ -16,7 +16,7 @@ namespace DBMS
 
         private string Content()
         {
-            if (!File.Exists(_filePath)) return null;
+            if (!File.Exists(_filePath)) throw new FileNotFoundException($"Executable file {_filePath} was not found!");
             Log.Info($"Execution content from file {_filePath}");
             return File.ReadAllText(_filePath).RemovePlaceholders(PH_Others);
         }

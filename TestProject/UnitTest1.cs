@@ -28,7 +28,8 @@ namespace TestProject
         [TestMethod]
         public void TestSimple()
         {
-             Log.Info( "John DOe 101");
+            var sts = Setting.AppConnection;
+           //  Log.Info( "John DOe 101");
             //Logger logger1 = createLog(1);
            // Logger logger2 = createLog(2);
 

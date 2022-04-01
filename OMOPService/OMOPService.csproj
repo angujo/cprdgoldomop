@@ -6,16 +6,21 @@
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>dotnet-OMOPService-52460FCD-50AA-4245-8102-67D71871FA3B</UserSecretsId>
 		<OutputType>exe</OutputType>
-		<PublishSingleFile Condition="'$(Configuration)' == 'Release'">true</PublishSingleFile>
-		<RuntimeIdentifier>win-x64</RuntimeIdentifier>
-		<PlatformTarget>x64</PlatformTarget>
+		<PublishSingleFile>true</PublishSingleFile>
 		<BaseOutputPath>D:\VSProjects\OMOPBuilder\bin</BaseOutputPath>
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <None Include="..\OMOPBuilder\App.config" Link="App.config">
+	    <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+	  </None>
+	</ItemGroup>
+
+	<ItemGroup>
 		<PackageReference Include="Microsoft.Extensions.Hosting" Version="6.0.1" />
 		<PackageReference Include="Microsoft.Extensions.Hosting.WindowsServices" Version="6.0.0" />
+		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>

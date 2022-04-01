@@ -1,5 +1,6 @@
 D:\VSProjects\OMOPBuilder\bin\Debug\OMOPBuilder.exe
 D:\VSProjects\OMOPBuilder\bin\Debug\NLog.config
+D:\VSProjects\OMOPBuilder\bin\Debug\App.config
 D:\VSProjects\OMOPBuilder\bin\Debug\OMOPBuilder.dll.config
 D:\VSProjects\OMOPBuilder\bin\Debug\OMOPBuilder.deps.json
 D:\VSProjects\OMOPBuilder\bin\Debug\OMOPBuilder.runtimeconfig.json

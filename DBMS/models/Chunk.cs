@@ -41,9 +41,9 @@ namespace DBMS.models
             if (ordinal >= 0) GetTimer().Start();
         }
 
-        public void Stop()
+        public void Stop(Exception ex = null)
         {
-            if (ordinal >= 0) GetTimer().Stop();
+            if (ordinal >= 0) GetTimer().Stop(ex);
         }
 
         public void Implemented()

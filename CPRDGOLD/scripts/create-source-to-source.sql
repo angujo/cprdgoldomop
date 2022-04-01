@@ -1,6 +1,6 @@
-DROP TABLE IF EXISTS {ss}.source_to_standard;
+DROP TABLE IF EXISTS {ss}.source_to_source;
 
-CREATE TABLE {ss}.source_to_standard (
+CREATE TABLE {ss}.source_to_source (
 	source_code varchar NULL,
 	source_concept_id int4 NULL,
 	source_code_description varchar(255) NULL,

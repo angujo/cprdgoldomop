@@ -16,34 +16,43 @@ namespace CPRDGOLD
     {
         private static AppDBMS appDBMS;
 
-        public static void Run(Action<bool> isUp)
+        public static async void Run(Action<bool> isUp)
         {
+            Log.Info("Checking Workload to proccess...");
             appDBMS = new AppDBMS();
             if (null == appDBMS.workload)
             {
+                Log.Info("No Workload to proccess...");
                 return;
             }
-            Task.Run(() =>
-            {
-                try
-                {
-                    isUp(true);
+            _ = Task.Run(() =>
+              {
+                  Log.Info("We are in a workload proccess...");
+                  try
+                  {
+                      isUp(true);
 
-                    appDBMS.StartQueue();
+                      appDBMS.StartQueue();
 
-                    appDBMS.CleanUpChunks();
+                      appDBMS.CleanUpChunks();
 
-                    Initiate();
-                    appDBMS.StopQueue();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    appDBMS.StopQueue(ex);
-                    throw;
-                }
-                finally { isUp(false); }
-            });
+                      Initiate();
+
+                      appDBMS.StopQueue();
+
+                      //Cleanup again to reset incomplete workload and chunks
+                      appDBMS.CleanUpChunks();
+                  }
+                  catch (Exception ex)
+                  {
+                      Log.Error(ex);
+                      appDBMS.StopQueue(ex);
+                      throw;
+                  }
+                  finally { isUp(false); }
+                  Log.Info("We are Done...");
+              });
+
         }
 
         private static void Initiate()
@@ -61,13 +70,23 @@ namespace CPRDGOLD
             Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = appDBMS.workload.MaxParallels }, chunkOrdinal =>
            {
                Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
-               chunk.Start();
+               try
+               {
+                   chunk.Start();
 
-               StemTableUsers(chunk);
-               ChunkBased(chunk);
+                   StemTableUsers(chunk);
+                   ChunkBased(chunk);
 
-               chunk.Implemented();
-               chunk.Clean();
+                   chunk.Implemented();
+               }
+               catch (Exception ex)
+               {
+                   chunk.Stop(ex);
+               }
+               finally
+               {
+                   chunk.Clean();
+               }
            });
         }
 

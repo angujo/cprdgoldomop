@@ -20,7 +20,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="..\OMOPBuilder\App.config" Link="App.config" />
+    <None Include="..\OMOPBuilder\App.config" Link="App.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>

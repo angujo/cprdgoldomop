@@ -20,8 +20,10 @@ namespace DBMS.models
             Save();
         }
 
-        public void Stop()
+        public void Stop(Exception ex = null)
         {
+            ErrorLog = null == ex ? ex.Message + "\n" + ex.StackTrace : null;
+            Status = Status.STOPPED;
             EndTime = DateTime.Now;
             Save();
         }

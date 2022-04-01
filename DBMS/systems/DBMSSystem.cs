@@ -60,6 +60,15 @@ namespace DBMS.systems
             }
         }
 
+        public void RunFactory(Action<QueryFactory> action)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                action(new QueryFactory(conn, GetCompiler()));
+            }
+        }
+
         public void RunChunk(Chunk chunk, string tbl_name, Action<Query, string> action)
         {
             using (var conn = GetConnection())
