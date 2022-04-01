@@ -16,13 +16,39 @@ namespace CPRDGOLD
     {
         private static AppDBMS appDBMS;
 
-        public static void Run()
+        public static void Run(Action<bool> isUp)
         {
             appDBMS = new AppDBMS();
-            if (null == appDBMS.workload) return;
+            if (null == appDBMS.workload)
+            {
+                return;
+            }
+            Task.Run(() =>
+            {
+                try
+                {
+                    isUp(true);
 
+                    appDBMS.StartQueue();
+
+                    appDBMS.CleanUpChunks();
+
+                    Initiate();
+                    appDBMS.StopQueue();
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    appDBMS.StopQueue(ex);
+                    throw;
+                }
+                finally { isUp(false); }
+            });
+        }
+
+        private static void Initiate()
+        {
             Chunk.WorkLoadId = (long)appDBMS.workload.Id;
-            appDBMS.StartQueue();
 
             Setups();
 
@@ -32,7 +58,7 @@ namespace CPRDGOLD
 
             var ordinals = appDBMS.ChunkOrdinals().ToArray();
 
-            Parallel.ForEach(ordinals.Take(5), new ParallelOptions { MaxDegreeOfParallelism = 2 }, chunkOrdinal =>
+            Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = appDBMS.workload.MaxParallels }, chunkOrdinal =>
            {
                Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
                chunk.Start();
@@ -43,18 +69,20 @@ namespace CPRDGOLD
                chunk.Implemented();
                chunk.Clean();
            });
-
-            appDBMS.StopQueue();
         }
 
         private static void ChunkBased(Chunk chunk)
         {
             Log.Info("Starting for Chunk entries...");
-            chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk));
-            chunk.Implement(LoadType.OBSERVATIONPERIOD, () => ObservationPeriod.InsertSets(chunk));
-            chunk.Implement(LoadType.VISITDETAIL, () => VisitDetail.InsertSets(chunk));
-            chunk.Implement(LoadType.VISITOCCURRENCE, () => VisitOccurrence.InsertSets(chunk));
-            chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk));
+            List<Action> actions = new List<Action>
+            {
+                () =>chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk)),
+                () =>chunk.Implement(LoadType.OBSERVATIONPERIOD, () => ObservationPeriod.InsertSets(chunk)),
+                () =>chunk.Implement(LoadType.VISITDETAIL, () => VisitDetail.InsertSets(chunk)),
+                () =>chunk.Implement(LoadType.VISITOCCURRENCE, () => VisitOccurrence.InsertSets(chunk)),
+                () =>chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk)),
+            };
+            Parallel.ForEach(actions, action => action());
             Log.Info("Finished Chunk entries!");
         }
 
@@ -71,24 +99,32 @@ namespace CPRDGOLD
             foreach (var s in stemA) Log.Info($"{s.Key} = {s.Value}");
             Log.Info("StemTable END Stats:");
 
-            chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk));
-            chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk));
-            chunk.Implement(LoadType.SPECIMEN, () => Specimen.InsertSets(chunk));
-            chunk.Implement(LoadType.OBSERVATION, () => Observation.InsertSets(chunk));
-            chunk.Implement(LoadType.DRUGEXPOSURE, () => DrugExposure.InsertSets(chunk));
-            chunk.Implement(LoadType.MEASUREMENT, () => Measurement.InsertSets(chunk));
-            chunk.Implement(LoadType.PROCEDUREEXPOSURE, () => ProcedureOccurrence.InsertSets(chunk));
+            Log.Info("Start StemTable entries!");
+            List<Action> actions = new List<Action>
+            {
+                () => chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.SPECIMEN, () => Specimen.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.OBSERVATION, () => Observation.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.DRUGEXPOSURE, () => DrugExposure.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.MEASUREMENT, () => Measurement.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.PROCEDUREEXPOSURE, () => ProcedureOccurrence.InsertSets(chunk)),
+            };
+            Parallel.ForEach(actions, action => action());
+            Log.Info("Finished StemTable entries!");
         }
 
         //Only runs once in the life of the app
         private static void SingleRuns()
         {
-            List<Action> actions = new List<Action>();
-            actions.Add(() => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets(null)));
-            actions.Add(() => Chunk.SUImplement(LoadType.CARESITE, () => CareSite.InsertSets(null)));
-            actions.Add(() => Chunk.SUImplement(LoadType.LOCATION, () => Location.InsertSets(null)));
-            actions.Add(() => Chunk.SUImplement(LoadType.CDMSOURCE, () => CdmSource.InsertSets(null)));
-            actions.Add(() => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets(null)));
+            List<Action> actions = new List<Action>
+            {
+                () => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets(null)),
+                () => Chunk.SUImplement(LoadType.CARESITE, () => CareSite.InsertSets(null)),
+                () => Chunk.SUImplement(LoadType.LOCATION, () => Location.InsertSets(null)),
+                () => Chunk.SUImplement(LoadType.CDMSOURCE, () => CdmSource.InsertSets(null)),
+                () => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets(null))
+            };
 
             Parallel.ForEach(actions, action => action());
         }
@@ -116,42 +152,43 @@ namespace CPRDGOLD
             });
 
             //From below we can run parallel, they are independent of each other
-            List<Action> actions = new List<Action>();
-
-            actions.Add(() =>
-            Chunk.SUImplement(LoadType.DAYSUPPLYDECODESETUP, () =>
+            List<Action> actions = new List<Action>
             {
-                var decodes = new DaySupplyDecodeSetup();
-                decodes.Create();
-                decodes.Run();
-            }));
+                () =>
+                Chunk.SUImplement(LoadType.DAYSUPPLYDECODESETUP, () =>
+                {
+                    var decodes = new DaySupplyDecodeSetup();
+                    decodes.Create();
+                    decodes.Run();
+                }),
 
 
-            actions.Add(() =>
-            Chunk.SUImplement(LoadType.DAYSUPPLYMODESETUP, () =>
-            {
-                var modes = new DaySupplyModeSetup();
-                modes.Create();
-                modes.Run();
-            }));
+                () =>
+                Chunk.SUImplement(LoadType.DAYSUPPLYMODESETUP, () =>
+                {
+                    var modes = new DaySupplyModeSetup();
+                    modes.Create();
+                    modes.Run();
+                }),
 
 
-            actions.Add(() =>
-            Chunk.SUImplement(LoadType.SOURCETOSOURCE, () =>
-            {
-                var source = new SourceToSourceSetup();
-                source.Create();
-                source.Run();
-            }));
+                () =>
+                Chunk.SUImplement(LoadType.SOURCETOSOURCE, () =>
+                {
+                    var source = new SourceToSourceSetup();
+                    source.Create();
+                    source.Run();
+                }),
 
 
-            actions.Add(() =>
-            Chunk.SUImplement(LoadType.SOURCETOSTANDARD, () =>
-            {
-                var standard = new SourceToStandardSetup();
-                standard.Create();
-                standard.Run();
-            }));
+                () =>
+                Chunk.SUImplement(LoadType.SOURCETOSTANDARD, () =>
+                {
+                    var standard = new SourceToStandardSetup();
+                    standard.Create();
+                    standard.Run();
+                })
+            };
 
             Parallel.ForEach(actions, action => action());
         }

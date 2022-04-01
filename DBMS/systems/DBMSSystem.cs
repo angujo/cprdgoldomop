@@ -73,7 +73,8 @@ namespace DBMS.systems
             }
         }
 
-        public int RunQuery(string query)
+        // For parameters use $1, $2, ... $N for placeholders with args holding value with resp to order
+        public int RunQuery(string query, params object[] args)
         {
             using (var conn = GetConnection())
             {
@@ -81,6 +82,7 @@ namespace DBMS.systems
                 using (var cmd = conn.CreateCommand())
                 {
                     cmd.CommandText = query;
+                    foreach (var arg in args) cmd.Parameters.Add(arg);
                     return cmd.ExecuteNonQuery();
                 }
                 // return new QueryFactory(conn, GetCompiler()).Statement(query);

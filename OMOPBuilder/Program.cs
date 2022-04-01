@@ -5,4 +5,4 @@ using CPRDGOLD;
 using Util;
 
 Log.Info("Starting the app...");
- CPRDGOLDMap.Run();
+// CPRDGOLDMap.Run();

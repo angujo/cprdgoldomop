@@ -23,15 +23,16 @@ namespace DBMS
                 WorkLoadId = (long)workload.Id,
                 Name = Guid.NewGuid().ToString(),
                 StartTime = DateTime.Now,
-                Status = Util.Status.RUNNING,
-                
+                Status = Status.RUNNING,
+
             };
             workqueue.Save();
         }
 
         public void StopQueue(Exception ex = null)
         {
-            workqueue.Status = ex == null ? Util.Status.FINISHED : Util.Status.STOPPED;
+            workqueue.Status = ex == null ? Status.FINISHED : Status.STOPPED;
+            workqueue.ErrorLog = ex.Message + "\n" + ex.StackTrace;
             workqueue.Save();
         }
 
@@ -40,5 +41,11 @@ namespace DBMS
             foreach (var ct in DB.Internal.GetAll<Chunktimer>("WHERE chunkid > 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)", new { WLId = workload.Id, Stat = Status.FINISHED })) yield return ct.ChunkId;
         }
 
+        public void CleanUpChunks()
+        {
+            DB.Internal.RunQuery("update chunktimer set status = $1 from cdmtimer d " +
+                "where d.chunkid = chunktimer.chunkid and d.workloadid = chunktimer.workloadid and d.status <> $2 AND d.workloadid = $3",
+                Status.SCHEDULED, Status.FINISHED, workload.Id);
+        }
     }
 }

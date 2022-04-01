@@ -121,7 +121,7 @@ namespace CPRDGOLD.loaders
             Log.Info($"DataChunk Stats: Total Data to Chunk: #{items.Count()} [{typeof(T).Name}]");
             int count = 0;
             IEnumerable<C> cData = null != items ? items.ToArray() : data.ToArray();
-            Parallel.ForEach(cData, new ParallelOptions { MaxDegreeOfParallelism = 5 }, dt =>
+            Parallel.ForEach(cData, new ParallelOptions { MaxDegreeOfParallelism = 50 }, dt =>
                {
                    string[][] keys;
                    if (null == (keys = getKeys(dt))) return;

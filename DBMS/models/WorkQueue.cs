@@ -11,6 +11,7 @@ namespace DBMS.models
         public DateTime EndTime { get; set; }
         public Status Status { get; set; }
         public int? ProgressPercent { get; set; }
+        public string ErrorLog { get; set; }
 
         WorkLoad wl;
 

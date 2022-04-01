@@ -2,11 +2,15 @@ using DBMS;
 using DBMS.models;
 using DBMS.systems;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NLog;
+using NLog.Config;
+using NLog.Targets;
 using SqlKata;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -17,12 +21,19 @@ namespace TestProject
     [TestClass]
     public class UnitTest1
     {
+        private LoggingConfiguration loggingConfig = new LoggingConfiguration();
+
         private Stopwatch stopwatch = new();
 
         [TestMethod]
         public void TestSimple()
         {
-            Log.Info(12, "John DOe 101");
+             Log.Info( "John DOe 101");
+            //Logger logger1 = createLog(1);
+           // Logger logger2 = createLog(2);
+
+          //  logger1.Info("Am trying to do something!");
+          //  logger2.Info("Am also trying here!");
         }
 
         [TestMethod]
@@ -93,7 +104,7 @@ namespace TestProject
 
 
 
-            dict.AddValue<string, int>(98798765, keys);
+            dict.AddValue(98798765, keys);
             var exists = dict.Exists<string, int>(keys);
             var exists2 = dict.Exists<string, int>(new string[] { "jane", "doe" });
             var finalDict = dict.LastDictionary<string, int>(keys);
@@ -239,6 +250,26 @@ namespace TestProject
         private string Dot(string schema, string table)
         {
             return string.Join(".", new string[] { schema, table });
+        }
+
+        private Logger createLog(int id)
+        {
+            string Name = $"Chunker{id}";
+            var target = new FileTarget
+            {
+                Name = Name,
+                FileName = Path.Combine(Environment.CurrentDirectory, "logs", $"log-{id}.log"),
+                ArchiveEvery = FileArchivePeriod.Day,
+                ArchiveAboveSize = 10240,
+                Layout = "${longdate} ${level:uppercase=true} ${message:withexception=true}"
+            };
+            var loggingRule = new LoggingRule("*", LogLevel.Debug, target);
+
+            loggingConfig.AddTarget(target);
+            loggingConfig.LoggingRules.Add(loggingRule);
+            // loggingConfig.Reload();
+
+            return LogManager.GetLogger(Name);
         }
     }
 

@@ -6,6 +6,7 @@ namespace DBMS.models
     [Table("workload")]
     public class WorkLoad : CRUDModel<WorkLoad>
     {
+        private int _parallels = 3;
         public string Name { get; set; }
         public DateTime ReleaseDate { get; set; }
         public bool FilesLocked { get; set; }
@@ -16,7 +17,7 @@ namespace DBMS.models
         public bool CdmProcessed { get; set; }
         public int ChunkSize { get; set; }
         public bool IsRunning { get; set; }
-        public int MaxParallels { get; set; }
+        public int MaxParallels { get { return _parallels; } set { _parallels = value > 1 ? value : _parallels; } }
         public int TestChunkCount { get; set; }
         public int ChunkStart { get; set; }
         public int ChunkEnd { get; set; }
