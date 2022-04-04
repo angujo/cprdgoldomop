@@ -32,31 +32,32 @@ namespace CPRDGOLD.mappers
         public long visit_detail_id { get; set; }
         public long visit_occurrence_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic stemSource)
         {
+            StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "sig", "provider_id", "drug_exposure_id", "drug_source_value",
                 "person_id", "drug_source_concept_id", "drug_exposure_start_date", "drug_concept_id", "drug_exposure_start_datetime",
                 "drug_exposure_end_date", "drug_exposure_end_datetime", "drug_type_concept_id",};
             DB.Target.CopyBinaryRows<DrugExposure>(cols, (row, write) =>
             {
-                StemTableMerger.LoopAll(chunk, stem =>
-                {
-                    if (null == stem.domain_id || !stem.domain_id.HasString("drug")) return;
-                    row();
+                stemTable.LoopAllData(stem =>
+               {
+                   if (null == stem.domain_id || !stem.domain_id.HasString("drug")) return;
+                   row();
 
-                    write(stem.sig);
-                    write(stem.provider_id);
-                    write(stem.id);
-                    write(stem.source_value);
-                    write(stem.person_id);
-                    write(stem.source_concept_id);
-                    write(stem.start_date);
-                    write(stem.concept_id);
-                    write(stem.start_datetime);
-                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
-                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
-                    write(stem.type_concept_id);
-                });
+                   write(stem.sig);
+                   write(stem.provider_id);
+                   write(stem.id);
+                   write(stem.source_value);
+                   write(stem.person_id);
+                   write(stem.source_concept_id);
+                   write(stem.start_date);
+                   write(stem.concept_id);
+                   write(stem.start_datetime);
+                   write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
+                   write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
+                   write(stem.type_concept_id);
+               });
             });
         }
 

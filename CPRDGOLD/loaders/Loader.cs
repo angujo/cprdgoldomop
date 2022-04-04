@@ -34,16 +34,16 @@ namespace CPRDGOLD.loaders
         protected void LoadData()
         {
             RunQuery((query, schema_name) =>
-                   {
-                       if (null != this.GetType().GetMethod("ChunkData"))
-                       {
-                           this.GetType().GetMethod("ChunkData").Invoke(this, new object[] { query.Get<C>() });
-                       }
-                       else
-                       {
-                           data = query.Get<C>().ToList();
-                       }
-                   });
+            {
+                if (null != this.GetType().GetMethod("ChunkData"))
+                {
+                    this.GetType().GetMethod("ChunkData").Invoke(this, new object[] { query.Get<C>() });
+                }
+                else
+                {
+                    data = query.Get<C>().ToList();
+                }
+            });
         }
 
         private void RunQuery(Action<Query, string> queryAct)
@@ -65,7 +65,7 @@ namespace CPRDGOLD.loaders
             }
         }
 
-        public void Clean() { data.Clear(); tupleChunk.Clear(); }
+        public void Clean() { data.Clear(); tupleChunk.Clear(); Log.Warning("Cleaning #{name}", typeof(T).Name); }
 
         protected static T GetMe()
         {
@@ -92,10 +92,6 @@ namespace CPRDGOLD.loaders
         }
 
         #region ChunkData
-
-        protected static C ChunkValue(params string[] keys) => ChunkValue(new string[][] { keys });
-        protected static C ChunkValue(IEnumerable<string[]> keys) => ChunkValue(keys.ToArray());
-        protected static C ChunkValue(string[][] keys) => ((Loader<T, C>)(object)GetMe()).IChunkValue(keys);
 
         protected C IChunkValue(string[][] keys)
         {

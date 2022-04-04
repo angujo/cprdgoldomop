@@ -2,6 +2,7 @@
 using DBMS.systems;
 using SqlKata;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace CPRDGOLD.loaders
 {
@@ -30,5 +31,9 @@ namespace CPRDGOLD.loaders
         {
             GetMe();
         }
+
+        protected static C ChunkValue(params string[] keys) => ChunkValue(new string[][] { keys });
+        protected static C ChunkValue(IEnumerable<string[]> keys) => ChunkValue(keys.ToArray());
+        protected static C ChunkValue(string[][] keys) => ((FullLoader<T, C>)(object)GetMe()).IChunkValue(keys);
     }
 }

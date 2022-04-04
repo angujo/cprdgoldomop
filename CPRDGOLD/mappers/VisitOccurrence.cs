@@ -32,31 +32,31 @@ namespace CPRDGOLD.mappers
         public DateTime? visit_start_datetime { get; set; }
         public int visit_type_concept_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic dSource = null)
         {
-            ConsultationLoader.Init(chunk);
-
             string[] cols = new string[] { "person_id", "visit_concept_id", "visit_start_date", "visit_start_datetime",
                 "visit_end_date", "visit_end_datetime", "visit_type_concept_id", "provider_id", "care_site_id", "visit_source_value",
                 "visit_source_concept_id", };
-            DB.Target.CopyBinaryRows<VisitOccurrence>( cols, (row, write) =>
-            {
-                ConsultationLoader.LoopAll(chunk, consult =>
-                {
-                    row();
-                    write(consult.patid);
-                    write(9202);
-                    write(consult.eventdate);
-                    write(consult.eventdate);
-                    write(consult.eventdate);
-                    write(consult.eventdate);
-                    write(32827);
-                    write(consult.staffid);
-                    write(consult.care_site_id);
-                    write(consult.constype.ToString());
-                    write(0);
-                });
-            });
+            DB.Target.CopyBinaryRows<VisitOccurrence>(cols, (row, write) =>
+           {
+               chunk.GetLoader<ConsultationLoader>(DBMS.models.ChunkLoadType.CONSULTATION).LoopGroupData(
+                   dt => dt.eventdate.ToString(),
+                   consult =>
+                   {
+                       row();
+                       write(consult.patid);
+                       write(9202);
+                       write(consult.eventdate);
+                       write(consult.eventdate);
+                       write(consult.eventdate);
+                       write(consult.eventdate);
+                       write(32827);
+                       write(consult.staffid);
+                       write(consult.care_site_id);
+                       write(consult.constype.ToString());
+                       write(0);
+                   });
+           });
         }
     }
 }

@@ -27,33 +27,34 @@ namespace CPRDGOLD.mappers
         public long visit_detail_id { get; set; }
         public long visit_occurrence_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic stemSource)
         {
-            string[] cols = new string[] { "provider_id",  "unit_source_value", "observation_id", "observation_source_value", 
+            StemTableMerger stemTable = stemSource as StemTableMerger;
+            string[] cols = new string[] { "provider_id",  "unit_source_value", "observation_id", "observation_source_value",
                 "person_id", "observation_source_concept_id", "observation_date", "observation_concept_id", "observation_datetime", "observation_type_concept_id",
                 "value_as_number", "value_as_concept_id", "unit_concept_id", "value_as_string", };
             DB.Target.CopyBinaryRows<Observation>(cols, (row, write) =>
             {
-                StemTableMerger.LoopAll(chunk, stem =>
-                {
-                    if (null == stem.domain_id || !stem.domain_id.HasString("observation")) return;
-                    row();
+                stemTable.LoopAllData(stem =>
+               {
+                   if (null == stem.domain_id || !stem.domain_id.HasString("observation")) return;
+                   row();
 
-                    write(stem.provider_id);
-                    write(stem.unit_source_value);
-                    write(stem.id);
-                    write(stem.source_value);
-                    write(stem.person_id);
-                    write(stem.source_concept_id);
-                    write(stem.start_date);
-                    write(stem.concept_id);
-                    write(stem.start_datetime);
-                    write(stem.type_concept_id);
-                    write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
-                    write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
-                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
-                    write(stem.value_as_string);
-                });
+                   write(stem.provider_id);
+                   write(stem.unit_source_value);
+                   write(stem.id);
+                   write(stem.source_value);
+                   write(stem.person_id);
+                   write(stem.source_concept_id);
+                   write(stem.start_date);
+                   write(stem.concept_id);
+                   write(stem.start_datetime);
+                   write(stem.type_concept_id);
+                   write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
+                   write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
+                   write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                   write(stem.value_as_string);
+               });
             });
         }
     }

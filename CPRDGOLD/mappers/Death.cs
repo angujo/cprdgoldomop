@@ -15,7 +15,7 @@ namespace CPRDGOLD.mappers
 
         public void QueryInsert() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<Death>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic dSource = null)
         {
             throw new NotImplementedException();
         }

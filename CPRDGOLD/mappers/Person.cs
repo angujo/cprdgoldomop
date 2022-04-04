@@ -27,14 +27,13 @@ namespace CPRDGOLD.mappers
 
         public Person() { birth_datetime = default(DateTime); }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic dSource = null)
         {
-            ActivePatientLoader.Init(chunk);
             string[] cols = new string[] { "person_id", "gender_concept_id", "year_of_birth", "month_of_birth", "race_concept_id", "ethnicity_concept_id", "care_site_id",
                 "person_source_value", "gender_source_value", "gender_source_concept_id", "race_source_concept_id", "ethnicity_source_concept_id" };
             DB.Target.CopyBinaryRows<Person>(cols, (row, write) =>
            {
-               ActivePatientLoader.LoopAll(chunk, patient =>
+               chunk.GetLoader<ActivePatientLoader>(DBMS.models.ChunkLoadType.ACTIVE_PATIENT).LoopAllData(patient =>
                      {
                          row();
                          write(patient.patid);

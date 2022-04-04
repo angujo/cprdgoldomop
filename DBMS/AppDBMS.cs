@@ -13,7 +13,7 @@ namespace DBMS
         public AppDBMS()
         {
             workload = DB.Internal.Load<WorkLoad>(new { cdmprocessed = false });
-            if (workload.Exists()) Chunk.WorkLoadId = (long)workload.Id;
+            if (null != workload && workload.Exists()) Chunk.WorkLoadId = (long)workload.Id;
         }
 
         public void StartQueue()
@@ -49,7 +49,11 @@ namespace DBMS
                 "where d.chunkid = chunktimer.chunkid and d.workloadid = chunktimer.workloadid and d.status <> :Fstat AND d.workloadid = :Wlid",
                 new { Nstat = (int)Status.SCHEDULED, Fstat = (int)Status.FINISHED, Wlid = workload.Id });
 
-                db.Statement("update work_load set cdmprocessed =true where not exists (select 1 from chunktimer c " +
+                db.Statement("update work_load set cdmprocessed = true where not exists (select 1 from chunktimer c " +
+                    "where (c.status is null or c.status <> :Fstat) and c.workloadid=work_load.id);",
+                new { Fstat = (int)Status.FINISHED, });
+
+                db.Statement("update work_load set cdmprocessed = false where exists (select 1 from chunktimer c " +
                     "where (c.status is null or c.status <> :Fstat) and c.workloadid=work_load.id);",
                 new { Fstat = (int)Status.FINISHED, });
             });

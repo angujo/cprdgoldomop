@@ -16,7 +16,7 @@ namespace CPRDGOLD.mappers
         public DateTime source_release_date { get; set; }
         public string vocabulary_version { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic refSource = null)
         {
             DB.Target.InsertPlain(new CdmSource
             {

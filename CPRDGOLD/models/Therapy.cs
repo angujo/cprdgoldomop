@@ -23,5 +23,6 @@ namespace CPRDGOLD.models
         public string prod_gemscriptcode { get; set; }
         public int? st_source_concept_id { get; set; }
         public int? ss_source_concept_id { get; set; }
+        public string conc_domain_id { get; set; }
     }
 }

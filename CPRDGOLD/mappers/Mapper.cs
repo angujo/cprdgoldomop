@@ -10,7 +10,7 @@ namespace CPRDGOLD.mappers
         protected Chunk chunk;
         protected string Delimiter = "\t";
 
-        public static void InsertSets(Chunk chunk)
+        public static void InsertSets(Chunk chunk = null, dynamic refSource = null)
         {
             var _me = new T();
             var me = (Mapper<T>)(object)_me;
@@ -21,11 +21,8 @@ namespace CPRDGOLD.mappers
             }
             Log.Info($"Starting Data Load [{typeof(T).Name}]");
             if (null != me.GetType().GetMethod("QueryInsert")) me.GetType().GetMethod("QueryInsert").Invoke(me, null);
-            else me.LoadData();
-            Log.Info($"Finished Data Load [{typeof(T).Name}]");
+            else me.LoadData(refSource);
 
-            var table_name = typeof(T).Name.ToSnakeCase();
-            Log.Info($"Data Load started for {typeof(T).Name}. ");
             //We are doing binary import
             //Ignore below unless otherwise
             /*
@@ -51,7 +48,7 @@ namespace CPRDGOLD.mappers
 
             if (0 < values.Count) insert();
             */
-            Log.Info($"Finished inserts for {table_name}. #{typeof(T).Name}");
+            Log.Info($"Finished Inserts for #{typeof(T).Name}");
             if (null != me.GetType().GetMethod("Dependency")) me.GetType().GetMethod("Dependency").Invoke(me, null);
         }
     }

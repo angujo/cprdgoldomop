@@ -14,90 +14,94 @@ namespace CPRDGOLD.mergers
     {
 
 
-        private ConcurrentDictionary<int, List<AddInBase>> unions = new ConcurrentDictionary<int, List<AddInBase>>();
-        protected AddInBaseMerger(Chunk chunk) : base(chunk) { chunk.AddCleaner(() => unions.Clear()); }
+        private readonly ConcurrentDictionary<int, List<AddInBase>> unions = new ConcurrentDictionary<int, List<AddInBase>>();
+        protected AddInBaseMerger(Chunk chunk) : base(chunk) { chunk.AddCleaner(() => { unions.Clear(); Log.Warning("Cleaning #AddInBaseMerger UNIONS"); }); }
         // string[] MED_PRD_DICT = new string[] { MED_DICT, PRD_DICT };
         public AddInBaseMerger() { }
         protected override void LoadData() { }
 
-        public static void prepare(Chunk chunk)
+        public static AddInBaseMerger prepare(Chunk chunk)
         {
-            ClinicalLoader.Prepare(chunk);
+            var bm = new AddInBaseMerger(chunk);
+
             //  if (0 < data.Count) return;
             Log.Info("Starting AddInBase Loader!");
-            for (int i = 0; i < 7; i++) GetMe(chunk).unions[i + 1] = new List<AddInBase>();
-            AdditionalLoader.LoopAll(chunk, addt =>
-            {
-                Clinical cl = ClinicalLoader.ByPatientAdId(chunk, addt.adid, addt.patid);
-                if (null == cl || null == cl.eventdate) return;
-                Entity entity = EntityLoader.ByType(addt.enttype) ?? new Entity();
-                AddInBase addInBase = new AddInBase
-                {
-                    patid = addt.patid,
-                    adid = addt.adid,
-                    enttype = addt.enttype,
-                    data1 = addt.data1,
-                    data2 = addt.data2,
-                    data3 = addt.data3,
-                    data4 = addt.data4,
-                    data5 = addt.data5,
-                    data6 = addt.data6,
-                    data7 = addt.data7,
-                    eventdate = cl.eventdate,
-                    constype = cl.constype,
-                    consid = cl.consid,
-                    staffid = cl.staffid,
-                    data_fields = entity.data_fields,
-                    category = entity.category,
-                    description = entity.description,
-                    e_data1 = entity.data1,
-                    e_data2 = entity.data2,
-                    e_data3 = entity.data3,
-                    e_data4 = entity.data4,
-                    e_data5 = entity.data5,
-                    e_data6 = entity.data6,
-                    e_data7 = entity.data7,
-                    data1_lkup = entity.data1_lkup,
-                    data2_lkup = entity.data2_lkup,
-                    data3_lkup = entity.data3_lkup,
-                    data4_lkup = entity.data4_lkup,
-                    data5_lkup = entity.data5_lkup,
-                    data6_lkup = entity.data6_lkup,
-                    data7_lkup = entity.data7_lkup,
-                };
-                //  Add(addInBase);
+            for (int i = 0; i < 7; i++) bm.unions[i + 1] = new List<AddInBase>();
+            chunk.GetLoader<AdditionalLoader>(ChunkLoadType.ADDITIONAL).LoopAllData(addt =>
+           {
+               Clinical cl = chunk.GetLoader<ClinicalLoader>(ChunkLoadType.CLINICAL).ByPatientAdId(addt.adid, addt.patid);
+               if (null == cl || null == cl.eventdate) return;
+               Entity entity = EntityLoader.ByType(addt.enttype) ?? new Entity();
+               AddInBase addInBase = new AddInBase
+               {
+                   patid = addt.patid,
+                   adid = addt.adid,
+                   enttype = addt.enttype,
+                   data1 = addt.data1,
+                   data2 = addt.data2,
+                   data3 = addt.data3,
+                   data4 = addt.data4,
+                   data5 = addt.data5,
+                   data6 = addt.data6,
+                   data7 = addt.data7,
+                   eventdate = cl.eventdate,
+                   constype = cl.constype,
+                   consid = cl.consid,
+                   staffid = cl.staffid,
+                   data_fields = entity.data_fields,
+                   category = entity.category,
+                   description = entity.description,
+                   e_data1 = entity.data1,
+                   e_data2 = entity.data2,
+                   e_data3 = entity.data3,
+                   e_data4 = entity.data4,
+                   e_data5 = entity.data5,
+                   e_data6 = entity.data6,
+                   e_data7 = entity.data7,
+                   data1_lkup = entity.data1_lkup,
+                   data2_lkup = entity.data2_lkup,
+                   data3_lkup = entity.data3_lkup,
+                   data4_lkup = entity.data4_lkup,
+                   data5_lkup = entity.data5_lkup,
+                   data6_lkup = entity.data6_lkup,
+                   data7_lkup = entity.data7_lkup,
+               };
+               //  Add(addInBase);
 
-                List<Action> actions = new List<Action> {
-                    () => GetMe(chunk).ForUnion1(addInBase),
-                    () => GetMe(chunk).ForUnion2(addInBase),
-                    () => GetMe(chunk).ForUnion3(addInBase),
-                    () => GetMe(chunk).ForUnion4(addInBase),
-                    () => GetMe(chunk).ForUnion5(addInBase),
-                    () => GetMe(chunk).ForUnion6(addInBase),
-                    () => GetMe(chunk).ForUnion7(addInBase),
-                    () => GetMe(chunk).ForUnion8(addInBase),
-                    () => GetMe(chunk).ForUnion9(addInBase),
-                    () => GetMe(chunk).ForUnion10(addInBase),
-                    () => GetMe(chunk).ForUnion11(addInBase),
-                 };
-                Parallel.ForEach(actions, action => action());
-            });
-            foreach (var un in GetMe(chunk).unions) Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
+               List<Action> actions = new List<Action> {
+                    () => bm.ForUnion1(addInBase),
+                    () => bm.ForUnion2(addInBase),
+                    () => bm.ForUnion3(addInBase),
+                    () => bm.ForUnion4(addInBase),
+                    () => bm.ForUnion5(addInBase),
+                    () => bm.ForUnion6(addInBase),
+                    () => bm.ForUnion7(addInBase),
+                    () => bm.ForUnion8(addInBase),
+                    () => bm.ForUnion9(addInBase),
+                    () => bm.ForUnion10(addInBase),
+                    () => bm.ForUnion11(addInBase),
+                };
+               Parallel.ForEach(actions, action => action());
+           });
+            foreach (var un in bm.unions) Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
             Log.Info("Finished AddInBase Loader!");
+            return bm;
         }
 
-        public static void LoopUnion(Chunk chunk, int union, Action<AddInBase> abAct)
+        public void LoopUnions(int union, Action<AddInBase> abAct)
         {
-            if (!GetMe(chunk).unions.ContainsKey(union))
+            if (!unions.ContainsKey(union))
             {
                 Log.Info($"Union {union} Was not Loaded. Skipped!");
                 return;
             }
-            Log.Info($"Started Loading Union #{union} Data: [{GetMe(chunk).unions[union].Count}]!");
-            Parallel.ForEach(GetMe(chunk).unions[union], abAct);
+            Log.Info($"Started Loading Union #{union} Data: [{unions[union].Count}]!");
+            Parallel.ForEach(unions[union], abAct);
             // foreach (var item in GetMe(chunk).unions[union]) abAct(item);
             Log.Info($"Finished Loading Union #{union}!");
         }
+
+        #region Unions
 
         private void ForUnion1(AddInBase addInBase)
         {
@@ -174,5 +178,7 @@ namespace CPRDGOLD.mergers
             if (!types.Contains(addInBase.enttype)) return;
             unions[1].Add(addInBase);
         }
+
+        #endregion
     }
 }

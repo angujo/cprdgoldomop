@@ -22,8 +22,6 @@ namespace CPRDGOLD.loaders
             return chunk;
         }
 
-        public static void Init(Chunk chunk) => GetMe(chunk);
-
         public void CustomizeQuery(Query query, string schema_name)
         {
             switch (table_name)
@@ -69,8 +67,12 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
-                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
-                        " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
+                        .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
+                            j => j.On("concept.concept_code", "medical.read_code"))
+                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id, " +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
+                            " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
+                    // query.q
                     break;
                 case "immunisation":
                     query.Join($"{schema_name}.medical", "medical.medcode", "immunisation.medcode")
@@ -82,7 +84,10 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
+                        .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
+                            j => j.On("concept.concept_code", "medical.read_code"))
                         .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case "referral":
@@ -95,7 +100,10 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
+                        .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
+                            j => j.On("concept.concept_code", "medical.read_code"))
                         .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case "test":
@@ -108,7 +116,10 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "medical.read_code")
                             .Where("source_to_source.source_vocabulary_id", "Read"))
+                        .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
+                            j => j.On("concept.concept_code", "medical.read_code"))
                         .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code, medical.desc as read_description");
                     break;
                 case "therapy":
@@ -121,37 +132,74 @@ namespace CPRDGOLD.loaders
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "product.gemscriptcode")
                             .Where("source_to_source.source_vocabulary_id", "gemscript"))
+                        .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
+                            j => j.On("concept.concept_code", "medical.read_code"))
                         .WhereRaw("therapy.eventdate between source_to_standard.source_valid_start_date and source_to_standard.source_valid_end_date")
                         .SelectRaw("product.gemscriptcode AS prod_gemscriptcode, source_to_standard.source_concept_id as st_source_concept_id," +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id");
                     break;
             }
         }
 
-        protected static T GetMe(Chunk chunk)
+        public static T Initialize(Chunk chunk)
         {
-            if (_instances.ContainsKey(chunk.ordinal)) return _instances[chunk.ordinal];
-            _instances[chunk.ordinal] = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
-            ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).chunk = chunk;
+            var _inst = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
+            ((ChunkLoader<T, C>)(object)_inst).chunk = chunk;
             Log.Info($"Starting Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
-            ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).LoadData();
+            ((ChunkLoader<T, C>)(object)_inst).LoadData();
             Log.Info($"Finished Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
-            return _instances[chunk.ordinal];
+            return _inst;
         }
 
-        public static void LoopAll(Chunk chunk, Action<C> looper)
+        /* protected static T GetMe(Chunk chunk)
+         {
+             if (_instances.ContainsKey(chunk.ordinal)) return _instances[chunk.ordinal];
+             _instances[chunk.ordinal] = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
+             ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).chunk = chunk;
+             Log.Info($"Starting Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
+             ((ChunkLoader<T, C>)(object)_instances[chunk.ordinal]).LoadData();
+             Log.Info($"Finished Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
+             return _instances[chunk.ordinal];
+         }
+
+         public static void LoopAll(Chunk chunk, Action<C> looper)
+         {
+             Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+             var m = (ChunkLoader<T, C>)(object)GetMe(chunk);
+             Log.Info($"Total Data Chunk to LoopAll [{m.dataset.Count}] [{typeof(T).Name}]");
+             foreach (C c in m.dataset)
+             {
+                 looper(c);
+             }
+             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+         }*/
+
+        public void LoopGroupData(Func<C, object> grouper, Action<C> looper)
         {
             Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
-            var m = (ChunkLoader<T, C>)(object)GetMe(chunk);
-            Log.Info($"Total Data Chunk to LoopAll [{m.dataset.Count}] [{typeof(T).Name}]");
-            foreach (C c in m.dataset)
+            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            var groups = dataset.GroupBy(grouper)
+                .Select(gr => gr.FirstOrDefault())
+                .Where(i => null != i);
+            foreach (C c in groups)
+            {
+                looper(c);
+            }
+            Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+
+        }
+
+        public void LoopAllData(Action<C> looper)
+        {
+            Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            foreach (C c in dataset)
             {
                 looper(c);
             }
             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
-
-        public static List<C> GetData(Chunk chunk) => ((ChunkLoader<T, C>)(object)GetMe(chunk)).dataset;
 
         public static new List<C> GetData() => throw new NotImplementedException();
         protected static new T GetMe() => throw new NotImplementedException();
@@ -160,14 +208,14 @@ namespace CPRDGOLD.loaders
 
         #region ChunkData
 
-        protected static C ChunkValue(Chunk chunk, params string[] keys) => ChunkValue(new string[][] { keys }, chunk);
-        protected static C ChunkValue(IEnumerable<string[]> keys, Chunk chunk) => ChunkValue(keys.ToArray(), chunk);
-        protected static C ChunkValue(string[][] keys, Chunk chunk) => ((ChunkLoader<T, C>)(object)GetMe(chunk)).IChunkValue(keys);
+        protected C ChunkValue(params string[] keys) => ChunkValue(new string[][] { keys });
+        protected C ChunkValue(IEnumerable<string[]> keys) => ChunkValue(keys.ToArray());
+        protected C ChunkValue(string[][] keys) => IChunkValue(keys);
 
         #region thrown Parent ChunkData
-        protected static new C ChunkValue(params string[] keys) => throw new NotImplementedException();
-        protected static new C ChunkValue(IEnumerable<string[]> keys) => throw new NotImplementedException();
-        protected static new C ChunkValue(string[][] keys) => throw new NotImplementedException();
+        // protected static new C ChunkValue(params string[] keys) => throw new NotImplementedException();
+        //protected static new C ChunkValue(IEnumerable<string[]> keys) => throw new NotImplementedException();
+        // protected static new C ChunkValue(string[][] keys) => throw new NotImplementedException();
 
         #endregion
 

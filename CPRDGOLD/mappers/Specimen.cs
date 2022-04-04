@@ -24,27 +24,28 @@ namespace CPRDGOLD.mappers
         public int? unit_concept_id { get; set; }
         public string unit_source_value { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic stemSource)
         {
+            StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "specimen_id", "specimen_source_value", "person_id", "specimen_date", "specimen_concept_id", "specimen_datetime",
                 "specimen_type_concept_id", "unit_concept_id", "unit_source_value",  };
             DB.Target.CopyBinaryRows<Specimen>(cols, (row, write) =>
             {
-                StemTableMerger.LoopAll(chunk, stem =>
-                {
-                    if (null == stem.domain_id || !stem.domain_id.HasString("specimen")) return;
-                    row();
+                stemTable.LoopAllData(stem =>
+               {
+                   if (null == stem.domain_id || !stem.domain_id.HasString("specimen")) return;
+                   row();
 
-                    write(stem.id);
-                    write(stem.source_value);
-                    write(stem.person_id);
-                    write(stem.start_date);
-                    write(stem.concept_id);
-                    write(stem.start_datetime);
-                    write(stem.type_concept_id);
-                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
-                    write(stem.unit_source_value);
-                });
+                   write(stem.id);
+                   write(stem.source_value);
+                   write(stem.person_id);
+                   write(stem.start_date);
+                   write(stem.concept_id);
+                   write(stem.start_datetime);
+                   write(stem.type_concept_id);
+                   write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                   write(stem.unit_source_value);
+               });
             });
         }
     }

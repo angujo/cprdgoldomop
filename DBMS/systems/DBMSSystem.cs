@@ -122,7 +122,7 @@ namespace DBMS.systems
                     return conn.Get<T>(args);
                 }
             }
-            return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).First<T>();
+            return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).FirstOrDefault<T>();
         }
 
         public int Update<T>(T obj, object where)

@@ -17,6 +17,7 @@ namespace DBMS.models
         public string relationTableName { get; set; }
         private Chunktimer timer;
         public dynamic dbms { get; set; }
+        public Dictionary<ChunkLoadType, dynamic> loaders =new Dictionary<ChunkLoadType, dynamic>();
 
         public string[] LoadedNames { get { return Loads.Keys.Select(k => k.GetStringValue()).ToArray(); } }
 
@@ -107,5 +108,29 @@ namespace DBMS.models
                 Log.Info($"Finished implementation of {ltype.GetStringValue()}");
             });
         }
+
+        public Chunk InitLoader(ChunkLoadType l, dynamic load)
+        {
+            if (ordinal < 0) return this;
+            loaders[l] = load; return this;
+        }
+
+        public T GetLoader<T>(ChunkLoadType l)
+        {
+            return (T)loaders[l];
+        }
+    }
+
+    public enum ChunkLoadType
+    {
+        ACTIVE_PATIENT,
+        ADDITIONAL,
+        CLINICAL,
+        CONSULTATION,
+        IMMUNISATION,
+        PATIENT,
+        REFERRAL,
+        TEST,
+        THERAPY,
     }
 }

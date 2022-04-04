@@ -18,15 +18,15 @@ namespace CPRDGOLD
 
         public static async void Run(Action<bool> isUp)
         {
-            Log.Info("Checking Workload to proccess...");
+            Log.Warning("Checking Workload to proccess...");
             appDBMS = new AppDBMS();
             if (null == appDBMS.workload)
             {
-                Log.Info("No Workload to proccess...");
+                Log.Warning("No Workload to proccess...");
                 return;
             }
-            _ = Task.Run(() =>
-              {
+           // await Task.Run(() =>
+           //   {
                   Log.Info("We are in a workload proccess...");
                   try
                   {
@@ -51,7 +51,7 @@ namespace CPRDGOLD
                   }
                   finally { isUp(false); }
                   Log.Info("We are Done...");
-              });
+            //  });
 
         }
 
@@ -70,6 +70,19 @@ namespace CPRDGOLD
             Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = appDBMS.workload.MaxParallels }, chunkOrdinal =>
            {
                Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
+
+               //Initialize all data loader for the chunk.
+
+               chunk
+               .InitLoader(ChunkLoadType.ACTIVE_PATIENT, ActivePatientLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.CONSULTATION, ConsultationLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.IMMUNISATION, ImmunisationLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.THERAPY, TherapyLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.ADDITIONAL, AdditionalLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.PATIENT, PatientLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.TEST, TestLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.REFERRAL, ReferralLoader.Initialize(chunk))
+               .InitLoader(ChunkLoadType.CLINICAL, ClinicalLoader.Initialize(chunk));
                try
                {
                    chunk.Start();
@@ -82,10 +95,6 @@ namespace CPRDGOLD
                catch (Exception ex)
                {
                    chunk.Stop(ex);
-               }
-               finally
-               {
-                   chunk.Clean();
                }
            });
         }
@@ -110,24 +119,24 @@ namespace CPRDGOLD
         {
             //It is cheaper to check than to load stem tables and not use
             if (!chunk.Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE)) return;
-            StemTableMerger.Prepare(chunk);
+            var stemTable = StemTableMerger.Prepare(chunk);
 
             Log.Info("StemTable Loaded!");
             Log.Info("StemTable Start Stats:");
-            var stemA = StemTableMerger.GetData(chunk).OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id).ToDictionary(kv => kv.Key, kv => kv.Count());
-            foreach (var s in stemA) Log.Info($"{s.Key} = {s.Value}");
+            foreach (var s in stemTable.GetData().OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id).ToDictionary(kv => kv.Key, kv => kv.Count()))
+                Log.Info($"{s.Key} = {s.Value}");
             Log.Info("StemTable END Stats:");
 
             Log.Info("Start StemTable entries!");
             List<Action> actions = new List<Action>
             {
-                () => chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.SPECIMEN, () => Specimen.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.OBSERVATION, () => Observation.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.DRUGEXPOSURE, () => DrugExposure.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.MEASUREMENT, () => Measurement.InsertSets(chunk)),
-                () => chunk.Implement(LoadType.PROCEDUREEXPOSURE, () => ProcedureOccurrence.InsertSets(chunk)),
+                () => chunk.Implement(LoadType.CONDITIONOCCURRENCE, () => ConditionOccurrence.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.DEVICEEXPOSURE, () => DeviceExposure.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.SPECIMEN, () => Specimen.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.OBSERVATION, () => Observation.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.DRUGEXPOSURE, () => DrugExposure.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.MEASUREMENT, () => Measurement.InsertSets(chunk,stemTable)),
+                () => chunk.Implement(LoadType.PROCEDUREEXPOSURE, () => ProcedureOccurrence.InsertSets(chunk,stemTable)),
             };
             Parallel.ForEach(actions, action => action());
             Log.Info("Finished StemTable entries!");
@@ -138,11 +147,11 @@ namespace CPRDGOLD
         {
             List<Action> actions = new List<Action>
             {
-                () => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets(null)),
-                () => Chunk.SUImplement(LoadType.CARESITE, () => CareSite.InsertSets(null)),
-                () => Chunk.SUImplement(LoadType.LOCATION, () => Location.InsertSets(null)),
-                () => Chunk.SUImplement(LoadType.CDMSOURCE, () => CdmSource.InsertSets(null)),
-                () => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets(null))
+                () => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets()),
+                () => Chunk.SUImplement(LoadType.CARESITE, () => CareSite.InsertSets()),
+                () => Chunk.SUImplement(LoadType.LOCATION, () => Location.InsertSets()),
+                () => Chunk.SUImplement(LoadType.CDMSOURCE, () => CdmSource.InsertSets()),
+                () => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets())
             };
 
             Parallel.ForEach(actions, action => action());

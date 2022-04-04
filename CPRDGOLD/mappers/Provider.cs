@@ -21,7 +21,7 @@ namespace CPRDGOLD.mappers
         public string specialty_source_value { get; set; }
         public int? year_of_birth { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic refSource = null)
         {
             StaffLoader.Init();
             string[] cols = new string[] { "provider_id", "specialty_concept_id", "care_site_id", "gender_concept_id", "provider_source_value", "specialty_source_value", "gender_source_value", };

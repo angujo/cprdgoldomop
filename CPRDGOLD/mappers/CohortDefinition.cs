@@ -13,7 +13,7 @@ namespace CPRDGOLD.mappers
         public int? definition_type_concept_id { get; set; }
         public int? subject_concept_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic refSource = null)
         {
             DB.Target.InsertPlain(new CohortDefinition
             {

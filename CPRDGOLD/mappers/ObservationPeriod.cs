@@ -13,21 +13,19 @@ namespace CPRDGOLD.mappers
         public int period_type_concept_id { get; set; }
         public long person_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic dSource = null)
         {
-            PatientLoader.Init(chunk);
-
             string[] cols = { "person_id", "observation_period_end_date", "observation_period_start_date", "period_type_concept_id" };
             DB.Target.CopyBinaryRows<ObservationPeriod>(cols, (row, write) =>
             {
-                PatientLoader.LoopAll(chunk, patient =>
-                 {
-                     row();
-                     write(patient.patid);
-                     write((DateTime)(null == patient.op_end_date ? null : patient.op_end_date));
-                     write((DateTime)(null == patient.op_start_date ? null : patient.op_start_date));
-                     write(patient.pt_concept_id);
-                 });
+                chunk.GetLoader<PatientLoader>(DBMS.models.ChunkLoadType.PATIENT).LoopAllData(patient =>
+                {
+                    row();
+                    write(patient.patid);
+                    write((DateTime)(null == patient.op_end_date ? null : patient.op_end_date));
+                    write((DateTime)(null == patient.op_start_date ? null : patient.op_start_date));
+                    write(patient.pt_concept_id);
+                });
             });
         }
     }

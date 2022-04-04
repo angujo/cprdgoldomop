@@ -8,8 +8,9 @@ namespace CPRDGOLD
         protected static T _instance;
         protected ConcurrentBag<T> data = new ConcurrentBag<T>();
 
-        protected abstract void LoadData();
+        protected abstract void LoadData(dynamic refSource = null);
 
+        /*
         protected static T GetMe()
         {
             if (_instance != null) return _instance;
@@ -22,8 +23,10 @@ namespace CPRDGOLD
         }
 
         public static ConcurrentBag<T> GetData() => ((ADataLoader<T>)(object)GetMe()).data;
+        */
+
         public void Add(T obj) => data.Add(obj);
 
-        public void Clean() => data = new ConcurrentBag<T>();
+        public void Clean() { data = new ConcurrentBag<T>(); Log.Warning("Cleaning #{name}", typeof(T).Name); }
     }
 }

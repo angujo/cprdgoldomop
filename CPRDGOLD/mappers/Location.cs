@@ -17,7 +17,7 @@ namespace CPRDGOLD.mappers
         public string state { get; set; }
         public string zip { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic refSource = null)
         {
             string[] cols = new string[] { "location_id", "location_source_value" };
             DB.Target.CopyBinaryRows<Location>(cols, (row, write) =>

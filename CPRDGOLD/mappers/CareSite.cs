@@ -12,7 +12,7 @@ namespace CPRDGOLD.mappers
         public int? place_of_service_concept_id { get; set; }
         public string place_of_service_source_value { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic refSource = null)
         {
             PracticeLoader.Init();
             string[] cols = new string[] { "care_site_id", "place_of_service_concept_id", "location_id", "care_site_source_value", };

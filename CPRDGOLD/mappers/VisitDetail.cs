@@ -26,31 +26,29 @@ namespace CPRDGOLD.mappers
         public int visit_detail_type_concept_id { get; set; }
         public long visit_occurrence_id { get; set; }
 
-        protected override void LoadData()
+        protected override void LoadData(dynamic dSource = null)
         {
-            ConsultationLoader.Init(chunk);
-
             string[] cols = new string[] { "person_id", "visit_detail_concept_id", "visit_detail_start_date", "visit_detail_start_datetime",
                 "visit_detail_end_date", "visit_detail_end_datetime", "visit_detail_type_concept_id", "provider_id", "care_site_id", "visit_detail_source_value",
                 "visit_detail_source_concept_id", };
-            DB.Target.CopyBinaryRows<VisitDetail>( cols, (row, write) =>
-            {
-                ConsultationLoader.LoopAll(chunk, consult =>
-            {
-                row();
-                write(consult.patid);
-                write(9202);
-                write(consult.eventdate);
-                write(consult.eventdate);
-                write(consult.eventdate);
-                write(consult.eventdate);
-                write(32827);
-                write(consult.staffid);
-                write(consult.care_site_id);
-                write(consult.constype.ToString());
-                write(0);
-            });
-            });
+            DB.Target.CopyBinaryRows<VisitDetail>(cols, (row, write) =>
+           {
+               chunk.GetLoader<ConsultationLoader>(DBMS.models.ChunkLoadType.CONSULTATION).LoopAllData(consult =>
+                {
+                    row();
+                    write(consult.patid);
+                    write(9202);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(consult.eventdate);
+                    write(32827);
+                    write(consult.staffid);
+                    write(consult.care_site_id);
+                    write(consult.constype.ToString());
+                    write(0);
+                });
+           });
         }
     }
 }
