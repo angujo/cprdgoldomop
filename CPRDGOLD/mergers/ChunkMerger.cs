@@ -62,6 +62,14 @@ namespace CPRDGOLD.mergers
             Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 
+        public void LoopAllFast(Action<C> looper)
+        {
+            Log.Info($"Starting LoopAll #{typeof(T).Name}");
+            Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
+            Parallel.ForEach(data, new ParallelOptions { MaxDegreeOfParallelism = 10 }, c => looper(c));
+            Log.Info($"Finished LoopAll #{typeof(T).Name}");
+        }
+
         protected abstract void LoadData();
     }
 }

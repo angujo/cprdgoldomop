@@ -38,7 +38,7 @@ namespace CPRDGOLD.mergers
             AddInMerger addInMerger = AddInMerger.prepare(chunk);
 
             Log.Info($"Starting StemTable #Additional");
-            addInMerger.LoopAllData(add_in =>
+            addInMerger.LoopAllFast(add_in =>
            {
                Concept concept = ConceptLoader.ByCode(add_in.source_value) ?? new Concept();
                Concept concUcum = ConceptLoader.ByStdCodeVocab(add_in.unit_source_value, "UCUM") ?? new Concept();
@@ -67,7 +67,7 @@ namespace CPRDGOLD.mergers
         private void Clinical()
         {
             Log.Info($"Starting StemTable #Clinical");
-            chunk.GetLoader<ClinicalLoader>(ChunkLoadType.CLINICAL).LoopAllData(clinic =>
+            chunk.GetLoader<ClinicalLoader>(ChunkLoadType.CLINICAL).LoopAllFast(clinic =>
            {
                var stem = new StemTable
                {
@@ -89,7 +89,7 @@ namespace CPRDGOLD.mergers
         private void Immunisation()
         {
             Log.Info($"Starting StemTable #Immunisation");
-            chunk.GetLoader<ImmunisationLoader>(ChunkLoadType.IMMUNISATION).LoopAllData(imm =>
+            chunk.GetLoader<ImmunisationLoader>(ChunkLoadType.IMMUNISATION).LoopAllFast(imm =>
          {
              Add(new StemTable
              {
@@ -110,7 +110,7 @@ namespace CPRDGOLD.mergers
         private void Referral()
         {
             Log.Info($"Starting StemTable #Referral");
-            chunk.GetLoader<ReferralLoader>(ChunkLoadType.REFERRAL).LoopAllData(reff =>
+            chunk.GetLoader<ReferralLoader>(ChunkLoadType.REFERRAL).LoopAllFast(reff =>
           {
               Add(new StemTable
               {
@@ -132,7 +132,7 @@ namespace CPRDGOLD.mergers
         {
             Log.Info($"Starting StemTable #Test");
             var testint = TestIntMerger.Init(chunk);
-            testint.LoopAllData(test =>
+            testint.LoopAllFast(test =>
            {
                Concept concUcum = ConceptLoader.ByStdCodeVocab(test.unit, "UCUM") ?? new Concept();
                Concept concVal = ConceptLoader.ByStdNameDomain(test.value_as_concept_id, "Meas Value") ?? new Concept();
@@ -163,7 +163,7 @@ namespace CPRDGOLD.mergers
         private void Therapy()
         {
             Log.Info($"Starting StemTable #Therapy");
-            chunk.GetLoader<TherapyLoader>(ChunkLoadType.THERAPY).LoopAllData(ther =>
+            chunk.GetLoader<TherapyLoader>(ChunkLoadType.THERAPY).LoopAllFast(ther =>
                {
                    CommonDosage cdosage = CommonDosageLoader.ByDoseId(ther.dosageid);
                    if (null == cdosage) return;

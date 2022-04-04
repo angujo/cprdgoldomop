@@ -5,6 +5,7 @@ using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Util;
 
 namespace CPRDGOLD.loaders
@@ -133,7 +134,7 @@ namespace CPRDGOLD.loaders
                             j => j.On("source_to_source.source_code", "product.gemscriptcode")
                             .Where("source_to_source.source_vocabulary_id", "gemscript"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
-                            j => j.On("concept.concept_code", "medical.read_code"))
+                            j => j.On("concept.concept_code", "product.gemscriptcode"))
                         .WhereRaw("therapy.eventdate between source_to_standard.source_valid_start_date and source_to_standard.source_valid_end_date")
                         .SelectRaw("product.gemscriptcode AS prod_gemscriptcode, source_to_standard.source_concept_id as st_source_concept_id," +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
@@ -188,6 +189,14 @@ namespace CPRDGOLD.loaders
             }
             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
 
+        }
+
+        public void LoopAllFast(Action<C> looper)
+        {
+            Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            Parallel.ForEach(dataset, new ParallelOptions { MaxDegreeOfParallelism = 10 }, c => looper(c));
+            Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 
         public void LoopAllData(Action<C> looper)
