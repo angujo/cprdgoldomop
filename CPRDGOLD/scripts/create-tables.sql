@@ -6,15 +6,15 @@
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.attribute_definition;
+--DROP TABLE IF EXISTS {sc}.attribute_definition;
 
-CREATE TABLE {sc}.attribute_definition (
-	attribute_definition_id int8 NULL,
-	attribute_name varchar(255) NULL,
-	attribute_description text NULL,
-	attribute_type_concept_id int4 NULL,
-	attribute_syntax text NULL
-);
+--CREATE TABLE {sc}.attribute_definition (
+--	attribute_definition_id int8 NULL,
+--	attribute_name varchar(255) NULL,
+--	attribute_description text NULL,
+--	attribute_type_concept_id int4 NULL,
+--	attribute_syntax text NULL
+--);
 
 
 -- {sc}.care_site definition
@@ -37,12 +37,12 @@ CREATE TABLE {sc}.care_site (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.cdm_domain_meta;
+--DROP TABLE IF EXISTS {sc}.cdm_domain_meta;
 
-CREATE TABLE {sc}.cdm_domain_meta (
-	domain_id varchar(20) NULL,
-	description varchar(4000) NULL
-);
+--CREATE TABLE {sc}.cdm_domain_meta (
+--	domain_id varchar(20) NULL,
+--	description varchar(4000) NULL
+--);
 
 
 -- {sc}.cdm_source definition
@@ -69,31 +69,31 @@ CREATE TABLE {sc}.cdm_source (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.cohort;
+--DROP TABLE IF EXISTS {sc}.cohort;
 
-CREATE TABLE {sc}.cohort (
-	cohort_definition_id int4 NULL,
-	subject_id int4 NULL,
-	cohort_start_date timestamp NULL,
-	cohort_end_date timestamp NULL
-);
+--CREATE TABLE {sc}.cohort (
+--	cohort_definition_id int4 NULL,
+--	subject_id int4 NULL,
+--	cohort_start_date timestamp NULL,
+--	cohort_end_date timestamp NULL
+--);
 
 
 -- {sc}.cohort_attribute definition
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.cohort_attribute;
+--DROP TABLE IF EXISTS {sc}.cohort_attribute;
 
-CREATE TABLE {sc}.cohort_attribute (
-	cohort_definition_id int4 NULL,
-	subject_id int4 NULL,
-	cohort_start_date timestamp NULL,
-	cohort_end_date timestamp NULL,
-	attribute_definition_id int4 NULL,
-	value_as_number numeric NULL,
-	value_as_concept_id int4 NULL
-);
+--CREATE TABLE {sc}.cohort_attribute (
+--	cohort_definition_id int4 NULL,
+--	subject_id int4 NULL,
+--	cohort_start_date timestamp NULL,
+--	cohort_end_date timestamp NULL,
+--	attribute_definition_id int4 NULL,
+--	value_as_number numeric NULL,
+--	value_as_concept_id int4 NULL
+--);
 
 
 -- {sc}.cohort_definition definition
@@ -158,32 +158,32 @@ CREATE TABLE {sc}.condition_occurrence (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}."cost";
+--DROP TABLE IF EXISTS {sc}."cost";
 
-CREATE TABLE {sc}."cost" (
-	cost_id int8 NULL,
-	cost_event_id int8 NULL,
-	cost_domain_id varchar(20) NULL,
-	cost_type_concept_id int4 NULL,
-	currency_concept_id int4 NULL,
-	total_charge numeric NULL,
-	total_cost numeric NULL,
-	total_paid numeric NULL,
-	paid_by_payer numeric NULL,
-	paid_by_patient numeric NULL,
-	paid_patient_copay numeric NULL,
-	paid_patient_coinsurance numeric NULL,
-	paid_patient_deductible numeric NULL,
-	paid_by_primary numeric NULL,
-	paid_ingredient_cost numeric NULL,
-	paid_dispensing_fee numeric NULL,
-	payer_plan_period_id int8 NULL,
-	amount_allowed numeric NULL,
-	revenue_code_concept_id int4 NULL,
-	revenue_code_source_value varchar(50) NULL,
-	drg_concept_id int4 NULL,
-	drg_source_value varchar(3) NULL
-);
+--CREATE TABLE {sc}."cost" (
+--	cost_id int8 NULL,
+--	cost_event_id int8 NULL,
+--	cost_domain_id varchar(20) NULL,
+--	cost_type_concept_id int4 NULL,
+--	currency_concept_id int4 NULL,
+--	total_charge numeric NULL,
+--	total_cost numeric NULL,
+--	total_paid numeric NULL,
+--	paid_by_payer numeric NULL,
+--	paid_by_patient numeric NULL,
+--	paid_patient_copay numeric NULL,
+--	paid_patient_coinsurance numeric NULL,
+--	paid_patient_deductible numeric NULL,
+--	paid_by_primary numeric NULL,
+--	paid_ingredient_cost numeric NULL,
+--	paid_dispensing_fee numeric NULL,
+--	payer_plan_period_id int8 NULL,
+--	amount_allowed numeric NULL,
+--	revenue_code_concept_id int4 NULL,
+--	revenue_code_source_value varchar(50) NULL,
+--	drg_concept_id int4 NULL,
+--	drg_source_value varchar(3) NULL
+--);
 
 
 -- {sc}.death definition
@@ -298,15 +298,15 @@ CREATE TABLE {sc}.drug_exposure (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.fact_relationship;
+--DROP TABLE IF EXISTS {sc}.fact_relationship;
 
-CREATE TABLE {sc}.fact_relationship (
-	domain_concept_id_1 int4 NULL,
-	fact_id_1 int4 NULL,
-	domain_concept_id_2 int4 NULL,
-	fact_id_2 int4 NULL,
-	relationship_concept_id int4 NULL
-);
+--CREATE TABLE {sc}.fact_relationship (
+--	domain_concept_id_1 int4 NULL,
+--	fact_id_1 int4 NULL,
+--	domain_concept_id_2 int4 NULL,
+--	fact_id_2 int4 NULL,
+--	relationship_concept_id int4 NULL
+--);
 
 
 -- {sc}."location" definition
@@ -361,77 +361,77 @@ CREATE TABLE {sc}.measurement (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.metadata;
+--DROP TABLE IF EXISTS {sc}.metadata;
 
-CREATE TABLE {sc}.metadata (
-	metadata_concept_id int4 NULL,
-	metadata_type_concept_id int4 NULL,
-	"name" varchar(250) NULL,
-	value_as_string text NULL,
-	value_as_concept_id int4 NULL,
-	metadata_date timestamp NULL,
-	metadata_datetime timestamp NULL
-);
+--CREATE TABLE {sc}.metadata (
+--	metadata_concept_id int4 NULL,
+--	metadata_type_concept_id int4 NULL,
+--	"name" varchar(250) NULL,
+--	value_as_string text NULL,
+--	value_as_concept_id int4 NULL,
+--	metadata_date timestamp NULL,
+--	metadata_datetime timestamp NULL
+--);
 
 
 -- {sc}.metadata_tmp definition
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.metadata_tmp;
+--DROP TABLE IF EXISTS {sc}.metadata_tmp;
 
-CREATE TABLE {sc}.metadata_tmp (
-	person_id int8 NULL,
-	"name" varchar(250) NULL
-);
+--CREATE TABLE {sc}.metadata_tmp (
+--	person_id int8 NULL,
+--	"name" varchar(250) NULL
+--);
 
 
 -- {sc}.note definition
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.note;
+--DROP TABLE IF EXISTS {sc}.note;
 
-CREATE TABLE {sc}.note (
-	note_id int8 NULL,
-	person_id int4 NULL,
-	note_date timestamp NULL,
-	note_datetime timestamp NULL,
-	note_type_concept_id int4 NULL,
-	note_class_concept_id int4 NULL,
-	note_title varchar(250) NULL,
-	note_text text NULL,
-	encoding_concept_id int4 NULL,
-	language_concept_id int4 NULL,
-	provider_id int4 NULL,
-	visit_occurrence_id int8 NULL,
-	visit_detail_id int4 NULL,
-	note_source_value varchar(50) NULL
-);
+--CREATE TABLE {sc}.note (
+--	note_id int8 NULL,
+--	person_id int4 NULL,
+--	note_date timestamp NULL,
+--	note_datetime timestamp NULL,
+--	note_type_concept_id int4 NULL,
+--	note_class_concept_id int4 NULL,
+--	note_title varchar(250) NULL,
+--	note_text text NULL,
+--	encoding_concept_id int4 NULL,
+--	language_concept_id int4 NULL,
+--	provider_id int4 NULL,
+--	visit_occurrence_id int8 NULL,
+--	visit_detail_id int4 NULL,
+--	note_source_value varchar(50) NULL
+--);
 
 
 -- {sc}.note_nlp definition
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.note_nlp;
+--DROP TABLE IF EXISTS {sc}.note_nlp;
 
-CREATE TABLE {sc}.note_nlp (
-	note_nlp_id int8 NULL,
-	note_id int4 NULL,
-	section_concept_id int4 NULL,
-	snippet varchar(250) NULL,
-	"offset" varchar(250) NULL,
-	lexical_variant varchar(250) NULL,
-	note_nlp_concept_id int4 NULL,
-	note_nlp_source_concept_id int4 NULL,
-	nlp_system varchar(250) NULL,
-	nlp_date timestamp NULL,
-	nlp_datetime timestamp NULL,
-	term_exists varchar(1) NULL,
-	term_temporal varchar(50) NULL,
-	term_modifiers varchar(2000) NULL
-);
+--CREATE TABLE {sc}.note_nlp (
+--	note_nlp_id int8 NULL,
+--	note_id int4 NULL,
+--	section_concept_id int4 NULL,
+--	snippet varchar(250) NULL,
+--	"offset" varchar(250) NULL,
+--	lexical_variant varchar(250) NULL,
+--	note_nlp_concept_id int4 NULL,
+--	note_nlp_source_concept_id int4 NULL,
+--	nlp_system varchar(250) NULL,
+--	nlp_date timestamp NULL,
+--	nlp_datetime timestamp NULL,
+--	term_exists varchar(1) NULL,
+--	term_temporal varchar(50) NULL,
+--	term_modifiers varchar(2000) NULL
+--);
 
 
 -- {sc}.observation definition
@@ -480,27 +480,27 @@ CREATE TABLE {sc}.observation_period (
 
 -- Drop
 
-DROP TABLE IF EXISTS {sc}.payer_plan_period;
+--DROP TABLE IF EXISTS {sc}.payer_plan_period;
 
-CREATE TABLE {sc}.payer_plan_period (
-	payer_plan_period_id int8 NULL,
-	person_id int8 NULL,
-	payer_plan_period_start_date timestamp NULL,
-	payer_plan_period_end_date timestamp NULL,
-	payer_concept_id int4 NULL,
-	payer_source_value varchar(50) NULL,
-	payer_source_concept_id int4 NULL,
-	plan_concept_id int4 NULL,
-	plan_source_value varchar(50) NULL,
-	plan_source_concept_id int4 NULL,
-	sponsor_concept_id int4 NULL,
-	sponsor_source_value varchar(50) NULL,
-	sponsor_source_concept_id int4 NULL,
-	family_source_value varchar(50) NULL,
-	stop_reason_concept_id int4 NULL,
-	stop_reason_source_value varchar(50) NULL,
-	stop_reason_source_concept_id int4 NULL
-);
+--CREATE TABLE {sc}.payer_plan_period (
+--	payer_plan_period_id int8 NULL,
+--	person_id int8 NULL,
+--	payer_plan_period_start_date timestamp NULL,
+--	payer_plan_period_end_date timestamp NULL,
+--	payer_concept_id int4 NULL,
+--	payer_source_value varchar(50) NULL,
+--	payer_source_concept_id int4 NULL,
+--	plan_concept_id int4 NULL,
+--	plan_source_value varchar(50) NULL,
+--	plan_source_concept_id int4 NULL,
+--	sponsor_concept_id int4 NULL,
+--	sponsor_source_value varchar(50) NULL,
+--	sponsor_source_concept_id int4 NULL,
+--	family_source_value varchar(50) NULL,
+--	stop_reason_concept_id int4 NULL,
+--	stop_reason_source_value varchar(50) NULL,
+--	stop_reason_source_concept_id int4 NULL
+--);
 
 
 -- {sc}.person definition
