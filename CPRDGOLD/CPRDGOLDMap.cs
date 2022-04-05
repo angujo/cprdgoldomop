@@ -16,7 +16,7 @@ namespace CPRDGOLD
     {
         private static AppDBMS appDBMS;
 
-        public static async void Run(Action<bool> isUp)
+        public static void Run(Action<bool> isUp)
         {
             Log.Warning("Checking Workload to proccess...");
             appDBMS = new AppDBMS();
@@ -25,33 +25,33 @@ namespace CPRDGOLD
                 Log.Warning("No Workload to proccess...");
                 return;
             }
-           // await Task.Run(() =>
-           //   {
-                  Log.Info("We are in a workload proccess...");
-                  try
-                  {
-                      isUp(true);
+            Task.Run(() =>
+             {
+                 Log.Info("We are in a workload proccess...");
+                 try
+                 {
+                     isUp(true);
 
-                      appDBMS.StartQueue();
+                     appDBMS.StartQueue();
 
-                      appDBMS.CleanUpChunks();
+                     appDBMS.CleanUpChunks();
 
-                      Initiate();
+                     Initiate();
 
-                      appDBMS.StopQueue();
+                     appDBMS.StopQueue();
 
                       //Cleanup again to reset incomplete workload and chunks
                       appDBMS.CleanUpChunks();
-                  }
-                  catch (Exception ex)
-                  {
-                      Log.Error(ex);
-                      appDBMS.StopQueue(ex);
-                      throw;
-                  }
-                  finally { isUp(false); }
-                  Log.Info("We are Done...");
-            //  });
+                 }
+                 catch (Exception ex)
+                 {
+                     Log.Error(ex);
+                     appDBMS.StopQueue(ex);
+                     throw;
+                 }
+                 finally { isUp(false); }
+                 Log.Info("We are Done...");
+             });
 
         }
 
