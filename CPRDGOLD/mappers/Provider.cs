@@ -30,7 +30,7 @@ namespace CPRDGOLD.mappers
                 SourceToConceptMap sconcept;
                 Lookup lu;
                 if (null == (lu = LookupLoader.ByCodeType(staff.role == 0 ? null : staff.role.ToString(), 76)) ||
-                null == (sconcept = SourceToConceptMapLoader.BySourceCode(staff.role == 0 ? null : staff.role.ToString()))) return null;
+                null == (sconcept = SourceToConceptMapLoader.ByJobCode(staff.role == 0 ? null : staff.role.ToString()))) return null;
                 return new Provider
                 {
                     provider_id = staff.staffid,

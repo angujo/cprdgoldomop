@@ -44,30 +44,30 @@ namespace CPRDGOLD.mappers
     internal enum LocationType
     {
         [StringValue("North East")]
-        NORTH_EAS_T = 1,
+        NORTH_EAST = 1,
         [StringValue("North West")]
-        NORTH_WES_T = 2,
+        NORTH_WEST = 2,
         [StringValue("Yorkshire The Humber")]
-        YORKSHIRETHE_HUMBE_R = 3,
+        YORKSHIRETHE_HUMBER = 3,
         [StringValue("East Midlands")]
-        EAST_MIDLAND_S = 4,
+        EAST_MIDLANDS = 4,
         [StringValue("West Midlands")]
-        WEST_MIDLAND_S = 5,
+        WEST_MIDLANDS = 5,
         [StringValue("East of England")]
         EAST_OF_ENGLAND = 6,
         [StringValue("South West")]
-        SOUTH_WES_T = 7,
+        SOUTH_WEST = 7,
         [StringValue("South Central")]
-        SOUTH_CENTRA_L = 8,
+        SOUTH_CENTRAL = 8,
         [StringValue("London")]
-        LONDO__N = 9,
+        LONDON = 9,
         [StringValue("South East Coast")]
         SOUTH_EAST_COAST = 10,
         [StringValue("Northern Ireland")]
-        NORTHERN_IRELAN_D = 11,
+        NORTHERN_IRELAND = 11,
         [StringValue("Scotland")]
-        SCOTLAN__D = 12,
+        SCOTLAND = 12,
         [StringValue("Wales")]
-        WALE__S = 13,
+        WALES = 13,
     }
 }

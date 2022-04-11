@@ -40,8 +40,8 @@ namespace CPRDGOLD
 
                      appDBMS.StopQueue();
 
-                      //Cleanup again to reset incomplete workload and chunks
-                      appDBMS.CleanUpChunks();
+                     //Cleanup again to reset incomplete workload and chunks
+                     appDBMS.CleanUpChunks();
                  }
                  catch (Exception ex)
                  {
@@ -52,7 +52,6 @@ namespace CPRDGOLD
                  finally { isUp(false); }
                  Log.Info("We are Done...");
              });
-
         }
 
         private static void Initiate()
@@ -68,35 +67,42 @@ namespace CPRDGOLD
             var ordinals = appDBMS.ChunkOrdinals().ToArray();
 
             Parallel.ForEach(ordinals, new ParallelOptions { MaxDegreeOfParallelism = appDBMS.workload.MaxParallels }, chunkOrdinal =>
-           {
-               Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
+            {
+                Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
 
-               //Initialize all data loader for the chunk.
+                //Initialize all data loader for the chunk based on implementable CDMs.
+                try
+                {
+                    chunk.Start();
 
-               chunk
-               .InitLoader(ChunkLoadType.ACTIVE_PATIENT, ActivePatientLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.CONSULTATION, ConsultationLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.IMMUNISATION, ImmunisationLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.THERAPY, TherapyLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.ADDITIONAL, AdditionalLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.PATIENT, PatientLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.TEST, TestLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.REFERRAL, ReferralLoader.Initialize(chunk))
-               .InitLoader(ChunkLoadType.CLINICAL, ClinicalLoader.Initialize(chunk));
-               try
-               {
-                   chunk.Start();
+                    if (chunk.Implementable(LoadType.DEATH, LoadType.PERSON)) chunk.InitLoader(ChunkLoadType.ACTIVE_PATIENT, ActivePatientLoader.Initialize(chunk));
+                    if (chunk.Implementable(LoadType.VISITDETAIL, LoadType.VISITOCCURRENCE)) chunk.InitLoader(ChunkLoadType.CONSULTATION, ConsultationLoader.Initialize(chunk));
 
-                   StemTableUsers(chunk);
-                   ChunkBased(chunk);
+                    if (chunk.ImplementableStemTable())
+                    {
+                        chunk.InitLoader(ChunkLoadType.IMMUNISATION, ImmunisationLoader.Initialize(chunk))
+                            .InitLoader(ChunkLoadType.THERAPY, TherapyLoader.Initialize(chunk))
+                            .InitLoader(ChunkLoadType.ADDITIONAL, AdditionalLoader.Initialize(chunk))
+                            .InitLoader(ChunkLoadType.TEST, TestLoader.Initialize(chunk))
+                            .InitLoader(ChunkLoadType.REFERRAL, ReferralLoader.Initialize(chunk))
+                            .InitLoader(ChunkLoadType.CLINICAL, ClinicalLoader.Initialize(chunk));
+                    }
+                    if (chunk.Implementable(LoadType.OBSERVATIONPERIOD)) chunk.InitLoader(ChunkLoadType.PATIENT, PatientLoader.Initialize(chunk));
 
-                   chunk.Implemented();
-               }
-               catch (Exception ex)
-               {
-                   chunk.Stop(ex);
-               }
-           });
+                    List<Action> actions = new List<Action>
+                    {
+                        () => StemTableUsers(chunk),
+                        () => ChunkBased(chunk),
+                    };
+                    Parallel.ForEach(actions, action => action());
+
+                    chunk.Implemented();
+                }
+                catch (Exception ex)
+                {
+                    chunk.Stop(ex);
+                }
+            });
         }
 
         private static void ChunkBased(Chunk chunk)
@@ -118,7 +124,7 @@ namespace CPRDGOLD
         private static void StemTableUsers(Chunk chunk)
         {
             //It is cheaper to check than to load stem tables and not use
-            if (!chunk.Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE)) return;
+            if (!chunk.ImplementableStemTable()) return;
             var stemTable = StemTableMerger.Prepare(chunk);
 
             Log.Info("StemTable Loaded!");

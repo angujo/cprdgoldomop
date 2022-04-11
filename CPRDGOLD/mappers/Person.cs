@@ -34,21 +34,21 @@ namespace CPRDGOLD.mappers
             DB.Target.CopyBinaryRows<Person>(cols, (row, write) =>
            {
                chunk.GetLoader<ActivePatientLoader>(DBMS.models.ChunkLoadType.ACTIVE_PATIENT).LoopAllData(patient =>
-                     {
-                         row();
-                         write(patient.patid);
-                         write(1 == patient.gender ? 8507 : 8532);
-                         write(patient.yob.ToString().Length < 4 ? patient.yob + 1800 : patient.yob);
-                         write(patient.mob);
-                         write(0);
-                         write(0);
-                         write(patient.care_site_id);
-                         write(patient.patid.ToString());
-                         write(patient.gender.ToString());
-                         write(0);
-                         write(0);
-                         write(0);
-                     });
+                {
+                    row();
+                    write(patient.patid);
+                    write(1 == patient.gender ? 8507 : 8532);
+                    write(patient.yob.ToString().Length < 4 ? patient.yob + 1800 : patient.yob);
+                    write(patient.mob);
+                    write(0);
+                    write(0);
+                    write(patient.care_site_id);
+                    write(patient.patid.ToString());
+                    write(patient.gender.ToString());
+                    write(0);
+                    write(0);
+                    write(0);
+                });
            });
         }
     }

@@ -91,9 +91,14 @@ namespace DBMS.models
             return _setup;
         }
 
+        public bool ImplementableStemTable()
+        {
+            return Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE);
+        }
+
         public bool Implementable(params LoadType[] ltypes)
         {
-            foreach (var ltype in ltypes) if (GetLoad(ltype).IsPending) return true;
+            foreach (var ltype in ltypes) if ((bool)(GetLoad(ltype)?.IsPending)) return true;
             return false;
         }
 

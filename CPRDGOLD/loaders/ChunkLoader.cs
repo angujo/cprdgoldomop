@@ -25,9 +25,9 @@ namespace CPRDGOLD.loaders
 
         public void CustomizeQuery(Query query, string schema_name)
         {
-            switch (table_name)
+            switch (typeof(T).Name)
             {
-                case "consultation":
+                case nameof(ConsultationLoader):
                     // When Loading visit_detail, the following merge is irrelevant 
                     /* DBMSSystem db = (DBMSSystem)chunk.dbms;
                      var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
@@ -51,14 +51,15 @@ namespace CPRDGOLD.loaders
                          .Join(clinical.UnionAll(referral).UnionAll(test).UnionAll(immunisation).UnionAll(therapy).As("u"),
                          j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));*/
                     break;
-                case "patient":
-                    if ("ActivePatientLoader" == typeof(T).Name)
-                        query.WhereRaw("accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 AND (deathdate IS NULL OR deathdate >= crd)");
-                    else
-                        query.Join($"{schema_name}.practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
-                            .SelectRaw("greatest(patient.frd,practice.uts) AS op_start_date, least(patient.tod,practice.lcd, patient.crd) AS op_end_date, 32880 AS pt_concept_id");
+                case nameof(ActivePatientLoader):
+                    query.WhereRaw("accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 " +
+                        "AND ((deathdate IS null and tod is null) OR coalesce(deathdate,tod) >= crd))");
                     break;
-                case "clinical":
+                case nameof(PatientLoader):
+                    query.Join($"{schema_name}.practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
+                                    .SelectRaw("greatest(patient.frd,practice.uts) AS op_start_date, least(patient.tod,practice.lcd, patient.crd) AS op_end_date, 32880 AS pt_concept_id");
+                    break;
+                case nameof(ClinicalLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "clinical.medcode")
                         .Join($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
@@ -73,9 +74,8 @@ namespace CPRDGOLD.loaders
                         .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id, " +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                             " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
-                    // query.q
                     break;
-                case "immunisation":
+                case nameof(ImmunisationLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "immunisation.medcode")
                         .Join($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
@@ -91,7 +91,7 @@ namespace CPRDGOLD.loaders
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
-                case "referral":
+                case nameof(ReferralLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "referral.medcode")
                         .Join($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
@@ -107,7 +107,7 @@ namespace CPRDGOLD.loaders
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
-                case "test":
+                case nameof(TestLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "test.medcode")
                         .Join($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
@@ -123,7 +123,7 @@ namespace CPRDGOLD.loaders
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code, medical.desc as read_description");
                     break;
-                case "therapy":
+                case nameof(TherapyLoader):
                     query.Join($"{schema_name}.product", "product.prodcode", "therapy.prodcode")
                         .Join($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "product.gemscriptcode")
