@@ -8,8 +8,10 @@ namespace DBMS.models
     public class Chunk
     {
         private static Chunk _setup;
+        private static Chunk _post;
         public string tableName = "_chunk";
         public int ordinal = 0;
+        public bool postProcess = false;
         public static long WorkLoadId = 0;
         public string column = "patient_id";
         public string ordinalColumn = "ordinal";
@@ -17,7 +19,7 @@ namespace DBMS.models
         public string relationTableName { get; set; }
         private Chunktimer timer;
         public dynamic dbms { get; set; }
-        public Dictionary<ChunkLoadType, dynamic> loaders =new Dictionary<ChunkLoadType, dynamic>();
+        public Dictionary<ChunkLoadType, dynamic> loaders = new Dictionary<ChunkLoadType, dynamic>();
 
         public string[] LoadedNames { get { return Loads.Keys.Select(k => k.GetStringValue()).ToArray(); } }
 
@@ -37,7 +39,8 @@ namespace DBMS.models
 
         public void Start()
         {
-            SetupLoads();
+            if (postProcess) DoSetup(new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA });
+            else SetupLoads();
             CommitLoads();
             if (ordinal >= 0) GetTimer().Start();
         }
@@ -56,11 +59,21 @@ namespace DBMS.models
         {
             var once = new LoadType[] {
                 LoadType.PROVIDER, LoadType.CARESITE, LoadType.LOCATION, LoadType.CDMSOURCE, LoadType.COHORTDEFINITION, LoadType.DAYSUPPLYDECODESETUP, LoadType.DAYSUPPLYMODESETUP,
-                LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES,LoadType.CHUNKSETUP,LoadType.CHUNKLOAD };
-            LoadType[] types = (0 > ordinal ? once : Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !once.Contains(lt))).ToArray();
+                LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES, LoadType.CHUNKSETUP, LoadType.CHUNKLOAD };
+            var post = new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA };
+
+            LoadType[] types = (0 > ordinal ? once : Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !once.Concat(post).ToArray().Contains(lt))).ToArray();
+            DoSetup(types);
+        }
+
+        private void DoSetup(LoadType[] types)
+        {
             string[] names = types.Select(lt => lt.GetStringValue()).ToArray();
             Loads = DB.Internal.GetAll<Cdmtimer>("WHERE workloadid = @WorkLoadId AND chunkid = @ChunkId AND name = ANY(@Name)", new { WorkLoadId = WorkLoadId, ChunkId = ordinal, Name = names }).ToDictionary(ct => LoadTypeFromName(ct.Name), ct => ct);
-
+            if (postProcess)
+            {
+                var i = 10000;
+            }
             var missingTypes = types.Where(name => !Loads.ContainsKey(name));
             foreach (var lkey in missingTypes) Loads[lkey] = new Cdmtimer { WorkLoadId = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, ChunkId = ordinal, Status = Status.SCHEDULED };
         }
@@ -91,6 +104,16 @@ namespace DBMS.models
             return _setup;
         }
 
+        public static Chunk ForPost()
+        {
+            if (default != _post) return _post;
+            _post = new Chunk { ordinal = -1, postProcess = true };
+            _post.DoSetup(new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA });
+            _post.CommitLoads();
+            _post.Start();
+            return _post;
+        }
+
         public bool ImplementableStemTable()
         {
             return Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE);
@@ -102,16 +125,28 @@ namespace DBMS.models
             return false;
         }
 
-        public static Cdmtimer SULoad(LoadType ltype) => ForSetup().GetLoad(ltype);
+        public static void PostImplement(LoadType ltype, Action impl)
+        {
+            ForPost()
+                .GetLoad(ltype)
+                .Implement(() =>
+                  {
+                      Log.Info($"Starting implementation of {ltype.GetStringValue()}");
+                      impl();
+                      Log.Info($"Finished implementation of {ltype.GetStringValue()}");
+                  });
+        }
+
+        private static Cdmtimer SULoad(LoadType ltype) => ForSetup().GetLoad(ltype);
 
         public static void SUImplement(LoadType ltype, Action impl)
         {
             SULoad(ltype).Implement(() =>
-            {
-                Log.Info($"Starting implementation of {ltype.GetStringValue()}");
-                impl();
-                Log.Info($"Finished implementation of {ltype.GetStringValue()}");
-            });
+              {
+                  Log.Info($"Starting implementation of {ltype.GetStringValue()}");
+                  impl();
+                  Log.Info($"Finished implementation of {ltype.GetStringValue()}");
+              });
         }
 
         public Chunk InitLoader(ChunkLoadType l, dynamic load)

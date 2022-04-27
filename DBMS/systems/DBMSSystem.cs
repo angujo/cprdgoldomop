@@ -77,6 +77,7 @@ namespace DBMS.systems
                 var query = new QueryFactory(conn, GetCompiler()).Query(string.Join(".", new string[] { DB.Source.schema.SchemaName, chunk.tableName, }));
                 query.Join(Dot(schema.SchemaName, tbl_name), Dot(tbl_name, chunk.relationColumn), Dot(chunk.tableName, chunk.column))
                     .SelectRaw(Dot(tbl_name, "*"))
+                    .SelectRaw(Dot(chunk.tableName, "id as chunk_id"))
                     .Where(Dot(chunk.tableName, chunk.ordinalColumn), chunk.ordinal);
                 action(query, schema.SchemaName);
             }
@@ -85,16 +86,24 @@ namespace DBMS.systems
         // For parameters use $1, $2, ... $N for placeholders with args holding value with resp to order
         public int RunQuery(string query, params object[] args)
         {
-            using (var conn = GetConnection())
+            try
             {
-                conn.Open();
-                using (var cmd = conn.CreateCommand())
+                using (var conn = GetConnection())
                 {
-                    cmd.CommandText = query;
-                    foreach (var arg in args) cmd.Parameters.Add(arg);
-                    return cmd.ExecuteNonQuery();
+                    conn.Open();
+                    using (var cmd = conn.CreateCommand())
+                    {
+                        cmd.CommandText = query;
+                        foreach (var arg in args) cmd.Parameters.Add(arg);
+                        return cmd.ExecuteNonQuery();
+                    }
+                    // return new QueryFactory(conn, GetCompiler()).Statement(query);
                 }
-                // return new QueryFactory(conn, GetCompiler()).Statement(query);
+            }
+            catch (Exception)
+            {
+                Log.Error(query);
+                throw;
             }
         }
 

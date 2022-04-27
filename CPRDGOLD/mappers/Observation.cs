@@ -32,7 +32,7 @@ namespace CPRDGOLD.mappers
             StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "provider_id",  "unit_source_value", "observation_id", "observation_source_value",
                 "person_id", "observation_source_concept_id", "observation_date", "observation_concept_id", "observation_datetime", "observation_type_concept_id",
-                "value_as_number", "value_as_concept_id", "unit_concept_id", "value_as_string", };
+                "value_as_number", "value_as_concept_id", "unit_concept_id", "value_as_string","visit_occurrence_id" };
             DB.Target.CopyBinaryRows<Observation>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -54,6 +54,7 @@ namespace CPRDGOLD.mappers
                    write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
                    write(stem.value_as_string);
+                   write(stem.chunk_identifier);
                });
             });
         }

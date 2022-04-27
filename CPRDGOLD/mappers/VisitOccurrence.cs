@@ -36,10 +36,11 @@ namespace CPRDGOLD.mappers
         {
             string[] cols = new string[] { "person_id", "visit_concept_id", "visit_start_date", "visit_start_datetime",
                 "visit_end_date", "visit_end_datetime", "visit_type_concept_id", "provider_id", "care_site_id", "visit_source_value",
-                "visit_source_concept_id", };
+                "visit_source_concept_id","visit_occurrence_id" };
             DB.Target.CopyBinaryRows<VisitOccurrence>(cols, (row, write) =>
            {
-               chunk.GetLoader<ConsultationLoader>(DBMS.models.ChunkLoadType.CONSULTATION).LoopGroupData(
+               chunk.GetLoader<ConsultationLoader>(DBMS.models.ChunkLoadType.CONSULTATION)
+               .LoopGroupData(
                    dt => dt.eventdate.ToString(),
                    consult =>
                    {
@@ -55,6 +56,7 @@ namespace CPRDGOLD.mappers
                        write(consult.care_site_id);
                        write(consult.constype.ToString());
                        write(0);
+                       write(consult.chunk_identifier);
                    });
            });
         }

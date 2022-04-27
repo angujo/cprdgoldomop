@@ -1,45 +1,52 @@
-/** ConfitionEra #{ch} */
-WITH cteConditionTarget AS (
-		SELECT co.PERSON_ID, co.condition_concept_id, co.CONDITION_START_DATE, COALESCE(co.CONDITION_END_DATE, CONDITION_START_DATE + interval '1 day') AS CONDITION_END_DATE
-		FROM {ss}._chunk JOIN {sc}.CONDITION_OCCURRENCE co ON patient_id = co.person_id WHERE ordinal = {ch}
-	),
-	
-	cteCondEndDates AS (
-	      SELECT PERSON_ID, CONDITION_CONCEPT_ID, EVENT_DATE::date - interval '30 day' AS END_DATE -- unpad the end date
-	      FROM (
-	          SELECT E1.PERSON_ID, E1.CONDITION_CONCEPT_ID, E1.EVENT_DATE, COALESCE(E1.START_ORDINAL, MAX(E2.START_ORDINAL)) START_ORDINAL, E1.OVERALL_ORD
-	          FROM (
-	              SELECT PERSON_ID, CONDITION_CONCEPT_ID, EVENT_DATE, EVENT_TYPE, START_ORDINAL, ROW_NUMBER() OVER (PARTITION BY PERSON_ID, CONDITION_CONCEPT_ID ORDER BY EVENT_DATE, EVENT_TYPE) AS OVERALL_ORD -- this re-numbers the inner UNION so all rows are numbered ordered by the event date
-	              FROM (
-	                  -- select the start dates, assigning a row number to each
-	                  SELECT PERSON_ID, CONDITION_CONCEPT_ID, CONDITION_START_DATE AS EVENT_DATE, - 1 AS EVENT_TYPE, ROW_NUMBER() OVER (PARTITION BY PERSON_ID, CONDITION_CONCEPT_ID ORDER BY CONDITION_START_DATE) AS START_ORDINAL
-	                  FROM cteConditionTarget
-	      
-	                  UNION ALL
-	      
-	                  -- pad the end dates by 30 to allow a grace period for overlapping ranges.
-	                  SELECT PERSON_ID, CONDITION_CONCEPT_ID, CONDITION_END_DATE + interval '30 day', 1 AS EVENT_TYPE, NULL
-	                  FROM cteConditionTarget
-	                  ) RAWDATA
-	              ) E1
-	          INNER JOIN (
-	              SELECT PERSON_ID, CONDITION_CONCEPT_ID, CONDITION_START_DATE AS EVENT_DATE, ROW_NUMBER() OVER (PARTITION BY PERSON_ID, CONDITION_CONCEPT_ID ORDER BY CONDITION_START_DATE) AS START_ORDINAL
-	              FROM cteConditionTarget) E2 ON E1.PERSON_ID = E2.PERSON_ID
-	              AND E1.CONDITION_CONCEPT_ID = E2.CONDITION_CONCEPT_ID
-	              AND E2.EVENT_DATE <= E1.EVENT_DATE
-	          GROUP BY E1.PERSON_ID, E1.CONDITION_CONCEPT_ID, E1.EVENT_DATE, E1.START_ORDINAL, E1.OVERALL_ORD
-	          ) E
-	      WHERE (2 * E.START_ORDINAL) - E.OVERALL_ORD = 0
-	),
-	
-	cteConditionEnds AS (
-	 	SELECT c.PERSON_ID, c.CONDITION_CONCEPT_ID, c.CONDITION_START_DATE, MIN(e.END_DATE) AS ERA_END_DATE
-		FROM cteConditionTarget c
-		INNER JOIN cteCondEndDates e ON c.PERSON_ID = e.PERSON_ID AND c.CONDITION_CONCEPT_ID = e.CONDITION_CONCEPT_ID AND e.END_DATE >= c.CONDITION_START_DATE
-		GROUP BY c.PERSON_ID, c.CONDITION_CONCEPT_ID, c.CONDITION_START_DATE
-	 )
-	
-	INSERT INTO {sc}.condition_era ( person_id, condition_concept_id, condition_era_start_date, condition_era_end_date, condition_occurrence_count) 
-	    SELECT person_id, CONDITION_CONCEPT_ID, min(CONDITION_START_DATE) AS CONDITION_ERA_START_DATE, ERA_END_DATE AS CONDITION_ERA_END_DATE, COUNT(*) AS CONDITION_OCCURRENCE_COUNT
-	    FROM cteConditionEnds
-	    GROUP BY person_id, CONDITION_CONCEPT_ID, ERA_END_DATE;
+-- This is an old script
+-- Untill we know why new script does not work, we'll use it.
+WITH cteConditionTarget (condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_end_date) AS
+(
+	SELECT co.condition_occurrence_id , co.person_id , co.condition_concept_id , co.condition_start_date , COALESCE(NULLIF(co.condition_end_date,NULL), condition_start_date + INTERVAL '1 day') AS condition_end_date
+	FROM {sc}.condition_occurrence co
+	/* Depending on the needs of your data, you can put more filters on to your code. We assign 0 to our unmapped condition_concept_id's,
+	 * and since we don't want different conditions put in the same era, we put in the filter below.
+ 	 */
+	---WHERE condition_concept_id != 0
+),
+-- ------------------------------------------------------------------------------------------------------------
+cteEndDates (person_id, condition_concept_id, end_date) AS -- the magic
+(
+	SELECT person_id, condition_concept_id, event_date - INTERVAL '30 days' AS end_date -- unpad the end date	
+	FROM
+	(
+		SELECT person_id, condition_concept_id, event_date, event_type
+			, MAX(start_ordinal) OVER (PARTITION BY person_id, condition_concept_id ORDER BY event_date, event_type ROWS UNBOUNDED PRECEDING) AS start_ordinal -- this pulls the current START down from the prior rows so that the NULLs from the END DATES will contain a value we can compare with 
+			, ROW_NUMBER() OVER (PARTITION BY person_id, condition_concept_id ORDER BY event_date, event_type) AS overall_ord -- this re-numbers the inner UNION so all rows are numbered ordered by the event date
+		FROM
+		(
+			-- select the start dates, assigning a row number to each
+			SELECT person_id , condition_concept_id , condition_start_date AS event_date , -1 AS event_type , ROW_NUMBER() OVER (PARTITION BY person_id , condition_concept_id ORDER BY condition_start_date) AS start_ordinal FROM cteConditionTarget
+		
+			UNION ALL
+		
+			-- pad the end dates by 30 to allow a grace period for overlapping ranges.
+			SELECT person_id, condition_concept_id, condition_end_date + INTERVAL '30 days', 1 AS event_type, NULL FROM cteConditionTarget
+		) RAWDATA
+	) e
+	WHERE (2 * e.start_ordinal) - e.overall_ord = 0
+),
+--------------------------------------------------------------------------------------------------------------
+cteConditionEnds (person_id, condition_concept_id, condition_start_date, era_end_date) AS
+(
+SELECT c.person_id , c.condition_concept_id , c.condition_start_date , MIN(e.end_date) AS era_end_date
+FROM cteConditionTarget c
+JOIN cteEndDates e ON c.person_id = e.person_id AND c.condition_concept_id = e.condition_concept_id AND e.end_date >= c.condition_start_date
+GROUP BY c.condition_occurrence_id, c.person_id, c.condition_concept_id, c.condition_start_date
+)
+--------------------------------------------------------------------------------------------------------------
+INSERT INTO {sc}.condition_era( -- condition_era_id, 
+person_id, condition_concept_id, condition_era_start_date, condition_era_end_date, condition_occurrence_count)
+SELECT
+	-- row_number() over (order by person_id, condition_concept_id) ,
+	person_id
+	, condition_concept_id
+	, MIN(condition_start_date) AS condition_era_start_date
+	, era_end_date AS condition_era_end_date
+	, COUNT(*) AS condition_occurrence_count
+FROM cteConditionEnds GROUP BY person_id, condition_concept_id, era_end_date;

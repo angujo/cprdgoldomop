@@ -2,7 +2,7 @@
 
 namespace CPRDGOLD.models
 {
-    internal class Test
+    internal class Test : ChunkedModel
     {
         public int consid { get; set; }
         public int? constype { get; set; }
@@ -33,5 +33,7 @@ namespace CPRDGOLD.models
         public int? st_source_concept_id { get; set; }
         public int? ss_source_concept_id { get; set; }
         public string conc_domain_id { get; set; }
+
+        public long chunk_identifier { get { return ChunkIdentifier(eventdate); } }
     }
 }

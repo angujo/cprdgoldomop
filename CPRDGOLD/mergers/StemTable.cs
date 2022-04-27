@@ -26,5 +26,6 @@ namespace CPRDGOLD.mergers
         public string value_as_string { get; set; }
         public string value_source_value { get; set; }
         public long visit_occurrence_id { get; set; }
+        public long chunk_identifier { get; set; }
     }
 }

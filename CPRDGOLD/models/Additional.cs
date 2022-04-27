@@ -1,6 +1,6 @@
 ﻿namespace CPRDGOLD.models
 {
-    internal class Additional
+    internal class Additional 
     {
         public int adid { get; set; }
         public string data1 { get; set; }

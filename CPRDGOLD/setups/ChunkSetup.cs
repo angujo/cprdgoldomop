@@ -15,7 +15,9 @@ namespace CPRDGOLD.setups
 
         public void ChunkLoad(long chunkSize)
         {
-            string from = @"COPY (select row_number() over(order by patid) rid, patid  from {ss}.patient p) TO STDOUT (FORMAT BINARY)".RemovePlaceholders();
+            string from = (@"COPY (select row_number() over(order by patid) rid, patid  from {ss}.patient p " +
+                $"WHERE {Consts.PATIENT_CONDITION}" +
+                ") TO STDOUT (FORMAT BINARY)").RemovePlaceholders();
             string to = @"COPY {ss}._chunk (ordinal, patient_id) FROM STDIN (FORMAT BINARY)".RemovePlaceholders();
 
             DB.Source.BinaryCopy(DB.Source, from, to);

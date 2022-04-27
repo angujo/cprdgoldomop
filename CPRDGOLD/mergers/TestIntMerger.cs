@@ -39,7 +39,8 @@ namespace CPRDGOLD.mergers
                      range_low = test.data2,
                      range_high = test.data3,
                      ss_source_concept_id = test.ss_source_concept_id,
-                     st_source_concept_id = test.st_source_concept_id
+                     st_source_concept_id = test.st_source_concept_id,
+                     chunk_identifier = test.chunk_identifier,
                  };
                  if (56 == lu.lookup_type_id)
                  {

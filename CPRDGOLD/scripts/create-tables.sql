@@ -158,32 +158,32 @@ CREATE TABLE {sc}.condition_occurrence (
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}."cost";
+DROP TABLE IF EXISTS {SC}."cost";
 
---CREATE TABLE {sc}."cost" (
---	cost_id int8 NULL,
---	cost_event_id int8 NULL,
---	cost_domain_id varchar(20) NULL,
---	cost_type_concept_id int4 NULL,
---	currency_concept_id int4 NULL,
---	total_charge numeric NULL,
---	total_cost numeric NULL,
---	total_paid numeric NULL,
---	paid_by_payer numeric NULL,
---	paid_by_patient numeric NULL,
---	paid_patient_copay numeric NULL,
---	paid_patient_coinsurance numeric NULL,
---	paid_patient_deductible numeric NULL,
---	paid_by_primary numeric NULL,
---	paid_ingredient_cost numeric NULL,
---	paid_dispensing_fee numeric NULL,
---	payer_plan_period_id int8 NULL,
---	amount_allowed numeric NULL,
---	revenue_code_concept_id int4 NULL,
---	revenue_code_source_value varchar(50) NULL,
---	drg_concept_id int4 NULL,
---	drg_source_value varchar(3) NULL
---);
+CREATE TABLE {SC}."cost" (
+	COST_ID INT8 NULL,
+	COST_EVENT_ID INT8 NULL,
+	COST_DOMAIN_ID VARCHAR(20) NULL,
+	COST_TYPE_CONCEPT_ID INT4 NULL,
+	CURRENCY_CONCEPT_ID INT4 NULL,
+	TOTAL_CHARGE NUMERIC NULL,
+	TOTAL_COST NUMERIC NULL,
+	TOTAL_PAID NUMERIC NULL,
+	PAID_BY_PAYER NUMERIC NULL,
+	PAID_BY_PATIENT NUMERIC NULL,
+	PAID_PATIENT_COPAY NUMERIC NULL,
+	PAID_PATIENT_COINSURANCE NUMERIC NULL,
+	PAID_PATIENT_DEDUCTIBLE NUMERIC NULL,
+	PAID_BY_PRIMARY NUMERIC NULL,
+	PAID_INGREDIENT_COST NUMERIC NULL,
+	PAID_DISPENSING_FEE NUMERIC NULL,
+	PAYER_PLAN_PERIOD_ID INT8 NULL,
+	AMOUNT_ALLOWED NUMERIC NULL,
+	REVENUE_CODE_CONCEPT_ID INT4 NULL,
+	REVENUE_CODE_SOURCE_VALUE VARCHAR(50) NULL,
+	DRG_CONCEPT_ID INT4 NULL,
+	DRG_SOURCE_VALUE VARCHAR(3) NULL
+);
 
 
 -- {sc}.death definition
@@ -390,24 +390,24 @@ CREATE TABLE {sc}.measurement (
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}.note;
+DROP TABLE IF EXISTS {sc}.note;
 
---CREATE TABLE {sc}.note (
---	note_id int8 NULL,
---	person_id int4 NULL,
---	note_date timestamp NULL,
---	note_datetime timestamp NULL,
---	note_type_concept_id int4 NULL,
---	note_class_concept_id int4 NULL,
---	note_title varchar(250) NULL,
---	note_text text NULL,
---	encoding_concept_id int4 NULL,
---	language_concept_id int4 NULL,
---	provider_id int4 NULL,
---	visit_occurrence_id int8 NULL,
---	visit_detail_id int4 NULL,
---	note_source_value varchar(50) NULL
---);
+CREATE TABLE {sc}.note (
+	note_id int8 NULL,
+	person_id int4 NULL,
+	note_date timestamp NULL,
+	note_datetime timestamp NULL,
+	note_type_concept_id int4 NULL,
+	note_class_concept_id int4 NULL,
+	note_title varchar(250) NULL,
+	note_text text NULL,
+	encoding_concept_id int4 NULL,
+	language_concept_id int4 NULL,
+	provider_id int4 NULL,
+	visit_occurrence_id int8 NULL,
+	visit_detail_id int4 NULL,
+	note_source_value varchar(50) NULL
+);
 
 
 -- {sc}.note_nlp definition
@@ -480,27 +480,27 @@ CREATE TABLE {sc}.observation_period (
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}.payer_plan_period;
+DROP TABLE IF EXISTS {sc}.payer_plan_period;
 
---CREATE TABLE {sc}.payer_plan_period (
---	payer_plan_period_id int8 NULL,
---	person_id int8 NULL,
---	payer_plan_period_start_date timestamp NULL,
---	payer_plan_period_end_date timestamp NULL,
---	payer_concept_id int4 NULL,
---	payer_source_value varchar(50) NULL,
---	payer_source_concept_id int4 NULL,
---	plan_concept_id int4 NULL,
---	plan_source_value varchar(50) NULL,
---	plan_source_concept_id int4 NULL,
---	sponsor_concept_id int4 NULL,
---	sponsor_source_value varchar(50) NULL,
---	sponsor_source_concept_id int4 NULL,
---	family_source_value varchar(50) NULL,
---	stop_reason_concept_id int4 NULL,
---	stop_reason_source_value varchar(50) NULL,
---	stop_reason_source_concept_id int4 NULL
---);
+CREATE TABLE {sc}.payer_plan_period (
+	payer_plan_period_id int8 NULL,
+	person_id int8 NULL,
+	payer_plan_period_start_date timestamp NULL,
+	payer_plan_period_end_date timestamp NULL,
+	payer_concept_id int4 NULL,
+	payer_source_value varchar(50) NULL,
+	payer_source_concept_id int4 NULL,
+	plan_concept_id int4 NULL,
+	plan_source_value varchar(50) NULL,
+	plan_source_concept_id int4 NULL,
+	sponsor_concept_id int4 NULL,
+	sponsor_source_value varchar(50) NULL,
+	sponsor_source_concept_id int4 NULL,
+	family_source_value varchar(50) NULL,
+	stop_reason_concept_id int4 NULL,
+	stop_reason_source_value varchar(50) NULL,
+	stop_reason_source_concept_id int4 NULL
+);
 
 
 -- {sc}.person definition
@@ -627,7 +627,7 @@ CREATE TABLE {sc}.visit_detail (
 	visit_detail_source_concept_id int4 NULL,
 	admitting_source_value varchar(50) NULL,
 	discharge_to_source_value varchar(50) NULL,
-	parent_visit_detail_id int8 NULL,
+	visit_detail_parent_id int8 NULL,
 	visit_occurrence_id int8 NULL
 );
 
@@ -639,6 +639,7 @@ CREATE TABLE {sc}.visit_detail (
 DROP TABLE IF EXISTS {sc}.visit_occurrence;
 
 CREATE TABLE {sc}.visit_occurrence (
+	visit_occurrence_id int8 NULL,
 	person_id int8 NULL,
 	visit_concept_id int4 NULL,
 	visit_start_date timestamp NULL,
@@ -653,10 +654,11 @@ CREATE TABLE {sc}.visit_occurrence (
 	admitting_source_concept_id int4 NULL,
 	admitting_source_value varchar(50) NULL,
 	discharge_to_concept_id int4 NULL,
-	discharge_to_source_value varchar(50) NULL,
+	discharge_to_source_value varchar(50) NULL,visit
 	preceding_visit_occurrence_id int8 NULL,
 	admitted_from_concept_id int8 NULL,
 	admitted_from_source_value varchar NULL,
 	discharged_to_concept_id int8 NULL,
-	discharged_to_source_value varchar NULL
+	discharged_to_source_value varchar NULL,
+	visit_occurrence_id int8 NULL
 );

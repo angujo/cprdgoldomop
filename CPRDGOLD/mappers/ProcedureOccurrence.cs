@@ -28,7 +28,7 @@ namespace CPRDGOLD.mappers
             StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "provider_id",  "procedure_occurrence_id", "procedure_source_value",
                 "person_id", "procedure_source_concept_id", "procedure_date", "procedure_concept_id", "procedure_datetime",
-                "procedure_type_concept_id", };
+                "procedure_type_concept_id","visit_occurrence_id", };
             DB.Target.CopyBinaryRows<ProcedureOccurrence>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -45,6 +45,7 @@ namespace CPRDGOLD.mappers
                    write(stem.concept_id);
                    write(stem.start_datetime);
                    write(stem.type_concept_id);
+                   write(stem.chunk_identifier);
                });
             });
         }

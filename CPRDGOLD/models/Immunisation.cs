@@ -2,7 +2,7 @@
 
 namespace CPRDGOLD.models
 {
-    internal class Immunisation
+    internal class Immunisation:ChunkedModel
     {
         public long batch { get; set; }
         public long compound { get; set; }
@@ -31,5 +31,6 @@ namespace CPRDGOLD.models
         public int? st_source_concept_id { get; set; }
         public int? ss_source_concept_id { get; set; }
         public string conc_domain_id { get; set; }
+        public long chunk_identifier { get { return ChunkIdentifier(eventdate); } }
     }
 }

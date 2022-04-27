@@ -65,6 +65,7 @@ namespace CPRDGOLD.mergers
                    data5_lkup = entity.data5_lkup,
                    data6_lkup = entity.data6_lkup,
                    data7_lkup = entity.data7_lkup,
+                   chunk_identifier = cl.chunk_identifier,
                };
                //  Add(addInBase);
 

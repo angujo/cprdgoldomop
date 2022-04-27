@@ -2,7 +2,7 @@
 
 namespace CPRDGOLD.models
 {
-    internal class Patient
+    internal class Patient:ChunkedModel
     {
         public short accept { get; set; }
         public int? capsup { get; set; }
@@ -27,6 +27,7 @@ namespace CPRDGOLD.models
         public short toreason { get; set; }
         public long vmid { get; set; }
         public short yob { get; set; }
+        public short year_of_birth { get { return (short)(yob.ToString().Length < 4 ? yob + 1800 : yob); } }
         public DateTime? op_start_date { get; set; }
         public DateTime? op_end_date { get; set; }
         public int pt_concept_id { get; set; }

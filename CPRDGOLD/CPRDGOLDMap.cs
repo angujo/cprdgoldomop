@@ -9,6 +9,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Util;
+using CPRDGOLD.post;
 
 namespace CPRDGOLD
 {
@@ -38,10 +39,27 @@ namespace CPRDGOLD
 
                      Initiate();
 
-                     appDBMS.StopQueue();
-
                      //Cleanup again to reset incomplete workload and chunks
                      appDBMS.CleanUpChunks();
+
+                     //Reload WorkPlan with new status
+                     appDBMS.ReloadWorkPlan();
+
+                     if (appDBMS.workload.CdmProcessed && !appDBMS.workload.CdmLoaded)
+                     {
+                         appDBMS.workload.CdmProcessed = false;
+                         appDBMS.workload.Save();
+                         PostSetup();
+                         //Cleanup again to close workplan, where possible
+                         appDBMS.CleanUpChunks();
+                         if (appDBMS.ReloadWorkPlan().CdmProcessed)
+                         {
+                             appDBMS.workload.CdmLoaded = true;
+                             appDBMS.workload.Save();
+                         }
+                     }
+
+                     appDBMS.StopQueue();
                  }
                  catch (Exception ex)
                  {
@@ -70,7 +88,7 @@ namespace CPRDGOLD
             {
                 Chunk chunk = new Chunk { ordinal = chunkOrdinal };// 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
 
-                //Initialize all data loader for the chunk based on implementable CDMs.
+                //Initialize all data loader for the chunk.
                 try
                 {
                     chunk.Start();
@@ -100,6 +118,7 @@ namespace CPRDGOLD
                 }
                 catch (Exception ex)
                 {
+                    Log.Error(ex);
                     chunk.Stop(ex);
                 }
             });
@@ -124,7 +143,7 @@ namespace CPRDGOLD
         private static void StemTableUsers(Chunk chunk)
         {
             //It is cheaper to check than to load stem tables and not use
-            if (!chunk.ImplementableStemTable()) return;
+            if (!chunk.Implementable(LoadType.CONDITIONOCCURRENCE, LoadType.DEVICEEXPOSURE, LoadType.SPECIMEN, LoadType.OBSERVATION, LoadType.DRUGEXPOSURE, LoadType.MEASUREMENT, LoadType.PROCEDUREEXPOSURE)) return;
             var stemTable = StemTableMerger.Prepare(chunk);
 
             Log.Info("StemTable Loaded!");
@@ -231,7 +250,7 @@ namespace CPRDGOLD
         {
             Log.Info("Starting Full Initializers...");
             List<Action> actions = new List<Action>{
-               ()=>CommonDosageLoader.Initialize(),
+                ()=>CommonDosageLoader.Initialize(),
                 ()=>ConceptLoader.Initialize(),
                 ()=>DaySupplyDecodeLoader.Initialize(),
                 ()=>DaySupplyModeLoader.Initialize(),
@@ -246,6 +265,21 @@ namespace CPRDGOLD
             };
             Parallel.ForEach(actions, action => action());
             Log.Info("Finished Full Initializers");
+        }
+
+        private static void PostSetup()
+        {
+            // Avoid conflict in the parallel universe.
+            // Initialize static var
+            Chunk.ForPost();
+            List<Action> actions = new List<Action>
+            {
+                () =>Chunk.PostImplement(LoadType.DRUGERA, () =>(new PostDrugEra()).Implement()),
+                () =>Chunk.PostImplement(LoadType.CONDITIONERA, () =>(new PostConditionEra()).Implement()),
+                () =>Chunk.PostImplement(LoadType.DOSE_ERA, () =>(new PostDoseEra()).Implement()),
+            };
+
+            Parallel.ForEach(actions, action => action());
         }
     }
 }

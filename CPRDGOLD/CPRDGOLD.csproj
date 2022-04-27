@@ -168,6 +168,7 @@
     <Compile Include="mergers\TestInt.cs" />
     <Compile Include="mergers\TestIntMerger.cs" />
     <Compile Include="models\Additional.cs" />
+    <Compile Include="models\ChunkedModel.cs" />
     <Compile Include="models\Clinical.cs" />
     <Compile Include="models\CommonDosage.cs" />
     <Compile Include="models\Concept.cs" />
@@ -189,6 +190,11 @@
     <Compile Include="models\Staff.cs" />
     <Compile Include="models\Test.cs" />
     <Compile Include="models\Therapy.cs" />
+    <Compile Include="post\PostConditionEra.cs" />
+    <Compile Include="post\PostDoseEra.cs" />
+    <Compile Include="post\PostDrugEra.cs" />
+    <Compile Include="post\PostRunner.cs" />
+    <Compile Include="post\PostVisitDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="setups\AbsSetup.cs" />
     <Compile Include="setups\ChunkSetup.cs" />
@@ -216,6 +222,7 @@
   <ItemGroup>
     <Content Include="scripts\app-setup.sql" />
     <Content Include="scripts\chunk-setup.sql" />
+    <Content Include="scripts\condition-era - old.sql" />
     <Content Include="scripts\condition-era.sql" />
     <Content Include="scripts\create-daysupply-modes.sql" />
     <Content Include="scripts\create-daysupply-decodes.sql" />
@@ -223,8 +230,11 @@
     <Content Include="scripts\create-tables.sql" />
     <Content Include="scripts\daysupply-decodes.sql" />
     <Content Include="scripts\daysupply-modes.sql" />
+    <Content Include="scripts\drug-era - old.sql" />
+    <Content Include="scripts\post-dose-era.sql" />
+    <Content Include="scripts\post-visit-detail.sql" />
     <Content Include="scripts\death.sql" />
-    <Content Include="scripts\drug-era.sql" />
+    <Content Include="scripts\post-drug-era.sql" />
     <Content Include="scripts\create-source-to-standard.sql" />
     <Content Include="scripts\source-to-source.sql" />
     <Content Include="scripts\source-to-standard.sql" />

@@ -49,9 +49,13 @@ namespace DBMS
                 if (2 != p.Length) continue;
                 content = content.Replace(p[0], p[1]);
             }
-            return content.Replace(PH_SC_VOCAB, DB.Vocabulary.schema.SchemaName)
+            return content
+                .Replace(PH_SC_VOCAB, DB.Vocabulary.schema.SchemaName)
                 .Replace(PH_SC_TARGET, DB.Target.schema.SchemaName)
-                .Replace(PH_SC_SOURCE, DB.Source.schema.SchemaName);
+                .Replace(PH_SC_SOURCE, DB.Source.schema.SchemaName)
+                .Replace(PH_SC_VOCAB.ToUpper(), DB.Vocabulary.schema.SchemaName)
+                .Replace(PH_SC_TARGET.ToUpper(), DB.Target.schema.SchemaName)
+                .Replace(PH_SC_SOURCE.ToUpper(), DB.Source.schema.SchemaName);
         }
     }
 

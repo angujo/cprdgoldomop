@@ -38,7 +38,7 @@ namespace CPRDGOLD.mappers
                     row();
                     write(patient.patid);
                     write(1 == patient.gender ? 8507 : 8532);
-                    write(patient.yob.ToString().Length < 4 ? patient.yob + 1800 : patient.yob);
+                    write(patient.year_of_birth);
                     write(patient.mob);
                     write(0);
                     write(0);

@@ -37,7 +37,7 @@ namespace CPRDGOLD.mappers
             StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "sig", "provider_id", "drug_exposure_id", "drug_source_value",
                 "person_id", "drug_source_concept_id", "drug_exposure_start_date", "drug_concept_id", "drug_exposure_start_datetime",
-                "drug_exposure_end_date", "drug_exposure_end_datetime", "drug_type_concept_id",};
+                "drug_exposure_end_date", "drug_exposure_end_datetime", "drug_type_concept_id","visit_occurrence_id",};
             DB.Target.CopyBinaryRows<DrugExposure>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -57,10 +57,11 @@ namespace CPRDGOLD.mappers
                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
                    write(stem.type_concept_id);
+                   write(stem.chunk_identifier);
                });
             });
         }
 
-        public void Dependency() => chunk.Implement(LoadType.DRUGERA, () => FileQuery.ExecuteFile(Script.ForCPRDGOLD<DrugEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
+        // public void Dependency() => chunk.Implement(LoadType.DRUGERA, () => FileQuery.ExecuteFile(Script.ForCPRDGOLD<DrugEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
     }
 }

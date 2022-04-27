@@ -25,5 +25,6 @@ namespace CPRDGOLD.mergers
         public int? st_source_concept_id { get; set; }
         public int? ss_source_concept_id { get; set; }
         public string conc_domain_id { get; set; }
+        public long chunk_identifier { get; set; }
     }
 }

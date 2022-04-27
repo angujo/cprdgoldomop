@@ -30,7 +30,7 @@ namespace CPRDGOLD.mappers
             StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "provider_id",  "condition_occurrence_id",
                 "condition_source_value", "person_id", "condition_concept_id", "condition_start_date", "condition_source_concept_id", "condition_start_datetime",
-                "condition_end_date", "condition_end_datetime", "condition_type_concept_id", };
+                "condition_end_date", "condition_end_datetime", "condition_type_concept_id","visit_occurrence_id", };
             DB.Target.CopyBinaryRows<ConditionOccurrence>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -49,10 +49,11 @@ namespace CPRDGOLD.mappers
                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
                    write(stem.type_concept_id);
+                   write(stem.chunk_identifier);
                });
             });
         }
 
-        public void Dependency() => chunk.Implement(LoadType.CONDITIONERA, () => FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
+        // public void Dependency() => chunk.Implement(LoadType.CONDITIONERA, () => FileQuery.ExecuteFile(Script.ForCPRDGOLD<ConditionEra>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } }));
     }
 }

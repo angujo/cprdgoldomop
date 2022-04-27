@@ -53,10 +53,15 @@ namespace DBMS
                     "where (c.status is null or c.status <> :Fstat) and c.workloadid=work_load.id);",
                 new { Fstat = (int)Status.FINISHED, });
 
-                db.Statement("update work_load set cdmprocessed = false where exists (select 1 from chunktimer c " +
+                db.Statement("update work_load set cdmprocessed = false, cdmloaded = false where exists (select 1 from chunktimer c " +
                     "where (c.status is null or c.status <> :Fstat) and c.workloadid=work_load.id);",
                 new { Fstat = (int)Status.FINISHED, });
             });
+        }
+
+        public WorkLoad ReloadWorkPlan()
+        {
+            return workload = DB.Internal.Load<WorkLoad>(new { id = workload.Id });
         }
     }
 }

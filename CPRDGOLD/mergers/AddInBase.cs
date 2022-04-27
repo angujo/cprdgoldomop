@@ -35,5 +35,6 @@ namespace CPRDGOLD.mergers
         public string data5_lkup { get; set; }
         public string data6_lkup { get; set; }
         public string data7_lkup { get; set; }
+        public long chunk_identifier { get; set; }
     }
 }

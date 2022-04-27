@@ -28,6 +28,7 @@ namespace CPRDGOLD.loaders
             switch (typeof(T).Name)
             {
                 case nameof(ConsultationLoader):
+                    query.SelectRaw("row_number() over(partition by consultation.patid, consultation.eventdate order by consultation.eventdate) AS consult_row");
                     // When Loading visit_detail, the following merge is irrelevant 
                     /* DBMSSystem db = (DBMSSystem)chunk.dbms;
                      var withChunk = new Query($"{db.schema.SchemaName}.{chunk.tableName}")
@@ -52,12 +53,11 @@ namespace CPRDGOLD.loaders
                          j => j.WhereRaw("consultation.patid=u.patid AND consultation.consid = u.consid AND consultation.eventdate = u.eventdate"));*/
                     break;
                 case nameof(ActivePatientLoader):
-                    query.WhereRaw("accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 " +
-                        "AND ((deathdate IS null and tod is null) OR coalesce(deathdate,tod) >= crd))");
+                    query.WhereRaw(Consts.PATIENT_CONDITION);
                     break;
                 case nameof(PatientLoader):
                     query.Join($"{schema_name}.practice", j => j.WhereRaw("RIGHT(patient.patid::varchar,5)::numeric = practice.pracid"))
-                                    .SelectRaw("greatest(patient.frd,practice.uts) AS op_start_date, least(patient.tod,practice.lcd, patient.crd) AS op_end_date, 32880 AS pt_concept_id");
+                                    .SelectRaw("greatest(patient.frd,practice.uts) AS op_start_date, least(patient.tod,practice.lcd, patient.frd) AS op_end_date, 32880 AS pt_concept_id");
                     break;
                 case nameof(ClinicalLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "clinical.medcode")

@@ -79,6 +79,7 @@ namespace CPRDGOLD.mergers
                 category = addInBase.category,
                 description = addInBase.description,
                 data_fields = (short)addInBase.data_fields,
+                chunk_identifier = addInBase.chunk_identifier,
             };
         }
 

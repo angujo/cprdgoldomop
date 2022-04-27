@@ -15,8 +15,6 @@ namespace CPRDGOLD.mappers
         public int death_type_concept_id { get; set; }
         public long person_id { get; set; }
 
-        // public void QueryInsert() => DBMS.FileQuery.ExecuteFile(Script.ForCPRDGOLD<Death>(), new string[][] { new string[] { @"{ch}", chunk.ordinal.ToString() } });
-
         protected override void LoadData(dynamic dSource = null)
         {
             string[] cols = new string[] { "person_id", "death_date", "death_datetime", "death_type_concept_id", "cause_concept_id", "cause_source_value", "cause_source_concept_id", };
@@ -24,7 +22,7 @@ namespace CPRDGOLD.mappers
             {
                 chunk.GetLoader<ActivePatientLoader>(DBMS.models.ChunkLoadType.ACTIVE_PATIENT).LoopAllData(patient =>
                 {
-                    if ((null == patient.deathdate || patient.deathdate == default(DateTime)) && (null == patient.tod || default(DateTime) == patient.tod)) return;
+                    if (null == patient.deathdate || patient.deathdate == default(DateTime)) return;
 
                     row();
                     //person_id

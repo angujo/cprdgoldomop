@@ -4,5 +4,5 @@ INSERT INTO {sc}.death
 SELECT 
 patid, CASE WHEN deathdate IS NULL THEN tod ELSE deathdate END, deathdate::timestamp, 32815, 0, 0, 0
 FROM {ss}._chunk JOIN {ss}.patient ON patient_id = patid and accept = 1 AND gender::int IN (1,2) AND (case when 4 > char_length(yob::varchar) then 1800+yob else yob end) > 1875 
-AND ((deathdate IS NOT null AND deathdate >= crd) OR (tod IS NOT NULL AND toreason IN (1)))
+AND ((deathdate IS NOT null AND deathdate >= frd) OR (tod IS NOT NULL AND toreason IN (1)))
 WHERE ordinal = {ch};

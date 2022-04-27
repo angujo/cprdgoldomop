@@ -59,6 +59,7 @@ namespace CPRDGOLD.mergers
                    value_as_number = add_in.value_as_number,
                    value_source_value = add_in.qualifier_source_value,
                    value_as_string = add_in.value_as_string,
+                   chunk_identifier = add_in.chunk_identifier,
                });
            });
             Log.Info($"Finished StemTable #Additional");
@@ -80,6 +81,7 @@ namespace CPRDGOLD.mergers
                    source_concept_id = clinic.ss_source_concept_id ?? 0,
                    type_concept_id = 32827,
                    start_date = clinic.eventdate,
+                   chunk_identifier = clinic.chunk_identifier,
                };
                Add(stem);
            });
@@ -102,6 +104,7 @@ namespace CPRDGOLD.mergers
                  source_concept_id = imm.ss_source_concept_id,
                  type_concept_id = 32827,
                  start_date = imm.eventdate,
+                 chunk_identifier = imm.chunk_identifier,
              });
          });
             Log.Info($"Finished StemTable #Immunisation");
@@ -123,6 +126,7 @@ namespace CPRDGOLD.mergers
                   source_concept_id = reff.ss_source_concept_id,
                   type_concept_id = 32842,
                   start_date = reff.eventdate,
+                  chunk_identifier = reff.chunk_identifier,
               });
           });
             Log.Info($"Finished StemTable #Referral");
@@ -155,6 +159,7 @@ namespace CPRDGOLD.mergers
                    value_as_concept_id = concVal.concept_id.ToString(),
                    value_as_number = test.value_as_number,
                    value_source_value = test.value_as_concept_id,
+                   chunk_identifier = test.chunk_identifier,
                });
            });
             Log.Info($"Finished StemTable #Test");
@@ -182,6 +187,7 @@ namespace CPRDGOLD.mergers
                        start_date = ther.eventdate,
                        end_date = ther.eventdate.AddDays((double)(null != ther.numdays && 0 < ther.numdays && 365 > ther.numdays ? ther.numdays : (0 != ddecode.numdays ? ddecode.numdays : dmode.numdays))).ToString(),
                        sig = cdosage.dosage_text,
+                       chunk_identifier = ther.chunk_identifier,
                    });
                });
             Log.Info($"Finished StemTable #Therapy");

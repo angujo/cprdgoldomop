@@ -35,7 +35,7 @@ namespace CPRDGOLD.mappers
             string[] cols = new string[] { "provider_id",  "unit_source_value", "value_source_value", "measurement_id",
                 "measurement_source_value", "person_id", "measurement_source_concept_id", "measurement_date", "measurement_concept_id",
                 "measurement_datetime", "measurement_type_concept_id", "operator_concept_id", "value_as_number", "value_as_concept_id",
-                "unit_concept_id", "range_high", "range_low", };
+                "unit_concept_id", "range_high", "range_low","visit_occurrence_id", };
             DB.Target.CopyBinaryRows<Measurement>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -60,6 +60,7 @@ namespace CPRDGOLD.mappers
                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
                    write(Decimal.TryParse(stem.range_high, out Decimal rh) ? rh : default);
                    write(Decimal.TryParse(stem.range_low, out Decimal rl) ? rl : default);
+                   write(stem.chunk_identifier);
                });
             });
         }

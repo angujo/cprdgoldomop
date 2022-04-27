@@ -29,7 +29,7 @@ namespace CPRDGOLD.mappers
             StemTableMerger stemTable = stemSource as StemTableMerger;
             string[] cols = new string[] { "provider_id",  "device_exposure_id", "device_source_value", "person_id", "device_source_concept_id",
                 "device_exposure_start_date", "device_concept_id", "device_exposure_start_datetime", "device_exposure_end_date", "device_exposure_end_datetime",
-                "device_type_concept_id",  };
+                "device_type_concept_id","visit_occurrence_id",  };
             DB.Target.CopyBinaryRows<DeviceExposure>(cols, (row, write) =>
             {
                 stemTable.LoopAllData(stem =>
@@ -48,6 +48,7 @@ namespace CPRDGOLD.mappers
                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
                    write(stem.type_concept_id);
+                   write(stem.chunk_identifier);
                });
             });
         }
