@@ -148,7 +148,7 @@ namespace CPRDGOLD
 
             Log.Info("StemTable Loaded!");
             Log.Info("StemTable Start Stats:");
-            foreach (var s in stemTable.GetData().OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id).ToDictionary(kv => kv.Key, kv => kv.Count()))
+            foreach (var s in stemTable.GetData().Where(sd => null != sd.domain_id && default != sd.domain_id).OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id).ToDictionary(kv => kv.Key, kv => kv.Count()))
                 Log.Info($"{s.Key} = {s.Value}");
             Log.Info("StemTable END Stats:");
 
@@ -274,9 +274,10 @@ namespace CPRDGOLD
             Chunk.ForPost();
             List<Action> actions = new List<Action>
             {
-                () =>Chunk.PostImplement(LoadType.DRUGERA, () =>(new PostDrugEra()).Implement()),
-                () =>Chunk.PostImplement(LoadType.CONDITIONERA, () =>(new PostConditionEra()).Implement()),
-                () =>Chunk.PostImplement(LoadType.DOSE_ERA, () =>(new PostDoseEra()).Implement()),
+                () =>Chunk.PostImplement(LoadType.DRUGERA, () =>PostMap.Implement<PostDrugEra>()),
+                () =>Chunk.PostImplement(LoadType.CONDITIONERA, () =>PostMap.Implement<PostConditionEra>()),
+                // () =>Chunk.PostImplement(LoadType.DOSE_ERA, () =>(new PostDoseEra()).Implement()),
+                () =>Chunk.PostImplement(LoadType.P_VISIT_DETAIL, () =>PostMap.Implement<PostVisitDetail>()),
             };
 
             Parallel.ForEach(actions, action => action());

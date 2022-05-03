@@ -61,7 +61,7 @@ namespace CPRDGOLD.loaders
                     break;
                 case nameof(ClinicalLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "clinical.medcode")
-                        .Join($"{schema_name}.source_to_standard",
+                        .LeftJoin($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
                             .WhereNull("source_to_standard.target_invalid_reason")
                             .Where("source_to_standard.target_standard_concept", "S")
@@ -71,13 +71,17 @@ namespace CPRDGOLD.loaders
                             .Where("source_to_source.source_vocabulary_id", "Read"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
                             j => j.On("concept.concept_code", "medical.read_code"))
-                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id, " +
+                        .SelectRaw(
+                            "source_to_standard.target_concept_id as st_target_concept_id, " +
+                            "source_to_source.target_concept_id as ss_target_concept_id, " +
+                            "source_to_standard.source_concept_id as st_source_concept_id, " +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
-                            " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
+                            "source_to_source.source_concept_id as ss_source_concept_id, " +
+                            "medical.read_code AS med_read_code");
                     break;
                 case nameof(ImmunisationLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "immunisation.medcode")
-                        .Join($"{schema_name}.source_to_standard",
+                        .LeftJoin($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
                             .WhereNull("source_to_standard.target_invalid_reason")
                             .Where("source_to_standard.target_standard_concept", "S")
@@ -87,13 +91,16 @@ namespace CPRDGOLD.loaders
                             .Where("source_to_source.source_vocabulary_id", "Read"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
                             j => j.On("concept.concept_code", "medical.read_code"))
-                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw(
+                            "source_to_standard.target_concept_id as st_target_concept_id, " +
+                            "source_to_source.target_concept_id as ss_target_concept_id, " +
+                            "source_to_standard.source_concept_id as st_source_concept_id," +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
                         " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case nameof(ReferralLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "referral.medcode")
-                        .Join($"{schema_name}.source_to_standard",
+                        .LeftJoin($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
                             .WhereNull("source_to_standard.target_invalid_reason")
                             .Where("source_to_standard.target_standard_concept", "S")
@@ -103,13 +110,16 @@ namespace CPRDGOLD.loaders
                             .Where("source_to_source.source_vocabulary_id", "Read"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
                             j => j.On("concept.concept_code", "medical.read_code"))
-                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw(
+                            "source_to_standard.target_concept_id as st_target_concept_id, " +
+                            "source_to_source.target_concept_id as ss_target_concept_id, " +
+                            "source_to_standard.source_concept_id as st_source_concept_id," +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
-                        " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
+                            " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code");
                     break;
                 case nameof(TestLoader):
                     query.Join($"{schema_name}.medical", "medical.medcode", "test.medcode")
-                        .Join($"{schema_name}.source_to_standard",
+                        .LeftJoin($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "medical.read_code")
                             .WhereNull("source_to_standard.target_invalid_reason")
                             .Where("source_to_standard.target_standard_concept", "S")
@@ -119,26 +129,36 @@ namespace CPRDGOLD.loaders
                             .Where("source_to_source.source_vocabulary_id", "Read"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
                             j => j.On("concept.concept_code", "medical.read_code"))
-                        .SelectRaw("source_to_standard.source_concept_id as st_source_concept_id," +
+                        .SelectRaw(
+                            "source_to_standard.target_concept_id as st_target_concept_id, " +
+                            "source_to_source.target_concept_id as ss_target_concept_id, " +
+                            "source_to_standard.source_concept_id as st_source_concept_id," +
                             "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
-                        " source_to_source.source_concept_id as ss_source_concept_id, medical.read_code AS med_read_code, medical.desc as read_description");
+                            " source_to_source.source_concept_id as ss_source_concept_id, " +
+                            "medical.read_code AS med_read_code, medical.desc as read_description");
                     break;
                 case nameof(TherapyLoader):
                     query.Join($"{schema_name}.product", "product.prodcode", "therapy.prodcode")
-                        .Join($"{schema_name}.source_to_standard",
+                        .LeftJoin($"{schema_name}.source_to_standard",
                             j => j.On("source_to_standard.source_code", "product.gemscriptcode")
                             .WhereNull("source_to_standard.target_invalid_reason")
+                            .WhereRaw("therapy.eventdate between source_to_standard.source_valid_start_date and source_to_standard.source_valid_end_date")
                             .Where("source_to_standard.target_standard_concept", "S")
-                            .Where("source_to_standard.source_vocabulary_id", "gemscript"))
+                            .Where("source_to_standard.source_vocabulary_id", "RxNorm")
+                            .WhereRaw("lower(source_to_standard.source_vocabulary_id) = 'gemscript'"))
                         .LeftJoin($"{schema_name}.source_to_source",
                             j => j.On("source_to_source.source_code", "product.gemscriptcode")
-                            .Where("source_to_source.source_vocabulary_id", "gemscript"))
+                            .WhereRaw("therapy.eventdate between source_to_source.source_valid_start_date and source_to_source.source_valid_end_date")
+                            .WhereRaw("lower(source_to_source.source_vocabulary_id) = 'gemscript'"))
                         .LeftJoin($"{DB.Vocabulary.schema.SchemaName}.concept",
                             j => j.On("concept.concept_code", "product.gemscriptcode"))
-                        .WhereRaw("therapy.eventdate between source_to_standard.source_valid_start_date and source_to_standard.source_valid_end_date")
-                        .SelectRaw("product.gemscriptcode AS prod_gemscriptcode, source_to_standard.source_concept_id as st_source_concept_id," +
-                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id, " +
-                        " source_to_source.source_concept_id as ss_source_concept_id");
+                        .SelectRaw(
+                            "source_to_standard.target_concept_id as st_target_concept_id, " +
+                            "source_to_source.target_concept_id as ss_target_concept_id, " +
+                            "source_to_standard.source_concept_id as st_source_concept_id, " +
+                            "source_to_source.source_concept_id as ss_source_concept_id, " +
+                            "product.gemscriptcode AS prod_gemscriptcode, " +
+                            "case concept.concept_id WHEN 0 THEN 'Observation' ELSE concept.domain_id END AS conc_domain_id");
                     break;
             }
         }

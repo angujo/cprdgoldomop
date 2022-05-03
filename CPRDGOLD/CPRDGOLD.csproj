@@ -190,6 +190,7 @@
     <Compile Include="models\Staff.cs" />
     <Compile Include="models\Test.cs" />
     <Compile Include="models\Therapy.cs" />
+    <Compile Include="PostMap.cs" />
     <Compile Include="post\PostConditionEra.cs" />
     <Compile Include="post\PostDoseEra.cs" />
     <Compile Include="post\PostDrugEra.cs" />

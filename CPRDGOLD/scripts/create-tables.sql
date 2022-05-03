@@ -252,6 +252,7 @@ CREATE TABLE {sc}.dose_era (
 DROP TABLE IF EXISTS {sc}.drug_era;
 
 CREATE TABLE {sc}.drug_era (
+	drug_era_id int8 NULL,
 	person_id int8 NULL,
 	drug_concept_id int4 NULL,
 	drug_era_start_date timestamp NULL,
@@ -654,11 +655,10 @@ CREATE TABLE {sc}.visit_occurrence (
 	admitting_source_concept_id int4 NULL,
 	admitting_source_value varchar(50) NULL,
 	discharge_to_concept_id int4 NULL,
-	discharge_to_source_value varchar(50) NULL,visit
+	discharge_to_source_value varchar(50) NULL,
 	preceding_visit_occurrence_id int8 NULL,
 	admitted_from_concept_id int8 NULL,
 	admitted_from_source_value varchar NULL,
 	discharged_to_concept_id int8 NULL,
-	discharged_to_source_value varchar NULL,
-	visit_occurrence_id int8 NULL
+	discharged_to_source_value varchar NULL
 );

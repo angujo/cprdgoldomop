@@ -38,7 +38,6 @@ CREATE TABLE public.chunktimer (
 	CONSTRAINT chunktimer_unique UNIQUE (chunkid, workloadid)
 );
 
-
 -- public.queue definition
 
 -- Drop table
@@ -61,7 +60,6 @@ CREATE TABLE public.queue (
 	dbschemaid int4 NOT NULL,
 	CONSTRAINT queue_id_key UNIQUE (id)
 );
-
 
 -- public.servicestatus definition
 

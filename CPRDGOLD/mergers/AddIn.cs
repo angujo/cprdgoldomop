@@ -23,6 +23,7 @@ namespace CPRDGOLD.mergers
         public string value_as_number { get; set; }
         public string value_as_string { get; set; }
         public int? st_source_concept_id { get; set; }
+        public int? st_target_concept_id { get; set; }
 
         public long chunk_identifier { get; set; }
 

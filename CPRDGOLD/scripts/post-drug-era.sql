@@ -1,4 +1,3 @@
-
 WITH
 ctePreDrugTarget(drug_exposure_id, person_id, ingredient_concept_id, drug_exposure_start_date, days_supply, drug_exposure_end_date) AS
 (-- Normalize DRUG_EXPOSURE_END_DATE to either the existing drug exposure end date, or add days supply, or add 1 day to the start date
@@ -9,14 +8,15 @@ ctePreDrugTarget(drug_exposure_id, person_id, ingredient_concept_id, drug_exposu
 		, d.drug_exposure_start_date AS drug_exposure_start_date
 		, d.days_supply AS days_supply
 		, COALESCE(
-			NULLIF(drug_exposure_end_date, NULL) ---If drug_exposure_end_date != NULL, return drug_exposure_end_date, otherwise go to next case
+			case when drug_exposure_end_date = timestamp '-infinity' or drug_exposure_end_date = timestamp 'infinity' or drug_exposure_end_date is null then null else drug_exposure_end_date end ---If drug_exposure_end_date != NULL, return drug_exposure_end_date, otherwise go to next case
 			, NULLIF(drug_exposure_start_date + (INTERVAL '1 day' * days_supply), drug_exposure_start_date) ---If days_supply != NULL or 0, return drug_exposure_start_date + days_supply, otherwise go to next case
 			, drug_exposure_start_date + INTERVAL '1 day' ---Add 1 day to the drug_exposure_start_date since there is no end_date or INTERVAL for the days_supply
 		) AS drug_exposure_end_date
 	FROM {sc}.drug_exposure d
 	JOIN {vs}.concept_ancestor ca ON ca.descendant_concept_id = d.drug_concept_id
 	JOIN {vs}.concept c ON ca.ancestor_concept_id = c.concept_id
-	WHERE c.concept_class_id = 'Ingredient'
+	WHERE d.drug_exposure_start_date != timestamp '-infinity'
+	-- WHERE c.concept_class_id = 'Ingredient'
 	-- AND c.vocabulary_id = 'RxNorm' --from the vocabulary_id
 	/* Depending on the needs of your data, you can put more filters on to your code. We assign 0 to unmapped drug_concept_id's, and we found data where days_supply was negative.
 	 * We don't want different drugs put in the same era, so the code below shows how we filtered them out.
@@ -169,7 +169,7 @@ GROUP BY
 	, ft.drug_exposure_count
 	, ft.days_exposed
 )
-INSERT INTO drug_era(drug_era_id, person_id, drug_concept_id, drug_era_start_date, drug_era_end_date, drug_exposure_count, gap_days)
+INSERT INTO {sc}.drug_era(drug_era_id, person_id, drug_concept_id, drug_era_start_date, drug_era_end_date, drug_exposure_count, gap_days)
 SELECT
 	row_number() over (order by person_id, drug_concept_id) 
 	, person_id
@@ -179,5 +179,4 @@ SELECT
 	, SUM(drug_exposure_count) AS drug_exposure_count
 	, EXTRACT(EPOCH FROM drug_era_end_date - MIN(drug_sub_exposure_start_date) - SUM(days_exposed)) / 86400 AS gap_days
 FROM cteDrugEraEnds
-GROUP BY person_id, drug_concept_id, drug_era_end_date
-ORDER BY person_id, drug_concept_id;
+GROUP BY person_id, drug_concept_id, drug_era_end_date;

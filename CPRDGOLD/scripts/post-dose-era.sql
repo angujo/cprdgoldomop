@@ -10,12 +10,14 @@ WITH cteDrugTarget(drug_exposure_id, person_id, drug_concept_id, ingredient_conc
 		, CAST(NULL as numeric) AS dose_value
 		, d.drug_exposure_start_date
 		, d.days_supply AS days_supply
-		, COALESCE(NULLIF(drug_exposure_end_date, NULL), NULLIF(drug_exposure_start_date + (INTERVAL '1 day' * days_supply), drug_exposure_start_date), drug_exposure_start_date + INTERVAL '1 day') AS drug_exposure_end_date
+		, COALESCE(
+		case when drug_exposure_end_date = timestamp '-infinity' or drug_exposure_end_date = timestamp 'infinity' or drug_exposure_end_date is null then null else drug_exposure_end_date end,
+		NULLIF(drug_exposure_start_date + (INTERVAL '1 day' * days_supply), drug_exposure_start_date), drug_exposure_start_date + INTERVAL '1 day') AS drug_exposure_end_date
 	FROM drug_exposure d
 	     JOIN {vs}.concept_ancestor ca ON ca.descendant_concept_id = d.drug_concept_id
 	     JOIN {vs}.concept c ON ca.ancestor_concept_id = c.concept_id
 		 LEFT JOIN {vs}.concept c2 ON lower(d.dose_unit_source_value) = lower(c2.concept_name) AND c2.vocabulary_id = c.vocabulary_id
-	     WHERE c.concept_class_id = 'Ingredient'
+	    -- WHERE c.concept_class_id = 'Ingredient'
 	     /* Depending on the needs of your data, you can put more filters on to your code. We assign 0 to unmapped drug_concept_id's, and we found data where days_supply was negative.
 	      * We don't want different drugs put in the same era, so the code below shows how we filtered them out.
 	      * We also don't want negative days_supply, because that will pull our end_date before the start_date due to our second parameter in the COALESCE function.

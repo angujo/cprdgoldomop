@@ -24,6 +24,8 @@ namespace CPRDGOLD.mergers
         public string value_as_number { get; set; }
         public int? st_source_concept_id { get; set; }
         public int? ss_source_concept_id { get; set; }
+        public int? st_target_concept_id { get; set; }
+        public int? ss_target_concept_id { get; set; }
         public string conc_domain_id { get; set; }
         public long chunk_identifier { get; set; }
     }

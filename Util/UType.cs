@@ -56,6 +56,8 @@
         DAYSUPPLYMODESETUP,
         [StringValue("DoseEra")]
         DOSE_ERA,
+        [StringValue("PostVisitDetail")]
+        P_VISIT_DETAIL,
     }
 
     enum DBMSType

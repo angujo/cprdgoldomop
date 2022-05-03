@@ -9,6 +9,11 @@ namespace DBMS.models
     {
         private static Chunk _setup;
         private static Chunk _post;
+        private static readonly LoadType[] POST_LOAD_TYPES = new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA, LoadType.P_VISIT_DETAIL };
+        private static readonly LoadType[] ONCE_LOAD_TYPES =
+            new LoadType[] { LoadType.PROVIDER, LoadType.CARESITE, LoadType.LOCATION, LoadType.CDMSOURCE, LoadType.COHORTDEFINITION, LoadType.DAYSUPPLYDECODESETUP, LoadType.DAYSUPPLYMODESETUP,
+                LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES, LoadType.CHUNKSETUP, LoadType.CHUNKLOAD };
+
         public string tableName = "_chunk";
         public int ordinal = 0;
         public bool postProcess = false;
@@ -39,8 +44,7 @@ namespace DBMS.models
 
         public void Start()
         {
-            if (postProcess) DoSetup(new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA });
-            else SetupLoads();
+            DoSetup((0 > ordinal ? ONCE_LOAD_TYPES : Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !ONCE_LOAD_TYPES.Concat(POST_LOAD_TYPES).Contains(lt))).ToArray());
             CommitLoads();
             if (ordinal >= 0) GetTimer().Start();
         }
@@ -55,25 +59,10 @@ namespace DBMS.models
             if (ordinal >= 0) GetTimer().Implemented();
         }
 
-        private void SetupLoads()
-        {
-            var once = new LoadType[] {
-                LoadType.PROVIDER, LoadType.CARESITE, LoadType.LOCATION, LoadType.CDMSOURCE, LoadType.COHORTDEFINITION, LoadType.DAYSUPPLYDECODESETUP, LoadType.DAYSUPPLYMODESETUP,
-                LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES, LoadType.CHUNKSETUP, LoadType.CHUNKLOAD };
-            var post = new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA };
-
-            LoadType[] types = (0 > ordinal ? once : Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !once.Concat(post).ToArray().Contains(lt))).ToArray();
-            DoSetup(types);
-        }
-
         private void DoSetup(LoadType[] types)
         {
             string[] names = types.Select(lt => lt.GetStringValue()).ToArray();
             Loads = DB.Internal.GetAll<Cdmtimer>("WHERE workloadid = @WorkLoadId AND chunkid = @ChunkId AND name = ANY(@Name)", new { WorkLoadId = WorkLoadId, ChunkId = ordinal, Name = names }).ToDictionary(ct => LoadTypeFromName(ct.Name), ct => ct);
-            if (postProcess)
-            {
-                var i = 10000;
-            }
             var missingTypes = types.Where(name => !Loads.ContainsKey(name));
             foreach (var lkey in missingTypes) Loads[lkey] = new Cdmtimer { WorkLoadId = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, ChunkId = ordinal, Status = Status.SCHEDULED };
         }
@@ -108,9 +97,8 @@ namespace DBMS.models
         {
             if (default != _post) return _post;
             _post = new Chunk { ordinal = -1, postProcess = true };
-            _post.DoSetup(new LoadType[] { LoadType.DOSE_ERA, LoadType.CONDITIONERA, LoadType.DRUGERA });
+            _post.DoSetup(POST_LOAD_TYPES);
             _post.CommitLoads();
-            _post.Start();
             return _post;
         }
 

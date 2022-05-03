@@ -84,7 +84,7 @@ namespace DBMS.systems
         }
 
         // For parameters use $1, $2, ... $N for placeholders with args holding value with resp to order
-        public int RunQuery(string query, params object[] args)
+        public long RunQuery(string query, params object[] args)
         {
             try
             {

@@ -2,7 +2,10 @@
 -- Untill we know why new script does not work, we'll use it.
 WITH cteConditionTarget (condition_occurrence_id, person_id, condition_concept_id, condition_start_date, condition_end_date) AS
 (
-	SELECT co.condition_occurrence_id , co.person_id , co.condition_concept_id , co.condition_start_date , COALESCE(NULLIF(co.condition_end_date,NULL), condition_start_date + INTERVAL '1 day') AS condition_end_date
+	SELECT co.condition_occurrence_id , co.person_id , co.condition_concept_id , co.condition_start_date , 
+	COALESCE(
+	case when co.condition_end_date = timestamp '-infinity' or co.condition_end_date = timestamp 'infinity' or co.condition_end_date is null then null else co.condition_end_date end,
+	condition_start_date + INTERVAL '1 day') AS condition_end_date
 	FROM {sc}.condition_occurrence co
 	/* Depending on the needs of your data, you can put more filters on to your code. We assign 0 to our unmapped condition_concept_id's,
 	 * and since we don't want different conditions put in the same era, we put in the filter below.

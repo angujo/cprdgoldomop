@@ -1,21 +1,22 @@
 ﻿++Solution 'OMOPBuilder' ‎(7 of 7 projects)
-i:{00000000-0000-0000-0000-000000000000}:OMOPBuilder.sln
 ++CPRDGOLD
 i:{00000000-0000-0000-0000-000000000000}:CPRDGOLD
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\cprdgold\cprdgold.csproj
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\cprdgold\cprdgold.csproj
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\cprdgold\cprdgold.csproj
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\bin\debug\cprdgold.dll
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\bin\debug\cprdgold.dll
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\bin\debug\cprdgold.dll
 ++Properties
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\properties\
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:d:\vsprojects\omopbuilder\util\properties\
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\properties\
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\properties\
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\properties\
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\
 ++References
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++loaders
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\loaders\
 ++ActivePatientLoader.cs
@@ -183,12 +184,22 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\mode
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\models\test.cs
 ++Therapy.cs
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\models\therapy.cs
+++post
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\
+++PostConditionEra.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\postconditionera.cs
+++PostRunner.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\postrunner.cs
+++PostVisitDetail.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\postvisitdetail.cs
 ++scripts
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\
 ++app-setup.sql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\app-setup.sql
 ++chunk-setup.sql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\chunk-setup.sql
+++condition-era - old.sql
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\condition-era - old.sql
 ++condition-era.sql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\condition-era.sql
 ++create-daysupply-decodes.sql
@@ -207,8 +218,11 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scri
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\daysupply-modes.sql
 ++death.sql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\death.sql
+++drug-era - old.sql
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\drug-era - old.sql
 ++drug-era.sql
-i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\drug-era.sql
+++post-visit-detail.sql
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\post-visit-detail.sql
 ++source-to-source.sql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\source-to-source.sql
 ++source-to-standard.sql
@@ -250,6 +264,7 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\prop
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:d:\vsprojects\omopbuilder\util\properties\assemblyinfo.cs
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\properties\assemblyinfo.cs
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\assemblyinfo.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\assemblyinfo.cs
 ++Dapper
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
@@ -271,6 +286,7 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++Npgsql
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
@@ -285,6 +301,7 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Buffers
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
@@ -296,16 +313,19 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Data
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Data.DataSetExtensions
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Diagnostics.DiagnosticSource
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
@@ -317,6 +337,7 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Numerics
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
@@ -346,17 +367,19 @@ i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Xml.Linq
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{93f5df5a-170a-4fd8-b5be-665c97b85352}:
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 i:{94ef5ca2-f614-4063-b10b-907918324fef}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++Util
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:
 i:{00000000-0000-0000-0000-000000000000}:Util
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\util\util.csproj
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\util\util.csproj
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\bin\debug\util.dll
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\bin\debug\util.dll
 ++AddIn.cs
 i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\mergers\addin.cs
 ++AddInBase.cs
@@ -431,6 +454,7 @@ i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\simplecr
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 ++System.Drawing
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
 ++System.Security
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:
 ++System.Web
@@ -453,18 +477,94 @@ i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\systems\
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\systems\idbmssystem.cs
 ++PostgreSQL.cs
 i:{810f0d0e-ba29-4977-b0ba-e60f6834a614}:d:\vsprojects\omopbuilder\dbms\systems\postgresql.cs
+++TestProject
+i:{00000000-0000-0000-0000-000000000000}:TestProject
+++Dependencies
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1055
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1056
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1054
+++App.config
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\omopbuilder\app.config
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopbuilder\app.config
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\app.config
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\app.config
+++UnitTest1.cs
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\unittest1.cs
+++Analyzers
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:analyzers
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:analyzers
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:analyzers
+++COM
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:com
+++Frameworks
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:frameworks
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:frameworks
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:frameworks
+++Packages
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:packages
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:packages
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:packages
+++Projects
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:projects
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:projects
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:projects
+++Microsoft.CodeAnalysis.CSharp.NetAnalyzers
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
+++Microsoft.CodeAnalysis.NetAnalyzers
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
+++System.Text.Json.SourceGeneration
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
+++Interop.ConfigurationLib
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\obj\debug\net6.0\interop.configurationlib.dll
+++Microsoft.NETCore.App
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\microsoft.netcore.app
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\microsoft.netcore.app
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\microsoft.netcore.app
+++coverlet.collector (3.1.0)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1096
+++Dapper (2.0.123)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1093
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1085
+++Microsoft.NET.Test.Sdk (16.11.0)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1088
+++MSTest.TestAdapter (2.2.7)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1097
+++MSTest.TestFramework (2.2.7)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1086
+++NLog (4.7.15)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1095
+++SqlKata (2.3.7)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1091
+++System.Configuration.ConfigurationManager (6.0.0)
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1094
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1090
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1089
+++AppControl
+i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\bin\debug\appcontrol.dll
+i:{00000000-0000-0000-0000-000000000000}:AppControl
+i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\bin\debug\appcontrol.dll
+++Connected Services
+i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\connected services\
+++README.MD
+i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\readme.md
+++setup.sql
+i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\setup.sql
+++Settings.settings
+i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\settings.settings
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\settings.settings
+++Settings.Designer.cs
+i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\settings.designer.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\settings.designer.cs
 ++OMOPService
 i:{00000000-0000-0000-0000-000000000000}:OMOPService
 ++Connected Services 
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1057
-++Dependencies
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1054
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1056
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1055
-++App.config
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopbuilder\app.config
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\omopbuilder\app.config
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\app.config
 ++appsettings.Development.json
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\appsettings.development.json
 ++appsettings.json
@@ -474,95 +574,23 @@ i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\o
 ++Program.cs
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\program.cs
 i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\program.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\program.cs
 ++Worker.cs
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\worker.cs
 ++No service dependencies discovered
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1058
-++Analyzers
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:analyzers
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:analyzers
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:analyzers
-++Frameworks
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:frameworks
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:frameworks
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:frameworks
-++Packages
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:packages
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:packages
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:packages
-++Projects
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:projects
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:projects
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:projects
 ++launchSettings.json
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\properties\launchsettings.json
 ++ILLink.CodeFixProvider
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\illink.codefixprovider.dll
 ++ILLink.RoslynAnalyzer
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\illink.roslynanalyzer.dll
-++Microsoft.CodeAnalysis.CSharp.NetAnalyzers
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.csharp.netanalyzers.dll
-++Microsoft.CodeAnalysis.NetAnalyzers
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\sdk\6.0.202\sdks\microsoft.net.sdk\analyzers\microsoft.codeanalysis.netanalyzers.dll
 ++Microsoft.Extensions.Logging.Generators
 i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\users\bomondi\.nuget\packages\microsoft.extensions.logging.abstractions\6.0.0\analyzers\dotnet\roslyn4.0\cs\microsoft.extensions.logging.generators.dll
-++System.Text.Json.SourceGeneration
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:c:\program files\dotnet\packs\microsoft.netcore.app.ref\6.0.4\analyzers\dotnet\cs\system.text.json.sourcegeneration.dll
-++Microsoft.NETCore.App
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:d:\vsprojects\omopbuilder\omopservice\microsoft.netcore.app
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\microsoft.netcore.app
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\microsoft.netcore.app
 ++Microsoft.Extensions.Hosting (6.0.1)
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1079
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1087
 ++Microsoft.Extensions.Hosting.WindowsServices (6.0.0)
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1082
-++System.Configuration.ConfigurationManager (6.0.0)
-i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1080
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1090
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1085
-++TestProject
-i:{00000000-0000-0000-0000-000000000000}:TestProject
-++UnitTest1.cs
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\unittest1.cs
-++COM
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:com
-++Interop.ConfigurationLib
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\testproject\obj\debug\net6.0\interop.configurationlib.dll
-++coverlet.collector (3.1.0)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1092
-++Dapper (2.0.123)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1089
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:>1083
-++Microsoft.NET.Test.Sdk (16.11.0)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1087
-++MSTest.TestAdapter (2.2.7)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1093
-++MSTest.TestFramework (2.2.7)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1086
-++NLog (4.7.15)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1091
-++SqlKata (2.3.7)
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:>1088
-++AppControl
-i:{cbd824ca-49b7-4d88-a560-6e730d900eed}:d:\vsprojects\omopbuilder\appcontrol\appcontrol.csproj
-i:{00000000-0000-0000-0000-000000000000}:AppControl
-i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\appcontrol\appcontrol.csproj
-++Connected Services
-i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\connected services\
-++README.MD
-i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\readme.md
-++setup.sql
-i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\setup.sql
-++Settings.settings
-i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\settings.settings
-++Settings.Designer.cs
-i:{94ef5ca2-f614-4063-b10b-907918324fef}:d:\vsprojects\omopbuilder\appcontrol\properties\settings.designer.cs
+i:{d3715e6d-60c2-40e2-9807-4fa95007257d}:>1092
 ++OMOPBuilder
 i:{00000000-0000-0000-0000-000000000000}:OMOPBuilder
 ++bin
@@ -622,3 +650,31 @@ i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\b
 i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\bin\debug\net6.0\util.dll
 ++Util.pdb
 i:{94c78b1e-0a22-4ee3-890b-1181effab340}:d:\vsprojects\omopbuilder\omopbuilder\bin\debug\net6.0\util.pdb
+++PostDrugEra.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\postdrugera.cs
+++post-drug-era.sql
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\post-drug-era.sql
+++post-drug-era - Copy.sql
+++post-dose-era.sql
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\scripts\post-dose-era.sql
+++PostDrugEra - Copy.cs
+++PostDoseEra.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\post\postdoseera.cs
+++Solution 'OMOPBuilder' ‎(8 of 8 projects)
+i:{00000000-0000-0000-0000-000000000000}:OMOPBuilder.sln
+++AppUI
+i:{00000000-0000-0000-0000-000000000000}:AppUI
+++Form1.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\form1.cs
+++Resources.resx
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\resources.resx
+++System.Deployment
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
+++System.Windows.Forms
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:
+++Form1.Designer.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\form1.designer.cs
+++Resources.Designer.cs
+i:{da41041e-0b53-472f-aeb3-b2cfef2e4844}:d:\vsprojects\omopbuilder\appui\properties\resources.designer.cs
+++PostMap.cs
+i:{9bca6f36-0060-47b3-b5b4-785310629fea}:d:\vsprojects\omopbuilder\cprdgold\postmap.cs

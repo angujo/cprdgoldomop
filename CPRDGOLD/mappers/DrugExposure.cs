@@ -44,19 +44,31 @@ namespace CPRDGOLD.mappers
                {
                    if (null == stem.domain_id || !stem.domain_id.HasString("drug")) return;
                    row();
-
+                   //sig
                    write(stem.sig);
+                   // provider_id
                    write(stem.provider_id);
+                   // drug_exposure_id
                    write(stem.id);
+                   // drug_source_value
                    write(stem.source_value);
+                   // person_id
                    write(stem.person_id);
+                   // drug_source_concept_id
                    write(stem.source_concept_id);
+                   // drug_exposure_start_date
                    write(stem.start_date);
+                   // drug_concept_id
                    write(stem.concept_id);
+                   // drug_exposure_start_datetime
                    write(stem.start_datetime);
+                   // drug_exposure_end_date
                    write(DateTime.TryParse(stem.end_date, out DateTime dt1) ? dt1 : default);
+                   // drug_exposure_end_datetime
                    write(DateTime.TryParse(stem.end_date, out DateTime dt2) ? dt2 : default);
+                   // drug_type_concept_id
                    write(stem.type_concept_id);
+                   // visit_occurrence_id
                    write(stem.chunk_identifier);
                });
             });

@@ -17,6 +17,9 @@ namespace Util
         public static void Error(string msg) => Logger.Error(msg);
         public static void Info(string msg, params object[] args) => Logger.Info(msg, args);
         public static void Warning(string msg, params object[] args) => Logger.Warn(msg, args);
+        public static void Error(string msg, int chunkId) => Logger.Error($"[CHUNK {chunkId}] {msg}");
+        public static void Info(string msg, int chunkId, params object[] args) => Info($"[CHUNK {chunkId}] {msg}", args);
+        public static void Warning(string msg, int chunkId, params object[] args) => Logger.Warn($"[CHUNK {chunkId}] {msg}", args);
         public static void Error(Exception exc) => Logger.Error(exc);
         public static void Info(int index, string msg) => GetInstance(index).Info(msg);
         public static void Error(int index, string msg) => GetInstance(index).Error(msg);

@@ -57,7 +57,9 @@ namespace CPRDGOLD.mergers
                 });
                 foreach (AddIn dt in addM.data)
                 {
-                    dt.st_source_concept_id = sourceStds.ContainsKey(dt.source_value) ? sourceStds[dt.source_value].source_concept_id : null;
+                    if (!sourceStds.TryGetValue(dt.source_value, out SourceToStandard stStd)) continue;
+                    dt.st_source_concept_id = stStd.source_concept_id;
+                    dt.st_target_concept_id = stStd.target_concept_id;
                 }
             }
             Log.Info("Finished Looping AddIn Source to standards");
