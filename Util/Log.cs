@@ -29,10 +29,10 @@ namespace Util
 
         private static Logger CreateLogger(int id)
         {
-            string Name = $"Chunker{id}";
+            string name = $"Chunker{id}";
             var target = new FileTarget
             {
-                Name = Name,
+                Name = name,
                 FileName = Path.Combine(LogFolder, $"{id}.log"),
                 ArchiveEvery = FileArchivePeriod.Day,
                 ArchiveAboveSize = 10240,
@@ -44,7 +44,7 @@ namespace Util
             LogManager.Configuration.LoggingRules.Add(loggingRule);
             LogManager.Configuration.Reload();
 
-            return LogManager.GetLogger(Name);
+            return LogManager.GetLogger(name);
         }
     }
 }
