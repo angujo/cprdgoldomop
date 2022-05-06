@@ -69,31 +69,31 @@ CREATE TABLE {sc}.cdm_source (
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}.cohort;
+DROP TABLE IF EXISTS {sc}.cohort;
 
---CREATE TABLE {sc}.cohort (
---	cohort_definition_id int4 NULL,
---	subject_id int4 NULL,
---	cohort_start_date timestamp NULL,
---	cohort_end_date timestamp NULL
---);
+CREATE TABLE {sc}.cohort (
+	cohort_definition_id int4 NULL,
+	subject_id int4 NULL,
+	cohort_start_date timestamp NULL,
+	cohort_end_date timestamp NULL
+);
 
 
 -- {sc}.cohort_attribute definition
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}.cohort_attribute;
+DROP TABLE IF EXISTS {sc}.cohort_attribute;
 
---CREATE TABLE {sc}.cohort_attribute (
---	cohort_definition_id int4 NULL,
---	subject_id int4 NULL,
---	cohort_start_date timestamp NULL,
---	cohort_end_date timestamp NULL,
---	attribute_definition_id int4 NULL,
---	value_as_number numeric NULL,
---	value_as_concept_id int4 NULL
---);
+CREATE TABLE {sc}.cohort_attribute (
+	cohort_definition_id int4 NULL,
+	subject_id int4 NULL,
+	cohort_start_date timestamp NULL,
+	cohort_end_date timestamp NULL,
+	attribute_definition_id int4 NULL,
+	value_as_number numeric NULL,
+	value_as_concept_id int4 NULL
+);
 
 
 -- {sc}.cohort_definition definition
@@ -415,24 +415,24 @@ CREATE TABLE {sc}.note (
 
 -- Drop
 
---DROP TABLE IF EXISTS {sc}.note_nlp;
+DROP TABLE IF EXISTS {sc}.note_nlp;
 
---CREATE TABLE {sc}.note_nlp (
---	note_nlp_id int8 NULL,
---	note_id int4 NULL,
---	section_concept_id int4 NULL,
---	snippet varchar(250) NULL,
---	"offset" varchar(250) NULL,
---	lexical_variant varchar(250) NULL,
---	note_nlp_concept_id int4 NULL,
---	note_nlp_source_concept_id int4 NULL,
---	nlp_system varchar(250) NULL,
---	nlp_date timestamp NULL,
---	nlp_datetime timestamp NULL,
---	term_exists varchar(1) NULL,
---	term_temporal varchar(50) NULL,
---	term_modifiers varchar(2000) NULL
---);
+CREATE TABLE {sc}.note_nlp (
+	note_nlp_id int8 NULL,
+	note_id int4 NULL,
+	section_concept_id int4 NULL,
+	snippet varchar(250) NULL,
+	"offset" varchar(250) NULL,
+	lexical_variant varchar(250) NULL,
+	note_nlp_concept_id int4 NULL,
+	note_nlp_source_concept_id int4 NULL,
+	nlp_system varchar(250) NULL,
+	nlp_date timestamp NULL,
+	nlp_datetime timestamp NULL,
+	term_exists varchar(1) NULL,
+	term_temporal varchar(50) NULL,
+	term_modifiers varchar(2000) NULL
+);
 
 
 -- {sc}.observation definition
@@ -475,7 +475,6 @@ CREATE TABLE {sc}.observation_period (
 	observation_period_end_date timestamp NULL,
 	period_type_concept_id int4 NULL
 );
-
 
 -- {sc}.payer_plan_period definition
 

@@ -1,0 +1,1 @@
+CREATE UNIQUE INDEX cdm_source_pkey ON {sc}.cdm_source USING btree (cdm_source_name);

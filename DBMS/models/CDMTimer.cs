@@ -7,27 +7,34 @@ namespace DBMS.models
     [Table("cdm_timer")]
     public class Cdmtimer : CRUDModel<Cdmtimer>
     {
-        [Column("name")]
-        public string Name { get; set; }
-        public int ChunkId { get; set; }
-        public string Query { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
-        public long WorkLoadId { get; set; }
-        public Util.Status Status { get; set; }
-        public string ErrorLog { get; set; }
+        [Column("name")] public string Name { get; set; }
+
+        public int         ChunkId    { get; set; }
+        public string      Query      { get; set; }
+        public DateTime?   StartTime  { get; set; }
+        public DateTime?   EndTime    { get; set; }
+        public long        WorkLoadId { get; set; }
+        public Util.Status Status     { get; set; }
+        public string      ErrorLog   { get; set; }
+
+        [Editable(false)] public Util.LoadType LoadType { get; set; }
 
         [Editable(false)]
-        public Util.LoadType LoadType { get; set; }
+        public bool IsPending
+        {
+            get { return Status != Status.FINISHED; }
+        }
+
         [Editable(false)]
-        public bool IsPending { get { return Status != Status.FINISHED; } }
-        [Editable(false)]
-        public bool IsDone { get { return Status == Status.FINISHED; } }
+        public bool IsDone
+        {
+            get { return Status == Status.FINISHED; }
+        }
 
         public void Start()
         {
             StartTime = DateTime.Now;
-            Status = Status.RUNNING;
+            Status    = Status.RUNNING;
             Save();
         }
 
@@ -46,6 +53,7 @@ namespace DBMS.models
         public void Implement(Action impl)
         {
             if (IsDone) return;
+            Log.Info($"Starting implementation of {Name}");
             Start();
             try
             {
@@ -54,11 +62,15 @@ namespace DBMS.models
             }
             catch (Exception ex)
             {
-                Status = Status.STOPPED;
+                Status   = Status.STOPPED;
                 ErrorLog = ex.Message + "\n" + ex.StackTrace;
                 Log.Error(ex);
                 Stop();
                 throw;
+            }
+            finally
+            {
+                Log.Info($"Finished implementation of {Name}");
             }
         }
     }

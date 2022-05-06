@@ -194,6 +194,7 @@
     <Compile Include="post\PostConditionEra.cs" />
     <Compile Include="post\PostDoseEra.cs" />
     <Compile Include="post\PostDrugEra.cs" />
+    <Compile Include="post\PostIndex.cs" />
     <Compile Include="post\PostRunner.cs" />
     <Compile Include="post\PostVisitDetail.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -205,7 +206,6 @@
     <Compile Include="setups\SourceToStandardSetup.cs" />
     <Compile Include="setups\TablesSetup.cs" />
   </ItemGroup>
-  <ItemGroup />
   <ItemGroup>
     <None Include="app.config" />
     <None Include="packages.config" />
@@ -232,6 +232,42 @@
     <Content Include="scripts\daysupply-decodes.sql" />
     <Content Include="scripts\daysupply-modes.sql" />
     <Content Include="scripts\drug-era - old.sql" />
+    <Content Include="scripts\indices\idx-care-site.sql" />
+    <Content Include="scripts\indices\idx-cdm-source.sql" />
+    <Content Include="scripts\indices\idx-cohort-attribute.sql" />
+    <Content Include="scripts\indices\idx-cohort-definition.sql" />
+    <Content Include="scripts\indices\idx-cohort.sql" />
+    <Content Include="scripts\indices\idx-concept-ancestor.sql" />
+    <Content Include="scripts\indices\idx-concept-class.sql" />
+    <Content Include="scripts\indices\idx-concept-relationship.sql" />
+    <Content Include="scripts\indices\idx-concept-synonym.sql" />
+    <Content Include="scripts\indices\idx-concept.sql" />
+    <Content Include="scripts\indices\idx-condition-era.sql" />
+    <Content Include="scripts\indices\idx-condition-occurrence.sql" />
+    <Content Include="scripts\indices\idx-cost.sql" />
+    <Content Include="scripts\indices\idx-death.sql" />
+    <Content Include="scripts\indices\idx-device-exposure.sql" />
+    <Content Include="scripts\indices\idx-domain.sql" />
+    <Content Include="scripts\indices\idx-dose-era.sql" />
+    <Content Include="scripts\indices\idx-drug-era.sql" />
+    <Content Include="scripts\indices\idx-drug-exposure.sql" />
+    <Content Include="scripts\indices\idx-drug-strength.sql" />
+    <Content Include="scripts\indices\idx-fact-relationship.sql" />
+    <Content Include="scripts\indices\idx-location.sql" />
+    <Content Include="scripts\indices\idx-measurement.sql" />
+    <Content Include="scripts\indices\idx-note-nlp.sql" />
+    <Content Include="scripts\indices\idx-note.sql" />
+    <Content Include="scripts\indices\idx-observation-period.sql" />
+    <Content Include="scripts\indices\idx-observation.sql" />
+    <Content Include="scripts\indices\idx-payer-plan-period.sql" />
+    <Content Include="scripts\indices\idx-person.sql" />
+    <Content Include="scripts\indices\idx-procedure-occurrence.sql" />
+    <Content Include="scripts\indices\idx-provider.sql" />
+    <Content Include="scripts\indices\idx-relationship.sql" />
+    <Content Include="scripts\indices\idx-specimen.sql" />
+    <Content Include="scripts\indices\idx-visit-detail.sql" />
+    <Content Include="scripts\indices\idx-visit-occurrence.sql" />
+    <Content Include="scripts\indices\idx-vocabulary.sql" />
     <Content Include="scripts\post-dose-era.sql" />
     <Content Include="scripts\post-visit-detail.sql" />
     <Content Include="scripts\death.sql" />

@@ -1,0 +1,1 @@
+﻿ALTER TABLE {sc}.care_site ADD CONSTRAINT care_site_pk PRIMARY KEY (care_site_id);

@@ -1,0 +1,1 @@
+CREATE INDEX idx_concept_synonym_id ON {vs}.concept_synonym USING btree (concept_id);

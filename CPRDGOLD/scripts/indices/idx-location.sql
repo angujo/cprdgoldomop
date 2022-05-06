@@ -1,0 +1,1 @@
+ALTER TABLE {sc}."location" ADD CONSTRAINT location_pk PRIMARY KEY (location_id);

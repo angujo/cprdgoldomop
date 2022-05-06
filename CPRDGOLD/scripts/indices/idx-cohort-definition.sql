@@ -1,0 +1,1 @@
+ALTER TABLE {sc}.cohort_definition ADD CONSTRAINT cohort_definition_pk PRIMARY KEY (cohort_definition_id);

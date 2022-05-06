@@ -28,13 +28,19 @@ namespace TestProject
         [TestMethod]
         public void TestSimple()
         {
-            var sts = Setting.AppConnection;
+           // var sts = Setting.AppConnection;
            //  Log.Info( "John DOe 101");
             //Logger logger1 = createLog(1);
            // Logger logger2 = createLog(2);
 
           //  logger1.Info("Am trying to do something!");
           //  logger2.Info("Am also trying here!");
+          var c = 200;
+          while (c>0)
+          {
+              Console.WriteLine($"{c} = {c%3}");
+              c--;
+          }
         }
 
         [TestMethod]
