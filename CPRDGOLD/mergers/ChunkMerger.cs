@@ -1,8 +1,7 @@
-﻿using DBMS.models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
-using System.Threading;
 using System.Threading.Tasks;
+using DBMS.models;
 using Util;
 
 namespace CPRDGOLD.mergers

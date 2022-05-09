@@ -5,7 +5,7 @@
         /**
          * For the OMOP CDM Tables
          */
-        [StringValue("CareSite")]             CARESITE,
+        [StringValue("CareSite")] CARESITE,
         [StringValue("CdmSource")]            CDMSOURCE,
         [StringValue("ChunkLoad")]            CHUNKLOAD,
         [StringValue("ChunkSetup")]           CHUNKSETUP,
@@ -103,5 +103,12 @@
         RUNNING,
         STOPPED,
         FINISHED,
+    }
+
+    public enum DbSchemaType
+    {
+        [StringValue("target")] TARGET,
+        [StringValue("source")] SOURCE,
+        [StringValue("vocabulary")] VOCABULARY,
     }
 }

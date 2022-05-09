@@ -1,12 +1,12 @@
-﻿using CPRDGOLD.loaders;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using CPRDGOLD.loaders;
 using CPRDGOLD.models;
 using DBMS;
 using DBMS.models;
 using SqlKata.Execution;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Util;
 
 namespace CPRDGOLD.mergers
@@ -26,7 +26,7 @@ namespace CPRDGOLD.mergers
             var addM = new AddInMerger(chunk);
             addM.baseMerger = AddInBaseMerger.prepare(chunk);
 
-            Log.Info($"Starting AddIn Table");
+            Log.Info("Starting AddIn Table");
             List<Action> unions = new List<Action>
             {
                 ()=>addM.Union1(),
@@ -64,7 +64,7 @@ namespace CPRDGOLD.mergers
             }
             Log.Info("Finished Looping AddIn Source to standards");
 
-            Log.Info($"Finished AddIn Table");
+            Log.Info("Finished AddIn Table");
             return addM;
         }
 
@@ -94,14 +94,14 @@ namespace CPRDGOLD.mergers
                Product product = ProductLoader.ByProdcode(addInBase.data1) ?? new Product();
 
                AddIn addIn = preloadBase(addInBase);
-               addIn.data = addInBase.e_data1;
-               addIn.value_as_number = Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup) ? null : addInBase.data1;
-               addIn.value_as_string = addInBase.data1_lkup == Consts.MED_DICT ? med.read_code : (addInBase.data1_lkup == Consts.PRD_DICT ? product.gemscriptcode : lu.text);
-               addIn.value_as_date = addInBase.data1_lkup == Consts.DATE_FORMAT ? addInBase.data1 : null;
-               addIn.unit_source_value = new int[] { 13, 488 }.Contains(addInBase.enttype) ? "kg" : (476 == addInBase.enttype ? "cm" : (new int[] { 119, 61, 60, 120 }.Contains(addInBase.enttype) ? "week" : (14 == addInBase.enttype ? "m" : null)));
+               addIn.data                  = addInBase.e_data1;
+               addIn.value_as_number       = Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup) ? null : addInBase.data1;
+               addIn.value_as_string       = addInBase.data1_lkup == Consts.MED_DICT ? med.read_code : (addInBase.data1_lkup == Consts.PRD_DICT ? product.gemscriptcode : lu.text);
+               addIn.value_as_date         = addInBase.data1_lkup == Consts.DATE_FORMAT ? addInBase.data1 : null;
+               addIn.unit_source_value     = new[] { 13, 488 }.Contains(addInBase.enttype) ? "kg" : (476 == addInBase.enttype ? "cm" : (new[] { 119, 61, 60, 120 }.Contains(addInBase.enttype) ? "week" : (14 == addInBase.enttype ? "m" : null)));
                addIn.read_code_description = med.desc;
                addIn.gemscript_description = product.productname;
-               addIn.source_value = addInBase.enttype + "-" + addInBase.category + "-" + addInBase.description + "-" + addInBase.e_data1;
+               addIn.source_value          = addInBase.enttype + "-" + addInBase.category + "-" + addInBase.description + "-" + addInBase.e_data1;
                Add(addIn);
            });
         }

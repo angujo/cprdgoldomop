@@ -12,7 +12,7 @@ namespace DBMS
     {
         private string _conn;
 
-        public long? Id { get; set; }
+        public long Id { get; set; }
 
         [Editable(false)]
         public string ConnectionString { get { return _conn ?? Setting.AppConnection; } }
@@ -20,7 +20,7 @@ namespace DBMS
         [Editable(false)]
         protected string TableName { get { return this.GetType().Name; } }
 
-        public bool Exists() => Id != null && 0 != Id;
+        public bool Exists() => default != Id;
 
         public void SetConnectionString(string conn_str) { _conn = conn_str; }
 
@@ -43,7 +43,7 @@ namespace DBMS
                 {
                     if ("id" == pi.Name.ToLower()) return false;
                     var attrs = pi.GetCustomAttributes(true);
-                    if (attrs == null || attrs.Length <= 0) return true;
+                    if (attrs.Length <= 0) return true;
                     var ea = attrs.FirstOrDefault(a => a is EditableAttribute);
                     return ea == null || ((EditableAttribute)ea).AllowEdit;
                 }).Select(p => p.Name.ToLower()).ToList();
@@ -56,7 +56,7 @@ namespace DBMS
                            {
                                if ("id" == pi.Name.ToLower()) return false;
                                var attrs = pi.GetCustomAttributes(true);
-                               if (attrs == null || attrs.Length <= 0) return true;
+                               if (attrs.Length <= 0) return true;
                                object ea;
                                if (null == (ea = attrs.FirstOrDefault(a => a is SaveableAttribute || a is EditableAttribute))) return true;
                                return (ea is SaveableAttribute sa && sa.AllowSave) || (ea is EditableAttribute da && da.AllowEdit);

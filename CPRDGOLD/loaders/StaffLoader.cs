@@ -1,5 +1,5 @@
-﻿using CPRDGOLD.models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CPRDGOLD.models;
 
 namespace CPRDGOLD.loaders
 {

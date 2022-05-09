@@ -1,7 +1,6 @@
-﻿using CPRDGOLD.mergers;
+﻿using System;
+using CPRDGOLD.mergers;
 using DBMS;
-using System;
-using System.Linq;
 using Util;
 
 namespace CPRDGOLD.mappers
@@ -27,7 +26,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData(dynamic stemSource)
         {
             StemTableMerger stemTable = stemSource as StemTableMerger;
-            string[] cols = new string[] { "specimen_id", "specimen_source_value", "person_id", "specimen_date", "specimen_concept_id", "specimen_datetime",
+            string[] cols = { "specimen_id", "specimen_source_value", "person_id", "specimen_date", "specimen_concept_id", "specimen_datetime",
                 "specimen_type_concept_id", "unit_concept_id", "unit_source_value",  };
             DB.Target.CopyBinaryRows<Specimen>(cols, (row, write) =>
             {

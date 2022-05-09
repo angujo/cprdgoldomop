@@ -1,7 +1,7 @@
-﻿using CPRDGOLD.loaders;
+﻿using System;
+using CPRDGOLD.loaders;
 using DBMS;
-using System;
-using Util;
+using DBMS.models;
 
 namespace CPRDGOLD.mappers
 {
@@ -17,10 +17,10 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData(dynamic dSource = null)
         {
-            string[] cols = new string[] { "person_id", "death_date", "death_datetime", "death_type_concept_id", "cause_concept_id", "cause_source_value", "cause_source_concept_id", };
+            string[] cols = { "person_id", "death_date", "death_datetime", "death_type_concept_id", "cause_concept_id", "cause_source_value", "cause_source_concept_id", };
             DB.Target.CopyBinaryRows<Death>(cols, (row, write) =>
             {
-                chunk.GetLoader<ActivePatientLoader>(DBMS.models.ChunkLoadType.ACTIVE_PATIENT).LoopAllData(patient =>
+                chunk.GetLoader<ActivePatientLoader>(ChunkLoadType.ACTIVE_PATIENT).LoopAllData(patient =>
                 {
                     if (null == patient.deathdate || patient.deathdate == default(DateTime)) return;
 

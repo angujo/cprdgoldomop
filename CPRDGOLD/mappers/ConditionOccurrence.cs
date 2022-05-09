@@ -1,7 +1,6 @@
-﻿using CPRDGOLD.mergers;
+﻿using System;
+using CPRDGOLD.mergers;
 using DBMS;
-using System;
-using System.Linq;
 using Util;
 
 namespace CPRDGOLD.mappers
@@ -28,7 +27,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData(dynamic stemSource)
         {
             StemTableMerger stemTable = stemSource as StemTableMerger;
-            string[] cols = new string[] { "provider_id",  "condition_occurrence_id",
+            string[] cols = { "provider_id",  "condition_occurrence_id",
                 "condition_source_value", "person_id", "condition_concept_id", "condition_start_date", "condition_source_concept_id", "condition_start_datetime",
                 "condition_end_date", "condition_end_datetime", "condition_type_concept_id","visit_occurrence_id", };
             DB.Target.CopyBinaryRows<ConditionOccurrence>(cols, (row, write) =>

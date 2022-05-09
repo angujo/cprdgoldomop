@@ -15,7 +15,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData(dynamic refSource = null)
         {
             PracticeLoader.Init();
-            string[] cols = new string[] { "care_site_id", "place_of_service_concept_id", "location_id", "care_site_source_value", };
+            string[] cols = { "care_site_id", "place_of_service_concept_id", "location_id", "care_site_source_value", };
             DB.Target.CopyBinaryRows<CareSite>(cols, (row, write) =>
             {
                 PracticeLoader.LoopAll(pract =>

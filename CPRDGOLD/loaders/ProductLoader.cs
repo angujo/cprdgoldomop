@@ -1,5 +1,5 @@
-﻿using CPRDGOLD.models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CPRDGOLD.models;
 
 namespace CPRDGOLD.loaders
 {
@@ -8,7 +8,7 @@ namespace CPRDGOLD.loaders
         public ProductLoader() : base("product") { }
         public override void ChunkData(IEnumerable<Product> items = null)
         {
-            ParallelChunk(sstd => new string[] { $"{sstd.prodcode}" }, items);
+            ParallelChunk(sstd => new[] { $"{sstd.prodcode}" }, items);
         }
 
         public static Product ByProdcode(string prodcode) => (!long.TryParse(prodcode, out long mc)) ? null : ByProdcode(mc);

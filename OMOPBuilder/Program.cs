@@ -11,7 +11,7 @@ Log.Info("Starting the app...");
 Log.Info($"Launched from {Environment.CurrentDirectory}");
 Log.Info($"Physical location {AppDomain.CurrentDomain.BaseDirectory}");
 Log.Info($"AppContext.BaseDir {AppContext.BaseDirectory}");
-Log.Info($"Runtime Call {Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)}");
+Log.Info($"Runtime Call {Path.GetDirectoryName(Process.GetCurrentProcess().MainModule?.FileName)}");
 
 // var sts =Setting.SettingValue("app_conn");
 // var sts = Setting.AppSetting();

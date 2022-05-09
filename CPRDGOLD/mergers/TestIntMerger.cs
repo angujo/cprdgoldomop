@@ -7,7 +7,8 @@ namespace CPRDGOLD.mergers
     internal class TestIntMerger : ChunkMerger<TestIntMerger, TestInt>
     {
         protected TestIntMerger(Chunk chunk) : base(chunk) { }
-        public TestIntMerger() : base() { }
+        public TestIntMerger()
+        { }
 
         protected override void LoadData()
         {
@@ -17,7 +18,7 @@ namespace CPRDGOLD.mergers
              {
                  Lookup lu = LookupLoader.ByCodeType(test.data1, new long[] { 85, 56 });
                  if (default == lu || default == lu.lookup_type_id || 0 == lu.lookup_type_id) return;
-                 entity = 85 == lu.lookup_type_id ? EntityLoader.ByDataFieldType(new int[] { 7, 8 }, test.enttype) : EntityLoader.ByDataFieldType(4, test.enttype);
+                 entity = 85 == lu.lookup_type_id ? EntityLoader.ByDataFieldType(new[] { 7, 8 }, test.enttype) : EntityLoader.ByDataFieldType(4, test.enttype);
                  if (null == entity || default == entity) return;
                  TestInt ti = new TestInt();
                  ti.conc_domain_id = test.conc_domain_id;

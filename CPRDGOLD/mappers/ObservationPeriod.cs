@@ -1,7 +1,7 @@
-﻿using CPRDGOLD.loaders;
+﻿using System;
+using CPRDGOLD.loaders;
 using DBMS;
-using System;
-using Util;
+using DBMS.models;
 
 namespace CPRDGOLD.mappers
 {
@@ -18,7 +18,7 @@ namespace CPRDGOLD.mappers
             string[] cols = { "person_id", "observation_period_end_date", "observation_period_start_date", "period_type_concept_id" };
             DB.Target.CopyBinaryRows<ObservationPeriod>(cols, (row, write) =>
             {
-                chunk.GetLoader<PatientLoader>(DBMS.models.ChunkLoadType.PATIENT).LoopAllData(patient =>
+                chunk.GetLoader<PatientLoader>(ChunkLoadType.PATIENT).LoopAllData(patient =>
                 {
                     row();
                     write(patient.patid);

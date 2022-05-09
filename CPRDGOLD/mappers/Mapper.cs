@@ -1,6 +1,4 @@
-﻿using DBMS;
-using DBMS.models;
-using System.Collections.Generic;
+﻿using DBMS.models;
 using Util;
 
 namespace CPRDGOLD.mappers

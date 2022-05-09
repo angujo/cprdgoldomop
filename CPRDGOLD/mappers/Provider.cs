@@ -1,7 +1,7 @@
-﻿using CPRDGOLD.loaders;
+﻿using System.Linq;
+using CPRDGOLD.loaders;
 using CPRDGOLD.models;
 using DBMS;
-using System.Linq;
 
 namespace CPRDGOLD.mappers
 {
@@ -24,7 +24,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData(dynamic refSource = null)
         {
             StaffLoader.Init();
-            string[] cols = new string[] { "provider_id", "specialty_concept_id", "care_site_id", "gender_concept_id", "provider_source_value", "specialty_source_value", "gender_source_value", };
+            string[] cols = { "provider_id", "specialty_concept_id", "care_site_id", "gender_concept_id", "provider_source_value", "specialty_source_value", "gender_source_value", };
             var items = StaffLoader.GetData().Select(staff =>
             {
                 SourceToConceptMap sconcept;

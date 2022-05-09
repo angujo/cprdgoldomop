@@ -1,5 +1,5 @@
-﻿using CPRDGOLD.models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CPRDGOLD.models;
 
 namespace CPRDGOLD.loaders
 {
@@ -8,7 +8,7 @@ namespace CPRDGOLD.loaders
         public MedicalLoader() : base("medical") { }
         public override void ChunkData(IEnumerable<Medical> items = null)
         {
-            ParallelChunk(item => new string[] { $"{item.medcode}" }, items);
+            ParallelChunk(item => new[] { $"{item.medcode}" }, items);
         }
 
         public static Medical ByMedcode(string medcode) => long.TryParse(medcode, out long mc) ? ByMedcode(mc) : null;

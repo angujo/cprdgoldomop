@@ -1,5 +1,5 @@
-﻿using CPRDGOLD.models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CPRDGOLD.models;
 
 namespace CPRDGOLD.loaders
 {
@@ -8,7 +8,7 @@ namespace CPRDGOLD.loaders
         public CommonDosageLoader() : base("commondosages") { }
         public override void ChunkData(IEnumerable<CommonDosage> items = null)
         {
-            ParallelChunk(sstd => new string[] { sstd.dosageid }, items);
+            ParallelChunk(sstd => new[] { sstd.dosageid }, items);
         }
 
         public static CommonDosage ByDoseId(string cd_id) => ChunkValue(cd_id);

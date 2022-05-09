@@ -1,6 +1,7 @@
-﻿using CPRDGOLD.loaders;
+﻿using System;
+using CPRDGOLD.loaders;
 using DBMS;
-using System;
+using DBMS.models;
 
 namespace CPRDGOLD.mappers
 {
@@ -28,12 +29,12 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData(dynamic dSource = null)
         {
-            string[] cols = new string[] { "person_id", "visit_detail_concept_id", "visit_detail_start_date", "visit_detail_start_datetime",
+            string[] cols = { "person_id", "visit_detail_concept_id", "visit_detail_start_date", "visit_detail_start_datetime",
                 "visit_detail_end_date", "visit_detail_end_datetime", "visit_detail_type_concept_id", "provider_id", "care_site_id", "visit_detail_source_value",
                 "visit_detail_source_concept_id","visit_occurrence_id", };
             DB.Target.CopyBinaryRows<VisitDetail>(cols, (row, write) =>
            {
-               chunk.GetLoader<ConsultationLoader>(DBMS.models.ChunkLoadType.CONSULTATION).LoopAllData(consult =>
+               chunk.GetLoader<ConsultationLoader>(ChunkLoadType.CONSULTATION).LoopAllData(consult =>
                 {
                     row();
                     write(consult.patid);

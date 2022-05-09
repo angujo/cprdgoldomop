@@ -1,7 +1,7 @@
-﻿using CPRDGOLD.models;
+﻿using System;
+using CPRDGOLD.models;
 using DBMS;
 using SqlKata.Execution;
-using System;
 using Util;
 
 namespace CPRDGOLD.mappers
@@ -19,7 +19,7 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData(dynamic refSource = null)
         {
-            string[] cols = new string[] { "location_id", "location_source_value" };
+            string[] cols = { "location_id", "location_source_value" };
             DB.Target.CopyBinaryRows<Location>(cols, (row, write) =>
             {
                 LoopRegions(practice =>

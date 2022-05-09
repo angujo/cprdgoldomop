@@ -1,6 +1,7 @@
 ﻿using DBMS.models;
 using System;
 using System.Collections.Generic;
+using SqlKata.Execution;
 using Util;
 
 namespace DBMS
@@ -13,19 +14,25 @@ namespace DBMS
         public AppDBMS()
         {
             workload = DB.Internal.Load<WorkLoad>(new {cdmprocessed = false});
-            if (null != workload && workload.Exists()) Chunk.WorkLoadId = (long) workload.Id;
+            if (null != workload && workload.Exists()) Chunk.WorkLoadId = workload.Id;
         }
 
         public void StartQueue()
         {
             workqueue = new WorkQueue
             {
-                WorkLoadId = (long) workload.Id,
+                WorkLoadId = workload.Id,
                 Name       = Guid.NewGuid().ToString(),
                 StartTime  = DateTime.Now,
                 Status     = Status.RUNNING,
             };
             workqueue.Save();
+            DB.Internal.RunFactory(
+                nameof(WorkLoad),
+                (query, schemaName) => { query.WhereRaw("isrunning = true").Update(new {isrunning = false}); }
+            );
+            workload.IsRunning = true;
+            workload.Save();
         }
 
         public void StopQueue(Exception ex = null)
@@ -33,6 +40,9 @@ namespace DBMS
             workqueue.Status   = ex == null ? Status.FINISHED : Status.STOPPED;
             workqueue.ErrorLog = ex == null ? null : ex.Message + "\n" + ex.StackTrace;
             workqueue.Save();
+
+            workload.IsRunning = false;
+            workload.Save();
         }
 
         public IEnumerable<int> ChunkOrdinals()

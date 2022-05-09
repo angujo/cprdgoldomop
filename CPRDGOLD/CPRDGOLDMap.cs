@@ -1,16 +1,15 @@
-﻿using CPRDGOLD.loaders;
-using CPRDGOLD.mappers;
-using CPRDGOLD.mergers;
-using CPRDGOLD.setups;
-using DBMS.models;
-using DBMS;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using CPRDGOLD.models;
-using Util;
+using CPRDGOLD.loaders;
+using CPRDGOLD.mappers;
+using CPRDGOLD.mergers;
 using CPRDGOLD.post;
+using CPRDGOLD.setups;
+using DBMS;
+using DBMS.models;
+using Util;
 
 namespace CPRDGOLD
 {
@@ -34,7 +33,7 @@ namespace CPRDGOLD
                 try
                 {
                     isUp(true);
-                    Chunk.WorkLoadId = (long) appDBMS.workload.Id;
+                    Chunk.WorkLoadId = appDBMS.workload.Id;
 
                     appDBMS.StartQueue();
 
@@ -239,7 +238,7 @@ namespace CPRDGOLD
             Chunk.SUImplement(LoadType.CHUNKLOAD, () =>
             {
                 var chunks = new ChunkSetup();
-                if (appDBMS.workload.Id != null) chunks.ChunkOrdinate((long) appDBMS.workload.Id);
+                if (appDBMS.workload.Id != default) chunks.ChunkOrdinate(appDBMS.workload.Id);
             });
 
             // From below we can run parallel, they are independent of each other

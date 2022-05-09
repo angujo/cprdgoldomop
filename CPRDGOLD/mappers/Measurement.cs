@@ -1,7 +1,6 @@
-﻿using CPRDGOLD.mergers;
+﻿using System;
+using CPRDGOLD.mergers;
 using DBMS;
-using System;
-using System.Linq;
 using Util;
 
 namespace CPRDGOLD.mappers
@@ -32,7 +31,7 @@ namespace CPRDGOLD.mappers
         protected override void LoadData(dynamic stemSource)
         {
             StemTableMerger stemTable = stemSource as StemTableMerger;
-            string[] cols = new string[] { "provider_id",  "unit_source_value", "value_source_value", "measurement_id",
+            string[] cols = { "provider_id",  "unit_source_value", "value_source_value", "measurement_id",
                 "measurement_source_value", "person_id", "measurement_source_concept_id", "measurement_date", "measurement_concept_id",
                 "measurement_datetime", "measurement_type_concept_id", "operator_concept_id", "value_as_number", "value_as_concept_id",
                 "unit_concept_id", "range_high", "range_low","visit_occurrence_id", };

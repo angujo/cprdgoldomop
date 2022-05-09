@@ -1,11 +1,11 @@
-﻿using CPRDGOLD.loaders;
-using CPRDGOLD.models;
-using DBMS.models;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using CPRDGOLD.loaders;
+using CPRDGOLD.models;
+using DBMS.models;
 using Util;
 
 namespace CPRDGOLD.mergers
@@ -106,42 +106,42 @@ namespace CPRDGOLD.mergers
 
         private void ForUnion1(AddInBase addInBase)
         {
-            int[] types = new int[] { 72, 116, 372, 78 };
+            int[] types = { 72, 116, 372, 78 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 0 || !Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup)) return;
             unions[1].Add(addInBase);
         }
 
         private void ForUnion2(AddInBase addInBase)
         {
-            int[] types = new int[] { 72, 116, 78, 60, 119, 120 };
+            int[] types = { 72, 116, 78, 60, 119, 120 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 1 || !Consts.MED_PRD_DICT.Contains(addInBase.data2_lkup)) return;
             unions[2].Add(addInBase);
         }
 
         private void ForUnion3(AddInBase addInBase)
         {
-            int[] types = new int[] { 372, 78, 126 };
+            int[] types = { 372, 78, 126 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 2 || !Consts.MED_PRD_DICT.Contains(addInBase.data3_lkup)) return;
             unions[3].Add(addInBase);
         }
 
         private void ForUnion4(AddInBase addInBase)
         {
-            int[] types = new int[] { 372, 78, 126 };
+            int[] types = { 372, 78, 126 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 3 || !Consts.MED_PRD_DICT.Contains(addInBase.data4_lkup)) return;
             unions[4].Add(addInBase);
         }
 
         private void ForUnion5(AddInBase addInBase)
         {
-            int[] types = new int[] { 78 };
+            int[] types = { 78 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 4 || !Consts.MED_PRD_DICT.Contains(addInBase.data5_lkup)) return;
             unions[5].Add(addInBase);
         }
 
         private void ForUnion6(AddInBase addInBase)
         {
-            int[] types = new int[] { 78 };
+            int[] types = { 78 };
             if (types.Contains(addInBase.enttype) || addInBase.data_fields <= 5 || !Consts.MED_PRD_DICT.Contains(addInBase.data6_lkup)) return;
             unions[6].Add(addInBase);
         }
@@ -154,28 +154,28 @@ namespace CPRDGOLD.mergers
 
         private void ForUnion8(AddInBase addInBase)
         {
-            int[] types = new int[] { 72, 116, 78 };
+            int[] types = { 72, 116, 78 };
             if (!types.Contains(addInBase.enttype) || !Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup)) return;
             unions[8].Add(addInBase);
         }
 
         private void ForUnion9(AddInBase addInBase)
         {
-            int[] types = new int[] { 126, 78 };
+            int[] types = { 126, 78 };
             if (!types.Contains(addInBase.enttype) || !Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup)) return;
             unions[9].Add(addInBase);
         }
 
         private void ForUnion10(AddInBase addInBase)
         {
-            int[] types = new int[] { 78 };
+            int[] types = { 78 };
             if (!types.Contains(addInBase.enttype) || !Consts.MED_PRD_DICT.Contains(addInBase.data1_lkup)) return;
             unions[10].Add(addInBase);
         }
 
         private void ForUnion11(AddInBase addInBase)
         {
-            int[] types = new int[] { 372 };
+            int[] types = { 372 };
             if (!types.Contains(addInBase.enttype)) return;
             unions[1].Add(addInBase);
         }

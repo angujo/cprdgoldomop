@@ -1,5 +1,5 @@
-﻿using CPRDGOLD.models;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using CPRDGOLD.models;
 
 namespace CPRDGOLD.loaders
 {
@@ -8,7 +8,7 @@ namespace CPRDGOLD.loaders
         public ScoreMethodLoader() : base("scoremethod") { }
         public override void ChunkData(IEnumerable<ScoreMethod> items = null)
         {
-            ParallelChunk(item => new string[] { $"{item.code}" }, items);
+            ParallelChunk(item => new[] { $"{item.code}" }, items);
         }
 
         public static ScoreMethod ByCode(string code) => long.TryParse(code, out long mc) ? ByCode(mc) : null;

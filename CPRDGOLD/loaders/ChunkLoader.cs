@@ -1,11 +1,11 @@
-﻿using DBMS;
-using DBMS.models;
-using SqlKata;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using DBMS;
+using DBMS.models;
+using SqlKata;
 using Util;
 
 namespace CPRDGOLD.loaders
@@ -15,7 +15,7 @@ namespace CPRDGOLD.loaders
         private static ConcurrentDictionary<int, T> _instances = new ConcurrentDictionary<int, T>();
         protected Chunk chunk { get; set; }
         protected string chunkColumn = "patid";
-        public ChunkLoader(string table_name, Chunk chunk) : base(DB.Source, table_name) { this.chunk = chunk; chunk.AddCleaner(() => this.Clean()); }
+        public ChunkLoader(string table_name, Chunk chunk) : base(DB.Source, table_name) { this.chunk = chunk; chunk.AddCleaner(() => Clean()); }
         public ChunkLoader(string table_name) : base(DB.Source, table_name) { }
 
         public Chunk GetChunk()
@@ -237,7 +237,7 @@ namespace CPRDGOLD.loaders
 
         #region ChunkData
 
-        protected C ChunkValue(params string[] keys) => ChunkValue(new string[][] { keys });
+        protected C ChunkValue(params string[] keys) => ChunkValue(new[] { keys });
         protected C ChunkValue(IEnumerable<string[]> keys) => ChunkValue(keys.ToArray());
         protected C ChunkValue(string[][] keys) => IChunkValue(keys);
 

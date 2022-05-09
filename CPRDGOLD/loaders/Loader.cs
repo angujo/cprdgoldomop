@@ -1,13 +1,13 @@
-﻿using DBMS.models;
-using DBMS.systems;
-using SqlKata;
-using SqlKata.Execution;
-using System;
+﻿using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using DBMS.models;
+using DBMS.systems;
+using SqlKata;
+using SqlKata.Execution;
 using Util;
 
 namespace CPRDGOLD.loaders
@@ -19,7 +19,7 @@ namespace CPRDGOLD.loaders
         protected DBMSSystem db { get; set; }
         protected List<C> dataset { get { return data.Count > 0 ? data : tupleChunk.Select(tc => tc.Value).ToList(); } }
 
-        protected string table_name = null;
+        protected string table_name;
 
         protected static T me;
 
@@ -35,9 +35,9 @@ namespace CPRDGOLD.loaders
         {
             RunQuery((query, schema_name) =>
             {
-                if (null != this.GetType().GetMethod("ChunkData"))
+                if (null != GetType().GetMethod("ChunkData"))
                 {
-                    this.GetType().GetMethod("ChunkData").Invoke(this, new object[] { query.Get<C>() });
+                    GetType().GetMethod("ChunkData").Invoke(this, new object[] { query.Get<C>() });
                 }
                 else
                 {
@@ -51,12 +51,12 @@ namespace CPRDGOLD.loaders
             if (null == db || null == table_name) return;
             Action<Query, string> actn = (query, schema_name) =>
               {
-                  if (null != this.GetType().GetMethod("CustomizeQuery")) this.GetType().GetMethod("CustomizeQuery").Invoke(this, new object[] { query, schema_name });
+                  if (null != GetType().GetMethod("CustomizeQuery")) GetType().GetMethod("CustomizeQuery").Invoke(this, new object[] { query, schema_name });
                   queryAct(query, schema_name);
               };
-            if (null != this.GetType().GetMethod("GetChunk"))
+            if (null != GetType().GetMethod("GetChunk"))
             {
-                Chunk ch = (Chunk)this.GetType().GetMethod("GetChunk").Invoke(this, null);
+                Chunk ch = (Chunk)GetType().GetMethod("GetChunk").Invoke(this, null);
                 db.RunChunk(ch, table_name, actn);
             }
             else
@@ -103,7 +103,7 @@ namespace CPRDGOLD.loaders
             return default;
         }
         protected void ParallelChunk(IEnumerable<C> items = null) => IParallelChunk(null, items);
-        protected void ParallelChunk(Func<C, string[]> getKeys, IEnumerable<C> items = null) => ParallelChunk(c => new string[][] { getKeys(c) }, items);
+        protected void ParallelChunk(Func<C, string[]> getKeys, IEnumerable<C> items = null) => ParallelChunk(c => new[] { getKeys(c) }, items);
         protected void ParallelChunk(Func<C, string[][]> getKeys, IEnumerable<C> items = null) => IParallelChunk(getKeys, items);
         private void IParallelChunk(Func<C, string[][]> getKeys, IEnumerable<C> items = null)
         {
