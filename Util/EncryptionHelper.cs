@@ -11,6 +11,7 @@ namespace Util
 
         public static string Encrypt(string clearText)
         {
+            if (string.IsNullOrEmpty(clearText)) return clearText;
             var clearBytes = Encoding.Unicode.GetBytes(clearText);
             using (var encryptor = Aes.Create())
             {
@@ -39,6 +40,7 @@ namespace Util
 
         public static string Decrypt(string cipherText)
         {
+            if (string.IsNullOrEmpty(cipherText)) return cipherText;
             cipherText = cipherText.Replace(" ", "+");
             var cipherBytes = Convert.FromBase64String(cipherText);
             using (var encryptor = Aes.Create())

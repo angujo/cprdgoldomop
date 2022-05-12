@@ -17,8 +17,8 @@ namespace DBMS.systems
 {
     public abstract class DBMSSystem : IDBMSSystem
     {
-        public DBSchema schema { get; set; }
-        protected string conn_string { get; set; }
+        public    DBSchema schema      { get; set; }
+        protected string   conn_string { get; set; }
 
         ConcurrentDictionary<string, PropertyInfo[]> columns = new ConcurrentDictionary<string, PropertyInfo[]>();
 
@@ -29,8 +29,15 @@ namespace DBMS.systems
             SimpleCRUD.SetTableNameResolver(resolver);
         }
 
-        public DBMSSystem(DBSchema schema) : this() { this.schema = schema; }
-        public DBMSSystem(string conn_string) : this() { this.conn_string = conn_string; }
+        public DBMSSystem(DBSchema schema) : this()
+        {
+            this.schema = schema;
+        }
+
+        public DBMSSystem(string conn_string) : this()
+        {
+            this.conn_string = conn_string;
+        }
 
         public abstract string ConnectionString();
 
@@ -56,7 +63,19 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                action(new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name)), schema.SchemaName);
+                action(new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name)),
+                       schema.SchemaName);
+            }
+        }
+
+        public R RunFactory<T, R>(Func<Query, R> action, string schemaName = null)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var table_name = typeof(T).Name.ToSnakeCase();
+                return action(new QueryFactory(conn, GetCompiler()).Query(
+                                  !string.IsNullOrEmpty(schemaName) ? Dot(schemaName, table_name) : table_name));
             }
         }
 
@@ -74,11 +93,13 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                var query = new QueryFactory(conn, GetCompiler()).Query(string.Join(".", new string[] { DB.Source.schema.SchemaName, chunk.tableName, }));
-                query.Join(Dot(schema.SchemaName, tbl_name), Dot(tbl_name, chunk.relationColumn), Dot(chunk.tableName, chunk.column))
-                    .SelectRaw(Dot(tbl_name, "*"))
-                    .SelectRaw(Dot(chunk.tableName, "id as chunk_id"))
-                    .Where(Dot(chunk.tableName, chunk.ordinalColumn), chunk.ordinal);
+                var query = new QueryFactory(conn, GetCompiler()).Query(
+                    string.Join(".", new string[] {DB.Source.schema.SchemaName, chunk.tableName,}));
+                query.Join(Dot(schema.SchemaName, tbl_name), Dot(tbl_name, chunk.relationColumn),
+                           Dot(chunk.tableName, chunk.column))
+                     .SelectRaw(Dot(tbl_name, "*"))
+                     .SelectRaw(Dot(chunk.tableName, "id as chunk_id"))
+                     .Where(Dot(chunk.tableName, chunk.ordinalColumn), chunk.ordinal);
                 action(query, schema.SchemaName);
             }
         }
@@ -118,7 +139,7 @@ namespace DBMS.systems
 
         private string Dot(string schema, string table)
         {
-            return string.Join(".", new string[] { schema, table });
+            return string.Join(".", new string[] {schema, table});
         }
 
         public T Load<T>(object args)
@@ -131,6 +152,7 @@ namespace DBMS.systems
                     return conn.Get<T>(args);
                 }
             }
+
             return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).FirstOrDefault<T>();
         }
 
@@ -139,29 +161,34 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase())).Where(where).Update(ColumnValues(obj));
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase()))
+                                                            .Where(where).Update(ColumnValues(obj));
             }
         }
 
-        public long Insert<T>(T obj) => Insert(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
+        public long Insert<T>(T obj) =>
+            Insert(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
 
         public long Insert(string table_name, IEnumerable<KeyValuePair<string, object>> values)
         {
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToLower())).InsertGetId<long>(values);
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToLower()))
+                                                            .InsertGetId<long>(values);
             }
         }
 
-        public long InsertPlain<T>(T obj) => InsertPlain(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
+        public long InsertPlain<T>(T obj) =>
+            InsertPlain(typeof(T).Name.ToSnakeCase(), ColumnValues<T>(obj).Where(cv => null != cv.Value));
 
         public long InsertPlain(string table_name, IEnumerable<KeyValuePair<string, object>> values)
         {
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToSnakeCase())).Insert(values);
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, table_name.ToSnakeCase()))
+                                                            .Insert(values);
             }
         }
 
@@ -175,7 +202,8 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, tbl_name.ToSnakeCase())).Insert(ColumnNames<T>(), values);
+                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, tbl_name.ToSnakeCase()))
+                                                            .Insert(ColumnNames<T>(), values);
             }
         }
 
@@ -184,30 +212,36 @@ namespace DBMS.systems
             string tkey = typeof(T).Name;
             if (columns.ContainsKey(tkey)) return columns[tkey];
             return columns[tkey] = typeof(T).GetProperties()
-                           .Where(pi =>
-                           {
-                               if ("id" == pi.Name.ToLower()) return false;
-                               var attrs = pi.GetCustomAttributes(true);
-                               if (attrs == null || attrs.Length <= 0) return true;
-                               object ea;
-                               if (null == (ea = attrs.FirstOrDefault(a => a is SaveableAttribute || a is EditableAttribute))) return true;
-                               return (ea is SaveableAttribute sa && sa.AllowSave) || (ea is EditableAttribute da && da.AllowEdit);
-                           }).ToArray();
+                                            .Where(pi =>
+                                            {
+                                                if ("id" == pi.Name.ToLower()) return false;
+                                                var attrs = pi.GetCustomAttributes(true);
+                                                if (attrs == null || attrs.Length <= 0) return true;
+                                                object ea;
+                                                if (null == (ea =
+                                                        attrs.FirstOrDefault(
+                                                            a => a is SaveableAttribute || a is EditableAttribute)))
+                                                    return true;
+                                                return (ea is SaveableAttribute sa && sa.AllowSave) ||
+                                                       (ea is EditableAttribute da && da.AllowEdit);
+                                            }).ToArray();
         }
 
         public string[] ColumnNames<T>(T obj = default) => GetColumns<T>(obj).Select(p => p.Name.ToLower()).ToArray();
 
         public object[] ColumnValues<T>(object obj) => GetColumns<T>().Select(p => p.GetValue(obj, null)).ToArray();
 
-        public Dictionary<string, object> ColumnValues<T>(T obj) => GetColumns<T>(obj).ToDictionary(p => p.Name.ToLower(), p => p.GetValue(obj, null));
+        public Dictionary<string, object> ColumnValues<T>(T obj) =>
+            GetColumns<T>(obj).ToDictionary(p => p.Name.ToLower(), p => p.GetValue(obj, null));
 
         public IEnumerable<T> GetAll<T>(object args)
         {
-            using (var conn = GetConnection())
-            {
-                conn.Open();
-                return conn.GetList<T>(args);
-            }
+            return RunFactory<T, IEnumerable<T>>(query => query.Where(args).Get<T>());
+        }
+
+        public IEnumerable<T> GetAll<T>()
+        {
+            return RunFactory<T, IEnumerable<T>>(query => query.Get<T>());
         }
 
         public IEnumerable<T> GetAll<T>(string stmt, object args = null)

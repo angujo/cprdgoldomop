@@ -3,7 +3,7 @@ using System;
 
 namespace DBMS.models
 {
-    [Table("workload")]
+    [Table("WorkLoad")]
     public class WorkLoad : CRUDModel<WorkLoad>
     {
         private int _parallels = 3;

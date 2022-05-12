@@ -39,9 +39,9 @@ namespace AppUI.ui
             this.label1                = new System.Windows.Forms.Label();
             this.tabSchema             = new System.Windows.Forms.TabPage();
             this.groupBox1             = new System.Windows.Forms.GroupBox();
-            this.textBox4              = new System.Windows.Forms.TextBox();
-            this.textBox3              = new System.Windows.Forms.TextBox();
-            this.textBox2              = new System.Windows.Forms.TextBox();
+            this.scVocabulary          = new System.Windows.Forms.TextBox();
+            this.scSource              = new System.Windows.Forms.TextBox();
+            this.scTarget              = new System.Windows.Forms.TextBox();
             this.label10               = new System.Windows.Forms.Label();
             this.label9                = new System.Windows.Forms.Label();
             this.label8                = new System.Windows.Forms.Label();
@@ -56,12 +56,12 @@ namespace AppUI.ui
             this.label4                = new System.Windows.Forms.Label();
             this.label3                = new System.Windows.Forms.Label();
             this.tabProgress           = new System.Windows.Forms.TabPage();
-            this.listView1             = new System.Windows.Forms.ListView();
+            this.lvAnalysis            = new System.Windows.Forms.ListView();
             this.chName                = new System.Windows.Forms.ColumnHeader();
             this.chValue               = new System.Windows.Forms.ColumnHeader();
             this.progressBar1          = new System.Windows.Forms.ProgressBar();
             this.tabChunks             = new System.Windows.Forms.TabPage();
-            this.listView2             = new System.Windows.Forms.ListView();
+            this.lvChunks              = new System.Windows.Forms.ListView();
             this.chOrdinal             = new System.Windows.Forms.ColumnHeader();
             this.chStart               = new System.Windows.Forms.ColumnHeader();
             this.chEnd                 = new System.Windows.Forms.ColumnHeader();
@@ -90,6 +90,7 @@ namespace AppUI.ui
             this.statusStrip1          = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
             this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.linkLabel1            = new System.Windows.Forms.LinkLabel();
             this.tabWorkload.SuspendLayout();
             this.tabDetails.SuspendLayout();
             this.tabSchema.SuspendLayout();
@@ -111,11 +112,12 @@ namespace AppUI.ui
             this.tabWorkload.Controls.Add(this.tabProgress);
             this.tabWorkload.Controls.Add(this.tabChunks);
             this.tabWorkload.Controls.Add(this.tabItems);
-            this.tabWorkload.Location      = new System.Drawing.Point(12, 12);
-            this.tabWorkload.Name          = "tabWorkload";
-            this.tabWorkload.SelectedIndex = 0;
-            this.tabWorkload.Size          = new System.Drawing.Size(776, 426);
-            this.tabWorkload.TabIndex      = 0;
+            this.tabWorkload.Location      =  new System.Drawing.Point(12, 36);
+            this.tabWorkload.Name          =  "tabWorkload";
+            this.tabWorkload.SelectedIndex =  0;
+            this.tabWorkload.Size          =  new System.Drawing.Size(776, 402);
+            this.tabWorkload.TabIndex      =  0;
+            this.tabWorkload.Selected      += new System.Windows.Forms.TabControlEventHandler(this.tabWorkload_Selected);
             // 
             // tabDetails
             // 
@@ -127,7 +129,7 @@ namespace AppUI.ui
             this.tabDetails.Location                = new System.Drawing.Point(4, 22);
             this.tabDetails.Name                    = "tabDetails";
             this.tabDetails.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabDetails.Size                    = new System.Drawing.Size(768, 400);
+            this.tabDetails.Size                    = new System.Drawing.Size(768, 376);
             this.tabDetails.TabIndex                = 0;
             this.tabDetails.Text                    = "Details";
             this.tabDetails.UseVisualStyleBackColor = true;
@@ -179,16 +181,16 @@ namespace AppUI.ui
             this.tabSchema.Location                = new System.Drawing.Point(4, 22);
             this.tabSchema.Name                    = "tabSchema";
             this.tabSchema.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabSchema.Size                    = new System.Drawing.Size(768, 400);
+            this.tabSchema.Size                    = new System.Drawing.Size(768, 376);
             this.tabSchema.TabIndex                = 1;
             this.tabSchema.Text                    = "Schema Connections";
             this.tabSchema.UseVisualStyleBackColor = true;
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.textBox4);
-            this.groupBox1.Controls.Add(this.textBox3);
-            this.groupBox1.Controls.Add(this.textBox2);
+            this.groupBox1.Controls.Add(this.scVocabulary);
+            this.groupBox1.Controls.Add(this.scSource);
+            this.groupBox1.Controls.Add(this.scTarget);
             this.groupBox1.Controls.Add(this.label10);
             this.groupBox1.Controls.Add(this.label9);
             this.groupBox1.Controls.Add(this.label8);
@@ -199,26 +201,26 @@ namespace AppUI.ui
             this.groupBox1.TabStop  = false;
             this.groupBox1.Text     = "Schemas";
             // 
-            // textBox4
+            // scVocabulary
             // 
-            this.textBox4.Location = new System.Drawing.Point(123, 59);
-            this.textBox4.Name     = "textBox4";
-            this.textBox4.Size     = new System.Drawing.Size(190, 20);
-            this.textBox4.TabIndex = 5;
+            this.scVocabulary.Location = new System.Drawing.Point(123, 59);
+            this.scVocabulary.Name     = "scVocabulary";
+            this.scVocabulary.Size     = new System.Drawing.Size(190, 20);
+            this.scVocabulary.TabIndex = 5;
             // 
-            // textBox3
+            // scSource
             // 
-            this.textBox3.Location = new System.Drawing.Point(123, 36);
-            this.textBox3.Name     = "textBox3";
-            this.textBox3.Size     = new System.Drawing.Size(190, 20);
-            this.textBox3.TabIndex = 4;
+            this.scSource.Location = new System.Drawing.Point(123, 36);
+            this.scSource.Name     = "scSource";
+            this.scSource.Size     = new System.Drawing.Size(190, 20);
+            this.scSource.TabIndex = 4;
             // 
-            // textBox2
+            // scTarget
             // 
-            this.textBox2.Location = new System.Drawing.Point(123, 13);
-            this.textBox2.Name     = "textBox2";
-            this.textBox2.Size     = new System.Drawing.Size(190, 20);
-            this.textBox2.TabIndex = 3;
+            this.scTarget.Location = new System.Drawing.Point(123, 13);
+            this.scTarget.Name     = "scTarget";
+            this.scTarget.Size     = new System.Drawing.Size(190, 20);
+            this.scTarget.TabIndex = 3;
             // 
             // label10
             // 
@@ -327,27 +329,28 @@ namespace AppUI.ui
             // tabProgress
             // 
             this.tabProgress.AutoScroll = true;
-            this.tabProgress.Controls.Add(this.listView1);
+            this.tabProgress.Controls.Add(this.lvAnalysis);
             this.tabProgress.Controls.Add(this.progressBar1);
             this.tabProgress.Location                = new System.Drawing.Point(4, 22);
             this.tabProgress.Name                    = "tabProgress";
             this.tabProgress.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabProgress.Size                    = new System.Drawing.Size(768, 400);
+            this.tabProgress.Size                    = new System.Drawing.Size(768, 376);
             this.tabProgress.TabIndex                = 2;
             this.tabProgress.Text                    = "Progress";
             this.tabProgress.UseVisualStyleBackColor = true;
             // 
-            // listView1
+            // lvAnalysis
             // 
-            this.listView1.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView1.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chName, this.chValue});
-            this.listView1.GridLines                       = true;
-            this.listView1.Location                        = new System.Drawing.Point(6, 28);
-            this.listView1.Name                            = "listView1";
-            this.listView1.Size                            = new System.Drawing.Size(756, 366);
-            this.listView1.TabIndex                        = 1;
-            this.listView1.UseCompatibleStateImageBehavior = false;
-            this.listView1.View                            = System.Windows.Forms.View.Details;
+            this.lvAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvAnalysis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chName, this.chValue});
+            this.lvAnalysis.FullRowSelect                   = true;
+            this.lvAnalysis.GridLines                       = true;
+            this.lvAnalysis.Location                        = new System.Drawing.Point(6, 28);
+            this.lvAnalysis.Name                            = "lvAnalysis";
+            this.lvAnalysis.Size                            = new System.Drawing.Size(756, 342);
+            this.lvAnalysis.TabIndex                        = 1;
+            this.lvAnalysis.UseCompatibleStateImageBehavior = false;
+            this.lvAnalysis.View                            = System.Windows.Forms.View.Details;
             // 
             // chName
             // 
@@ -370,7 +373,7 @@ namespace AppUI.ui
             // tabChunks
             // 
             this.tabChunks.AutoScroll = true;
-            this.tabChunks.Controls.Add(this.listView2);
+            this.tabChunks.Controls.Add(this.lvChunks);
             this.tabChunks.Controls.Add(this.numericUpDown1);
             this.tabChunks.Controls.Add(this.label12);
             this.tabChunks.Controls.Add(this.comboBox1);
@@ -378,21 +381,23 @@ namespace AppUI.ui
             this.tabChunks.Location                = new System.Drawing.Point(4, 22);
             this.tabChunks.Name                    = "tabChunks";
             this.tabChunks.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabChunks.Size                    = new System.Drawing.Size(768, 400);
+            this.tabChunks.Size                    = new System.Drawing.Size(768, 376);
             this.tabChunks.TabIndex                = 4;
             this.tabChunks.Text                    = "Chunks\' Status";
             this.tabChunks.UseVisualStyleBackColor = true;
             // 
-            // listView2
+            // lvChunks
             // 
-            this.listView2.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chOrdinal, this.chStart, this.chEnd, this.chDuration, this.chStatus});
-            this.listView2.GridLines                       = true;
-            this.listView2.Location                        = new System.Drawing.Point(6, 32);
-            this.listView2.Name                            = "listView2";
-            this.listView2.Size                            = new System.Drawing.Size(756, 362);
-            this.listView2.TabIndex                        = 4;
-            this.listView2.UseCompatibleStateImageBehavior = false;
-            this.listView2.View                            = System.Windows.Forms.View.Details;
+            this.lvChunks.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.lvChunks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chOrdinal, this.chStart, this.chEnd, this.chDuration, this.chStatus});
+            this.lvChunks.FullRowSelect                   = true;
+            this.lvChunks.GridLines                       = true;
+            this.lvChunks.Location                        = new System.Drawing.Point(6, 32);
+            this.lvChunks.Name                            = "lvChunks";
+            this.lvChunks.Size                            = new System.Drawing.Size(756, 335);
+            this.lvChunks.TabIndex                        = 4;
+            this.lvChunks.UseCompatibleStateImageBehavior = false;
+            this.lvChunks.View                            = System.Windows.Forms.View.Details;
             // 
             // chOrdinal
             // 
@@ -422,6 +427,7 @@ namespace AppUI.ui
             // numericUpDown1
             // 
             this.numericUpDown1.Location = new System.Drawing.Point(345, 6);
+            this.numericUpDown1.Minimum  = new decimal(new int[] {1, 0, 0, -2147483648});
             this.numericUpDown1.Name     = "numericUpDown1";
             this.numericUpDown1.Size     = new System.Drawing.Size(120, 20);
             this.numericUpDown1.TabIndex = 3;
@@ -436,6 +442,7 @@ namespace AppUI.ui
             // 
             // comboBox1
             // 
+            this.comboBox1.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox1.FormattingEnabled = true;
             this.comboBox1.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
             this.comboBox1.Location = new System.Drawing.Point(112, 5);
@@ -466,7 +473,7 @@ namespace AppUI.ui
             this.tabItems.Location                = new System.Drawing.Point(4, 22);
             this.tabItems.Name                    = "tabItems";
             this.tabItems.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabItems.Size                    = new System.Drawing.Size(768, 400);
+            this.tabItems.Size                    = new System.Drawing.Size(768, 376);
             this.tabItems.TabIndex                = 5;
             this.tabItems.Text                    = "Items\' Status";
             this.tabItems.UseVisualStyleBackColor = true;
@@ -478,7 +485,7 @@ namespace AppUI.ui
             this.listView3.GridLines                       = true;
             this.listView3.Location                        = new System.Drawing.Point(6, 38);
             this.listView3.Name                            = "listView3";
-            this.listView3.Size                            = new System.Drawing.Size(756, 356);
+            this.listView3.Size                            = new System.Drawing.Size(756, 332);
             this.listView3.TabIndex                        = 12;
             this.listView3.UseCompatibleStateImageBehavior = false;
             this.listView3.View                            = System.Windows.Forms.View.Details;
@@ -530,6 +537,7 @@ namespace AppUI.ui
             // 
             // comboBox3
             // 
+            this.comboBox3.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox3.FormattingEnabled = true;
             this.comboBox3.Items.AddRange(new object[] {"Pre-Setup", "Chunk", "Post-Setup", "Indices"});
             this.comboBox3.Location = new System.Drawing.Point(439, 11);
@@ -563,6 +571,7 @@ namespace AppUI.ui
             // 
             // comboBox2
             // 
+            this.comboBox2.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.comboBox2.FormattingEnabled = true;
             this.comboBox2.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
             this.comboBox2.Location = new System.Drawing.Point(53, 11);
@@ -599,11 +608,22 @@ namespace AppUI.ui
             this.toolStripProgressBar1.Name      = "toolStripProgressBar1";
             this.toolStripProgressBar1.Size      = new System.Drawing.Size(100, 16);
             // 
+            // linkLabel1
+            // 
+            this.linkLabel1.Location    =  new System.Drawing.Point(12, 9);
+            this.linkLabel1.Name        =  "linkLabel1";
+            this.linkLabel1.Size        =  new System.Drawing.Size(137, 24);
+            this.linkLabel1.TabIndex    =  2;
+            this.linkLabel1.TabStop     =  true;
+            this.linkLabel1.Text        =  "< Back to Work Loads";
+            this.linkLabel1.LinkClicked += new System.Windows.Forms.LinkLabelLinkClickedEventHandler(this.linkLabel1_LinkClicked);
+            // 
             // WorkloadForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize          = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabWorkload);
             this.MinimumSize = new System.Drawing.Size(300, 200);
@@ -627,6 +647,8 @@ namespace AppUI.ui
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.LinkLabel linkLabel1;
 
         private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
 
@@ -660,7 +682,7 @@ namespace AppUI.ui
         private System.Windows.Forms.ColumnHeader chDuration;
         private System.Windows.Forms.ColumnHeader chStatus;
 
-        private System.Windows.Forms.ListView listView2;
+        private System.Windows.Forms.ListView lvChunks;
 
         private System.Windows.Forms.Label label12;
 
@@ -670,7 +692,7 @@ namespace AppUI.ui
         private System.Windows.Forms.ColumnHeader chName;
         private System.Windows.Forms.ColumnHeader chValue;
 
-        private System.Windows.Forms.ListView listView1;
+        private System.Windows.Forms.ListView lvAnalysis;
 
         private System.Windows.Forms.GroupBox    groupBox1;
         private System.Windows.Forms.Label       label8;
@@ -678,10 +700,10 @@ namespace AppUI.ui
         private System.Windows.Forms.Label       label10;
         private System.Windows.Forms.ProgressBar progressBar1;
 
-        private System.Windows.Forms.TextBox scPassword;
-        private System.Windows.Forms.TextBox scServer  ;
-        private System.Windows.Forms.TextBox scDb      ;
-        private System.Windows.Forms.TextBox scUsername;
+        private System.Windows.Forms.TextBox       scPassword;
+        private System.Windows.Forms.TextBox       scServer;
+        private System.Windows.Forms.TextBox       scDb      ;
+        private System.Windows.Forms.TextBox       scUsername;
         private System.Windows.Forms.NumericUpDown scPort    ;
 
         private System.Windows.Forms.Label         label3;
@@ -689,9 +711,9 @@ namespace AppUI.ui
         private System.Windows.Forms.Label         label5;
         private System.Windows.Forms.Label         label6;
         private System.Windows.Forms.Label         label7;
-        private System.Windows.Forms.TextBox       textBox2;
-        private System.Windows.Forms.TextBox       textBox3;
-        private System.Windows.Forms.TextBox       textBox4;
+        private System.Windows.Forms.TextBox       scTarget;
+        private System.Windows.Forms.TextBox       scSource;
+        private System.Windows.Forms.TextBox       scVocabulary;
         private System.Windows.Forms.NumericUpDown numericUpDown1;
 
         private System.Windows.Forms.TextBox        tbWlName;

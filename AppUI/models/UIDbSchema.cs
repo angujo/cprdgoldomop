@@ -3,70 +3,109 @@ using Util;
 
 namespace AppUI.models
 {
-    public class UIDbSchema
+    public class UIDbSchema : UIModel
     {
         private UIDb _uiDb;
 
-        private DbSchema target;
-        private DbSchema source;
-        private DbSchema vocabulary;
+        private Dbschema target;
+        private Dbschema source;
+        private Dbschema vocabulary;
 
         public string user
         {
             get => target.username;
-            set => target.username = value;
+            set
+            {
+                target.username     = value;
+                source.username     = value;
+                vocabulary.username = value;
+                PropagateChange();
+            }
         }
 
         public string password
         {
+            get => "";
             set
             {
                 target.password     = value;
                 source.password     = value;
                 vocabulary.password = value;
+                PropagateChange();
             }
         }
 
         public string server
         {
             get => target.server;
-            set => target.server = value;
+            set
+            {
+                target.server     = value;
+                source.server     = value;
+                vocabulary.server = value;
+                PropagateChange();
+            }
         }
 
         public string dbname
         {
             get => target.dbname;
-            set => target.dbname = value;
+            set
+            {
+                target.dbname     = value;
+                source.dbname     = value;
+                vocabulary.dbname = value;
+                PropagateChange();
+            }
         }
 
-        public string username
+        public int portnumber
         {
-            get => target.username;
-            set => target.username = value;
+            get => target.port;
+            set
+            {
+                target.port     = value;
+                source.port     = value;
+                vocabulary.port = value;
+                PropagateChange();
+            }
         }
 
         public string target_schemaname
         {
             get => target.schemaname;
-            set => target.schemaname = value;
+            set
+            {
+                target.schemaname = value;
+                PropagateChange();
+            }
         }
 
         public string source_schemaname
         {
             get => source.schemaname;
-            set => source.schemaname = value;
+            set
+            {
+                source.schemaname = value;
+                PropagateChange();
+            }
         }
 
         public string vocab_schemaname
         {
             get => vocabulary.schemaname;
-            set => vocabulary.schemaname = value;
+            set
+            {
+                vocabulary.schemaname = value;
+                PropagateChange();
+            }
         }
 
         public UIDbSchema(long workload_id)
         {
             _uiDb = new UIDb(workload_id);
             loadSchemas();
+            SetBouncer(Save);
         }
 
         private void loadSchemas()
