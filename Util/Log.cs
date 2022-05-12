@@ -4,47 +4,131 @@ using NLog.Targets;
 using System;
 using System.Collections.Concurrent;
 using System.IO;
+using Serilog;
 
 namespace Util
 {
     public static class Log
     {
-        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
-        private static readonly ConcurrentDictionary<int, Logger> _instances = new ConcurrentDictionary<int, NLog.Logger>();
+        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static string LogFolder { get { return Path.Combine(Environment.CurrentDirectory, "log", "chunks"); } }
+        private static readonly ConcurrentDictionary<int, Logger> _instances =
+            new ConcurrentDictionary<int, NLog.Logger>();
 
-        public static void Error(string msg) => Logger.Error(msg);
-        public static void Info(string msg, params object[] args) => Logger.Info(msg, args);
-        public static void Warning(string msg, params object[] args) => Logger.Warn(msg, args);
-        public static void Error(string msg, int chunkId) => Logger.Error($"[CHUNK {chunkId}] {msg}");
-        public static void Info(string msg, int chunkId, params object[] args) => Info($"[CHUNK {chunkId}] {msg}", args);
-        public static void Warning(string msg, int chunkId, params object[] args) => Logger.Warn($"[CHUNK {chunkId}] {msg}", args);
+
+        public static void Error(string msg) => File.Error(msg);
+        public static void Info(string msg, params object[] args) => File.Info(msg, args);
+        public static void Warning(string msg, params object[] args) => File.Warning(msg, args);
+
+        public static void Info(string msg, int chunkId, params object[] args) =>
+            Info($"[CHUNK {chunkId}] {msg}", args);
+
         public static void Error(Exception exc) => Logger.Error(exc);
-        public static void Info(int index, string msg) => GetInstance(index).Info(msg);
-        public static void Error(int index, string msg) => GetInstance(index).Error(msg);
-        public static void Error(int index, Exception exc) => GetInstance(index).Error(exc);
 
-        private static NLog.Logger GetInstance(int id) => _instances.ContainsKey(id) ? _instances[id] : (_instances[id] = CreateLogger(id));
 
-        private static Logger CreateLogger(int id)
+        public class Chunk
         {
-            string name = $"Chunker{id}";
-            var target = new FileTarget
+            protected LogWriter _writer;
+            protected long      chunkId;
+
+            public Chunk(long ord)
             {
-                Name = name,
-                FileName = Path.Combine(LogFolder, $"{id}.log"),
-                ArchiveEvery = FileArchivePeriod.Day,
-                ArchiveAboveSize = 10240,
-                Layout = "${longdate} ${level:uppercase=true} ${message:withexception=true}"
-            };
-            var loggingRule = new LoggingRule("*", LogLevel.Debug, target);
+                chunkId = ord;
+            }
 
-            LogManager.Configuration.AddTarget(target);
-            LogManager.Configuration.LoggingRules.Add(loggingRule);
-            LogManager.Configuration.Reload();
+            private LogWriter getWriter() => _writer ?? (_writer = LogWriter.ForChunk(chunkId));
 
-            return LogManager.GetLogger(name);
+            public void Error(string msg, params object[] args) => getWriter().Error(msg, args);
+            public void Info(string msg, params object[] args) => getWriter().Info(msg, args);
+            public void Warning(string msg, params object[] args) => getWriter().Warning(msg, args);
+            public void Error(Exception exception) => getWriter().Error(exception);
+        }
+
+        public class File
+        {
+            protected static LogWriter _writer;
+
+            private static LogWriter getWriter()
+            {
+                return _writer ?? (_writer = LogWriter.ForFile());
+            }
+
+            public static void Error(string msg, params object[] args) => getWriter().Error(msg, args);
+            public static void Info(string msg, params object[] args) => getWriter().Info(msg, args);
+            public static void Warning(string msg, params object[] args) => getWriter().Warning(msg, args);
+            public static void Error(Exception exception) => getWriter().Error(exception);
+        }
+
+        public class Console
+        {
+            protected static LogWriter _writer;
+
+            private static LogWriter getWriter()
+            {
+                return _writer ?? (_writer = LogWriter.ForConsole());
+            }
+
+            public static void Error(string msg, params object[] args) => getWriter().Error(msg, args);
+            public static void Info(string msg, params object[] args) => getWriter().Info(msg, args);
+            public static void Warning(string msg, params object[] args) => getWriter().Warning(msg, args);
+            public static void Error(Exception exception) => getWriter().Error(exception);
+        }
+
+        public class LogWriter
+        {
+            public void Error(string msg, params object[] args) => _logger.Error(msg, args);
+            public void Info(string msg, params object[] args) => _logger.Information(msg, args);
+            public void Warning(string msg, params object[] args) => _logger.Warning(msg, args);
+
+            public void Error(Exception exception, string msg = null) =>
+                _logger.Error(exception, msg ?? exception.Message);
+
+            private Serilog.Core.Logger _logger;
+
+            private LogWriter()
+            {
+            }
+
+            public static LogWriter ForConsole()
+            {
+                var m = new LogWriter
+                {
+                    _logger = new LoggerConfiguration()
+                              .MinimumLevel.Debug()
+                              .WriteTo.Console()
+                              .CreateLogger()
+                };
+                return m;
+            }
+
+            public static LogWriter ForFile()
+            {
+                var m = new LogWriter
+                {
+                    _logger = new LoggerConfiguration()
+                              .MinimumLevel.Debug()
+                              .WriteTo.File(
+                                  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", "seriallog.txt"),
+                                  rollingInterval: RollingInterval.Day)
+                              .CreateLogger()
+                };
+                return m;
+            }
+
+            public static LogWriter ForChunk(long ordinal)
+            {
+                var m = new LogWriter
+                {
+                    _logger = new LoggerConfiguration()
+                              .MinimumLevel.Debug()
+                              .WriteTo.File(
+                                  Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "logs", $"chunk{ordinal}",
+                                               "log.txt"),
+                                  rollingInterval: RollingInterval.Day)
+                              .CreateLogger()
+                };
+                return m;
+            }
         }
     }
 }

@@ -93,7 +93,7 @@ namespace TestProject
         [TestMethod]
         public void TestMethod1()
         {
-            UtilClass.Tester();
+          //  UtilClass.Tester();
             var keys = new string[] { "john", };
             var keys1 = new string[] { "john", "doe", "smith", "james" };
             var keys2 = new string[] { "john", "doe", "smith1", "james" };
@@ -131,7 +131,7 @@ namespace TestProject
             var arrays = new string[][] {
             new string[] { "job",Consts.TUPLE_MISS},
             new string[] { "job","doe"},
-            new string[] { "job",null},
+            new string[] { "job",""},
             new string[] { "","doe"},
             };
             bool[] hasNE = new bool[arrays.Length];
@@ -282,7 +282,7 @@ namespace TestProject
 
     internal class TestClass
     {
-        public string Name { get; set; }
-        public string Description { get; set; }
+        public string? Name        { get; set; }
+        public string? Description { get; set; }
     }
 }

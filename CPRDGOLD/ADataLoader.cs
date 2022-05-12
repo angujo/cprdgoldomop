@@ -5,7 +5,7 @@ namespace CPRDGOLD
 {
     internal abstract class ADataLoader<T> where T : new()
     {
-        protected static T _instance;
+       // protected static T _instance;
         protected ConcurrentBag<T> data = new ConcurrentBag<T>();
 
         protected abstract void LoadData(dynamic refSource = null);

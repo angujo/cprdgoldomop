@@ -1,22 +1,43 @@
-﻿using DBMS;
+﻿using System;
+using DBMS;
 using DBMS.models;
 
 namespace AppUI.models
 {
-    public class UIWorkLoad
+    public class UIWorkLoad : UIModel
     {
-        private WorkLoad WorkLoad { get; set; }
+        private WorkLoad _WorkLoad { get; set; }
 
-        public UIWorkLoad(long id)
+        public string Name
         {
-            WorkLoad = DB.Internal.Load<WorkLoad>(new {id});
+            get => _WorkLoad.Name;
+            set
+            {
+                _WorkLoad.Name = value;
+                PropagateChange();
+            }
+        }
+
+        public DateTime ReleaseDate
+        {
+            get => _WorkLoad.ReleaseDate;
+            set
+            {
+                _WorkLoad.ReleaseDate = value;
+                PropagateChange();
+            }
+        }
+
+        public UIWorkLoad(long id) : this(DB.Internal.Load<WorkLoad>(new {id}))
+        {
         }
 
         public UIWorkLoad(WorkLoad wl)
         {
-            WorkLoad = wl;
+            _WorkLoad = wl;
+            SetBouncer(() => _WorkLoad.Save());
         }
 
-        public WorkLoad GetWorkload() => WorkLoad;
+        public WorkLoad GetWorkload() => _WorkLoad;
     }
 }

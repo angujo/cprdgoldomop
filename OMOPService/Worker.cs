@@ -2,7 +2,7 @@ namespace OMOPService
 {
     public class Worker : BackgroundService
     {
-        private readonly ILogger<Worker> _logger;
+        // private readonly ILogger<Worker> _logger;
         private readonly OMOPServe _service;
 
         public Worker(OMOPServe service, ILogger<Worker> logger)

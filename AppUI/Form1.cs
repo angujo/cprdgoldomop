@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AppUI.ui;
 
 namespace AppUI
 {
@@ -15,6 +16,14 @@ namespace AppUI
         public Form1()
         {
             InitializeComponent();
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            var workloadForm = new WorkloadForm();
+            workloadForm.Show();
+            Hide();
+            workloadForm.Closed += (s, args) => this.Close();
         }
     }
 }
