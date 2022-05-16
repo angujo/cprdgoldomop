@@ -72,6 +72,7 @@
     <Compile Include="models\UIChunks.cs" />
     <Compile Include="models\UIDb.cs" />
     <Compile Include="models\UIDbSchema.cs" />
+    <Compile Include="models\UIItems.cs" />
     <Compile Include="models\UIModel.cs" />
     <Compile Include="models\UIWorkLoad.cs" />
     <Compile Include="Program.cs" />

@@ -38,7 +38,7 @@ namespace CPRDGOLD.mergers
         {
             AddInMerger addInMerger = AddInMerger.prepare(chunk);
 
-            Log.Info("Starting StemTable #Additional", chunk.ordinal);
+            chunk.Log.Info("Starting StemTable #Additional");
             addInMerger.LoopAllFast(add_in =>
            {
                Concept concept = ConceptLoader.ByCode(add_in.source_value) ?? new Concept();
@@ -63,12 +63,12 @@ namespace CPRDGOLD.mergers
                    chunk_identifier = add_in.chunk_identifier,
                });
            });
-            Log.Info("Finished StemTable #Additional", chunk.ordinal);
+            chunk.Log.Info("Finished StemTable #Additional");
         }
 
         private void Clinical()
         {
-            Log.Info("Starting StemTable #Clinical", chunk.ordinal);
+             chunk.Log.Info("Starting StemTable #Clinical");
             chunk.GetLoader<ClinicalLoader>(ChunkLoadType.CLINICAL).LoopAllFast(clinic =>
            {
                var stem = new StemTable
@@ -86,12 +86,12 @@ namespace CPRDGOLD.mergers
                };
                Add(stem);
            });
-            Log.Info("Finished StemTable #Clinical", chunk.ordinal);
+            chunk.Log.Info("Finished StemTable #Clinical");
         }
 
         private void Immunisation()
         {
-            Log.Info("Starting StemTable #Immunisation", chunk.ordinal);
+             chunk.Log.Info("Starting StemTable #Immunisation");
             chunk.GetLoader<ImmunisationLoader>(ChunkLoadType.IMMUNISATION).LoopAllFast(imm =>
              {
                  Add(new StemTable
@@ -108,12 +108,12 @@ namespace CPRDGOLD.mergers
                      chunk_identifier = imm.chunk_identifier,
                  });
              });
-            Log.Info("Finished StemTable #Immunisation", chunk.ordinal);
+             chunk.Log.Info("Finished StemTable #Immunisation");
         }
 
         private void Referral()
         {
-            Log.Info("Starting StemTable #Referral", chunk.ordinal);
+             chunk.Log.Info("Starting StemTable #Referral");
             chunk.GetLoader<ReferralLoader>(ChunkLoadType.REFERRAL).LoopAllFast(reff =>
           {
               Add(new StemTable
@@ -130,12 +130,12 @@ namespace CPRDGOLD.mergers
                   chunk_identifier = reff.chunk_identifier,
               });
           });
-            Log.Info("Finished StemTable #Referral", chunk.ordinal);
+            chunk.Log.Info("Finished StemTable #Referral");
         }
 
         private void Test()
         {
-            Log.Info("Starting StemTable #Test", chunk.ordinal);
+             chunk.Log.Info("Starting StemTable #Test");
             var testint = TestIntMerger.Init(chunk);
             testint.LoopAllFast(test =>
            {
@@ -163,12 +163,12 @@ namespace CPRDGOLD.mergers
                    chunk_identifier = test.chunk_identifier,
                });
            });
-            Log.Info("Finished StemTable #Test", chunk.ordinal);
+             chunk.Log.Info("Finished StemTable #Test");
         }
 
         private void Therapy()
         {
-            Log.Info("Starting StemTable #Therapy", chunk.ordinal);
+            chunk.Log.Info("Starting StemTable #Therapy");
             chunk.GetLoader<TherapyLoader>(ChunkLoadType.THERAPY).LoopAllFast(ther =>
                {
                    CommonDosage cdosage = CommonDosageLoader.ByDoseId(ther.dosageid);
@@ -190,7 +190,7 @@ namespace CPRDGOLD.mergers
                        chunk_identifier = ther.chunk_identifier,
                    });
                });
-            Log.Info("Finished StemTable #Therapy", chunk.ordinal);
+             chunk.Log.Info("Finished StemTable #Therapy");
         }
     }
 }

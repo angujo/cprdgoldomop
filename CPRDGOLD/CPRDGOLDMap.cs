@@ -156,7 +156,7 @@ namespace CPRDGOLD
 
         private static void ChunkBased(Chunk chunk)
         {
-            Log.Info("Starting for Chunk entries...", chunk.ordinal);
+          chunk.Log.Info("Starting for Chunk entries...");
             var actions = new List<Action>
             {
                 () => chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk)),
@@ -166,7 +166,7 @@ namespace CPRDGOLD
                 () => chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk)),
             };
             Parallel.ForEach(actions, action => action());
-            Log.Info("Finished Chunk entries!", chunk.ordinal);
+            chunk.Log.Info("Finished Chunk entries!");
         }
 
         //Are all dependant on the StemTable virtual existance

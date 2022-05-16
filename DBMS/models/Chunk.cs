@@ -20,11 +20,12 @@ namespace DBMS.models
             LoadType.IDX_COHORT_DEFINITION, LoadType.IDX_COHORT,
             LoadType.IDX_CONDITION_ERA, LoadType.IDX_CONDITION_OCCURRENCE, LoadType.IDX_COST,
             LoadType.IDX_DEATH, LoadType.IDX_DEVICE_EXPOSURE, LoadType.IDX_DOSE_ERA,
-            LoadType.IDX_DRUG_ERA, LoadType.IDX_DRUG_EXPOSURE,  LoadType.IDX_LOCATION, LoadType.IDX_MEASUREMENT, LoadType.IDX_NOTE_NLP,
+            LoadType.IDX_DRUG_ERA, LoadType.IDX_DRUG_EXPOSURE, LoadType.IDX_LOCATION, LoadType.IDX_MEASUREMENT,
+            LoadType.IDX_NOTE_NLP,
             LoadType.IDX_NOTE, LoadType.IDX_OBSERVATION_PERIOD,
             LoadType.IDX_PAYER_PLAN_PERIOD, LoadType.IDX_PERSON, LoadType.IDX_PROCEDURE_OCCURRENCE,
-            LoadType.IDX_PROVIDER,LoadType.IDX_SPECIMEN, LoadType.IDX_VISIT_DETAIL,
-            LoadType.IDX_VISIT_OCCURRENCE, LoadType.IDX_OBSERVATION, 
+            LoadType.IDX_PROVIDER, LoadType.IDX_SPECIMEN, LoadType.IDX_VISIT_DETAIL,
+            LoadType.IDX_VISIT_OCCURRENCE, LoadType.IDX_OBSERVATION,
             // /** We disable below for now */
             // LoadType.IDX_CONCEPT_ANCESTOR, LoadType.IDX_CONCEPT_CLASS, LoadType.IDX_CONCEPT_RELATIONSHIP,
             // LoadType.IDX_CONCEPT_SYNONYM, LoadType.IDX_CONCEPT, LoadType.IDX_DOMAIN,LoadType.IDX_DRUG_STRENGTH,
@@ -48,16 +49,28 @@ namespace DBMS.models
             }
         }
 
-        public        string                             tableName      = "_chunk";
-        public        int                                ordinal        = 0;
-        public static long                               WorkLoadId     = 0;
-        public        string                             column         = "patient_id";
-        public        string                             ordinalColumn  = "ordinal";
-        public        string                             relationColumn = "patid";
-        public        string                             relationTableName { get; set; }
-        private       Chunktimer                         timer;
-        public        dynamic                            dbms { get; set; }
-        public        Dictionary<ChunkLoadType, dynamic> loaders = new Dictionary<ChunkLoadType, dynamic>();
+        public static long WorkLoadId = 0;
+
+        public string tableName = "_chunk";
+
+        public int ordinal
+        {
+            get => _ord;
+            set
+            {
+                _ord = value;
+                Log.SetChunkId(value);
+            }
+        }
+
+        public  string                             column         = "patient_id";
+        public  string                             ordinalColumn  = "ordinal";
+        public  string                             relationColumn = "patid";
+        public  string                             relationTableName { get; set; }
+        private Chunktimer                         timer;
+        public  dynamic                            dbms { get; set; }
+        public  Dictionary<ChunkLoadType, dynamic> loaders = new Dictionary<ChunkLoadType, dynamic>();
+        public  Log.Chunk                          Log;
 
         public string[] LoadedNames
         {
@@ -67,9 +80,11 @@ namespace DBMS.models
         protected Dictionary<Util.LoadType, Cdmtimer> Loads = new Dictionary<Util.LoadType, Cdmtimer>();
 
         protected List<Action> cleaners = new List<Action>();
+        private   int          _ord;
 
         public Chunk()
         {
+            Log = new Log.Chunk(ordinal);
         }
 
         public void AddCleaner(Action clean)

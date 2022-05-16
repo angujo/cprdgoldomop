@@ -56,40 +56,46 @@ namespace AppUI.ui
             this.label4                = new System.Windows.Forms.Label();
             this.label3                = new System.Windows.Forms.Label();
             this.tabProgress           = new System.Windows.Forms.TabPage();
-            this.lvAnalysis            = new System.Windows.Forms.ListView();
-            this.chName                = new System.Windows.Forms.ColumnHeader();
-            this.chValue               = new System.Windows.Forms.ColumnHeader();
+            this.dgvProgress           = new System.Windows.Forms.DataGridView();
+            this.clmPName              = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmPValue             = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.cbPTimer              = new System.Windows.Forms.ComboBox();
             this.progressBar1          = new System.Windows.Forms.ProgressBar();
             this.tabChunks             = new System.Windows.Forms.TabPage();
-            this.lvChunks              = new System.Windows.Forms.ListView();
-            this.chOrdinal             = new System.Windows.Forms.ColumnHeader();
-            this.chStart               = new System.Windows.Forms.ColumnHeader();
-            this.chEnd                 = new System.Windows.Forms.ColumnHeader();
-            this.chDuration            = new System.Windows.Forms.ColumnHeader();
-            this.chStatus              = new System.Windows.Forms.ColumnHeader();
-            this.numericUpDown1        = new System.Windows.Forms.NumericUpDown();
+            this.dgvChunks             = new System.Windows.Forms.DataGridView();
+            this.clcOrdinal            = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clcStart              = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clcEnd                = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clcDuration           = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clcStatus             = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clcError              = new System.Windows.Forms.DataGridViewLinkColumn();
+            this.btnChunkFilter        = new System.Windows.Forms.Button();
+            this.nmCOrdinal            = new System.Windows.Forms.NumericUpDown();
             this.label12               = new System.Windows.Forms.Label();
-            this.comboBox1             = new System.Windows.Forms.ComboBox();
+            this.cbCStatuses           = new System.Windows.Forms.ComboBox();
             this.label11               = new System.Windows.Forms.Label();
             this.tabItems              = new System.Windows.Forms.TabPage();
-            this.listView3             = new System.Windows.Forms.ListView();
-            this.chIChunk              = new System.Windows.Forms.ColumnHeader();
-            this.chcName               = new System.Windows.Forms.ColumnHeader();
-            this.chIStart              = new System.Windows.Forms.ColumnHeader();
-            this.chIEnd                = new System.Windows.Forms.ColumnHeader();
-            this.chIDuration           = new System.Windows.Forms.ColumnHeader();
-            this.chIStatus             = new System.Windows.Forms.ColumnHeader();
-            this.comboBox4             = new System.Windows.Forms.ComboBox();
-            this.label16               = new System.Windows.Forms.Label();
-            this.comboBox3             = new System.Windows.Forms.ComboBox();
-            this.label15               = new System.Windows.Forms.Label();
-            this.numericUpDown2        = new System.Windows.Forms.NumericUpDown();
-            this.label13               = new System.Windows.Forms.Label();
-            this.comboBox2             = new System.Windows.Forms.ComboBox();
+            this.groupBox2             = new System.Windows.Forms.GroupBox();
+            this.btnItemsFielter       = new System.Windows.Forms.Button();
+            this.cbIStatuses           = new System.Windows.Forms.ComboBox();
             this.label14               = new System.Windows.Forms.Label();
+            this.cbINames              = new System.Windows.Forms.ComboBox();
+            this.nmIOrdinal            = new System.Windows.Forms.NumericUpDown();
+            this.label16               = new System.Windows.Forms.Label();
+            this.label13               = new System.Windows.Forms.Label();
+            this.cbITypes              = new System.Windows.Forms.ComboBox();
+            this.label15               = new System.Windows.Forms.Label();
+            this.dgvItems              = new System.Windows.Forms.DataGridView();
+            this.clmChunk              = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmName               = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmStart              = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmEnd                = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmDur                = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmStatus             = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.clmError              = new System.Windows.Forms.DataGridViewLinkColumn();
             this.statusStrip1          = new System.Windows.Forms.StatusStrip();
             this.toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
-            this.toolStripProgressBar1 = new System.Windows.Forms.ToolStripProgressBar();
+            this.tsProgressBar         = new System.Windows.Forms.ToolStripProgressBar();
             this.linkLabel1            = new System.Windows.Forms.LinkLabel();
             this.tabWorkload.SuspendLayout();
             this.tabDetails.SuspendLayout();
@@ -97,10 +103,14 @@ namespace AppUI.ui
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.scPort)).BeginInit();
             this.tabProgress.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.dgvProgress)).BeginInit();
             this.tabChunks.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize) (this.numericUpDown1)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dgvChunks)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.nmCOrdinal)).BeginInit();
             this.tabItems.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize) (this.numericUpDown2)).BeginInit();
+            this.groupBox2.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize) (this.nmIOrdinal)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dgvItems)).BeginInit();
             this.statusStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -118,6 +128,7 @@ namespace AppUI.ui
             this.tabWorkload.Size          =  new System.Drawing.Size(776, 402);
             this.tabWorkload.TabIndex      =  0;
             this.tabWorkload.Selected      += new System.Windows.Forms.TabControlEventHandler(this.tabWorkload_Selected);
+            this.tabWorkload.Deselected    += new System.Windows.Forms.TabControlEventHandler(this.tabWorkload_Deselected);
             // 
             // tabDetails
             // 
@@ -329,7 +340,8 @@ namespace AppUI.ui
             // tabProgress
             // 
             this.tabProgress.AutoScroll = true;
-            this.tabProgress.Controls.Add(this.lvAnalysis);
+            this.tabProgress.Controls.Add(this.dgvProgress);
+            this.tabProgress.Controls.Add(this.cbPTimer);
             this.tabProgress.Controls.Add(this.progressBar1);
             this.tabProgress.Location                = new System.Drawing.Point(4, 22);
             this.tabProgress.Name                    = "tabProgress";
@@ -339,44 +351,59 @@ namespace AppUI.ui
             this.tabProgress.Text                    = "Progress";
             this.tabProgress.UseVisualStyleBackColor = true;
             // 
-            // lvAnalysis
+            // dgvProgress
             // 
-            this.lvAnalysis.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvAnalysis.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chName, this.chValue});
-            this.lvAnalysis.FullRowSelect                   = true;
-            this.lvAnalysis.GridLines                       = true;
-            this.lvAnalysis.Location                        = new System.Drawing.Point(6, 28);
-            this.lvAnalysis.Name                            = "lvAnalysis";
-            this.lvAnalysis.Size                            = new System.Drawing.Size(756, 342);
-            this.lvAnalysis.TabIndex                        = 1;
-            this.lvAnalysis.UseCompatibleStateImageBehavior = false;
-            this.lvAnalysis.View                            = System.Windows.Forms.View.Details;
+            this.dgvProgress.AllowUserToAddRows          = false;
+            this.dgvProgress.AllowUserToDeleteRows       = false;
+            this.dgvProgress.Anchor                      = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvProgress.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvProgress.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.clmPName, this.clmPValue});
+            this.dgvProgress.Location = new System.Drawing.Point(6, 33);
+            this.dgvProgress.Name     = "dgvProgress";
+            this.dgvProgress.ReadOnly = true;
+            this.dgvProgress.Size     = new System.Drawing.Size(756, 334);
+            this.dgvProgress.TabIndex = 3;
             // 
-            // chName
+            // clmPName
             // 
-            this.chName.Text  = "Name";
-            this.chName.Width = 397;
+            this.clmPName.HeaderText = "Item";
+            this.clmPName.Name       = "clmPName";
+            this.clmPName.ReadOnly   = true;
+            this.clmPName.Width      = 300;
             // 
-            // chValue
+            // clmPValue
             // 
-            this.chValue.Text  = "Value";
-            this.chValue.Width = 305;
+            this.clmPValue.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.clmPValue.HeaderText   = "";
+            this.clmPValue.Name         = "clmPValue";
+            this.clmPValue.ReadOnly     = true;
+            // 
+            // cbPTimer
+            // 
+            this.cbPTimer.DropDownStyle        =  System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbPTimer.FormattingEnabled    =  true;
+            this.cbPTimer.Location             =  new System.Drawing.Point(6, 6);
+            this.cbPTimer.Name                 =  "cbPTimer";
+            this.cbPTimer.Size                 =  new System.Drawing.Size(108, 21);
+            this.cbPTimer.TabIndex             =  2;
+            this.cbPTimer.SelectedIndexChanged += new System.EventHandler(this.cbPTimer_SelectedIndexChanged);
             // 
             // progressBar1
             // 
             this.progressBar1.Anchor   = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(6, 6);
+            this.progressBar1.Location = new System.Drawing.Point(120, 11);
             this.progressBar1.Name     = "progressBar1";
-            this.progressBar1.Size     = new System.Drawing.Size(756, 16);
+            this.progressBar1.Size     = new System.Drawing.Size(642, 16);
             this.progressBar1.TabIndex = 0;
             // 
             // tabChunks
             // 
             this.tabChunks.AutoScroll = true;
-            this.tabChunks.Controls.Add(this.lvChunks);
-            this.tabChunks.Controls.Add(this.numericUpDown1);
+            this.tabChunks.Controls.Add(this.dgvChunks);
+            this.tabChunks.Controls.Add(this.btnChunkFilter);
+            this.tabChunks.Controls.Add(this.nmCOrdinal);
             this.tabChunks.Controls.Add(this.label12);
-            this.tabChunks.Controls.Add(this.comboBox1);
+            this.tabChunks.Controls.Add(this.cbCStatuses);
             this.tabChunks.Controls.Add(this.label11);
             this.tabChunks.Location                = new System.Drawing.Point(4, 22);
             this.tabChunks.Name                    = "tabChunks";
@@ -386,90 +413,105 @@ namespace AppUI.ui
             this.tabChunks.Text                    = "Chunks\' Status";
             this.tabChunks.UseVisualStyleBackColor = true;
             // 
-            // lvChunks
+            // dgvChunks
             // 
-            this.lvChunks.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.lvChunks.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chOrdinal, this.chStart, this.chEnd, this.chDuration, this.chStatus});
-            this.lvChunks.FullRowSelect                   = true;
-            this.lvChunks.GridLines                       = true;
-            this.lvChunks.Location                        = new System.Drawing.Point(6, 32);
-            this.lvChunks.Name                            = "lvChunks";
-            this.lvChunks.Size                            = new System.Drawing.Size(756, 335);
-            this.lvChunks.TabIndex                        = 4;
-            this.lvChunks.UseCompatibleStateImageBehavior = false;
-            this.lvChunks.View                            = System.Windows.Forms.View.Details;
+            this.dgvChunks.AllowUserToAddRows          = false;
+            this.dgvChunks.AllowUserToDeleteRows       = false;
+            this.dgvChunks.Anchor                      = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvChunks.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvChunks.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.clcOrdinal, this.clcStart, this.clcEnd, this.clcDuration, this.clcStatus, this.clcError});
+            this.dgvChunks.Location = new System.Drawing.Point(6, 32);
+            this.dgvChunks.Name     = "dgvChunks";
+            this.dgvChunks.ReadOnly = true;
+            this.dgvChunks.Size     = new System.Drawing.Size(756, 335);
+            this.dgvChunks.TabIndex = 6;
             // 
-            // chOrdinal
+            // clcOrdinal
             // 
-            this.chOrdinal.Text  = "Ordinal";
-            this.chOrdinal.Width = 53;
+            this.clcOrdinal.HeaderText = "Ordinal";
+            this.clcOrdinal.Name       = "clcOrdinal";
+            this.clcOrdinal.ReadOnly   = true;
             // 
-            // chStart
+            // clcStart
             // 
-            this.chStart.Text  = "Start";
-            this.chStart.Width = 110;
+            this.clcStart.HeaderText = "Start";
+            this.clcStart.Name       = "clcStart";
+            this.clcStart.ReadOnly   = true;
             // 
-            // chEnd
+            // clcEnd
             // 
-            this.chEnd.Text  = "End";
-            this.chEnd.Width = 157;
+            this.clcEnd.HeaderText = "End";
+            this.clcEnd.Name       = "clcEnd";
+            this.clcEnd.ReadOnly   = true;
             // 
-            // chDuration
+            // clcDuration
             // 
-            this.chDuration.Text  = "Duration";
-            this.chDuration.Width = 161;
+            this.clcDuration.HeaderText = "Duration";
+            this.clcDuration.Name       = "clcDuration";
+            this.clcDuration.ReadOnly   = true;
             // 
-            // chStatus
+            // clcStatus
             // 
-            this.chStatus.Text  = "Status";
-            this.chStatus.Width = 224;
+            this.clcStatus.HeaderText = "Status";
+            this.clcStatus.Name       = "clcStatus";
+            this.clcStatus.ReadOnly   = true;
             // 
-            // numericUpDown1
+            // clcError
             // 
-            this.numericUpDown1.Location = new System.Drawing.Point(345, 6);
-            this.numericUpDown1.Minimum  = new decimal(new int[] {1, 0, 0, -2147483648});
-            this.numericUpDown1.Name     = "numericUpDown1";
-            this.numericUpDown1.Size     = new System.Drawing.Size(120, 20);
-            this.numericUpDown1.TabIndex = 3;
+            this.clcError.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.clcError.HeaderText   = "Error";
+            this.clcError.Name         = "clcError";
+            this.clcError.ReadOnly     = true;
+            // 
+            // btnChunkFilter
+            // 
+            this.btnChunkFilter.Location                =  new System.Drawing.Point(420, 3);
+            this.btnChunkFilter.Name                    =  "btnChunkFilter";
+            this.btnChunkFilter.Size                    =  new System.Drawing.Size(75, 23);
+            this.btnChunkFilter.TabIndex                =  5;
+            this.btnChunkFilter.Text                    =  "Filter";
+            this.btnChunkFilter.UseVisualStyleBackColor =  true;
+            this.btnChunkFilter.Click                   += new System.EventHandler(this.btnChunkFilter_Click);
+            // 
+            // nmCOrdinal
+            // 
+            this.nmCOrdinal.Location = new System.Drawing.Point(294, 6);
+            this.nmCOrdinal.Minimum  = new decimal(new int[] {1, 0, 0, -2147483648});
+            this.nmCOrdinal.Name     = "nmCOrdinal";
+            this.nmCOrdinal.Size     = new System.Drawing.Size(120, 20);
+            this.nmCOrdinal.TabIndex = 3;
             // 
             // label12
             // 
-            this.label12.Location = new System.Drawing.Point(239, 8);
+            this.label12.Location = new System.Drawing.Point(205, 8);
             this.label12.Name     = "label12";
-            this.label12.Size     = new System.Drawing.Size(100, 18);
+            this.label12.Size     = new System.Drawing.Size(83, 18);
             this.label12.TabIndex = 2;
             this.label12.Text     = "Chunk Ordinal";
             // 
-            // comboBox1
+            // cbCStatuses
             // 
-            this.comboBox1.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox1.FormattingEnabled = true;
-            this.comboBox1.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
-            this.comboBox1.Location = new System.Drawing.Point(112, 5);
-            this.comboBox1.Name     = "comboBox1";
-            this.comboBox1.Size     = new System.Drawing.Size(121, 21);
-            this.comboBox1.TabIndex = 1;
+            this.cbCStatuses.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbCStatuses.FormattingEnabled = true;
+            this.cbCStatuses.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
+            this.cbCStatuses.Location = new System.Drawing.Point(78, 5);
+            this.cbCStatuses.Name     = "cbCStatuses";
+            this.cbCStatuses.Size     = new System.Drawing.Size(121, 21);
+            this.cbCStatuses.TabIndex = 1;
             // 
             // label11
             // 
             this.label11.Location = new System.Drawing.Point(6, 8);
             this.label11.Name     = "label11";
-            this.label11.Size     = new System.Drawing.Size(100, 18);
+            this.label11.Size     = new System.Drawing.Size(66, 18);
             this.label11.TabIndex = 0;
             this.label11.Text     = "Status";
             // 
             // tabItems
             // 
             this.tabItems.AutoScroll = true;
-            this.tabItems.Controls.Add(this.listView3);
-            this.tabItems.Controls.Add(this.comboBox4);
-            this.tabItems.Controls.Add(this.label16);
-            this.tabItems.Controls.Add(this.comboBox3);
-            this.tabItems.Controls.Add(this.label15);
-            this.tabItems.Controls.Add(this.numericUpDown2);
-            this.tabItems.Controls.Add(this.label13);
-            this.tabItems.Controls.Add(this.comboBox2);
-            this.tabItems.Controls.Add(this.label14);
+            this.tabItems.Controls.Add(this.groupBox2);
+            this.tabItems.Controls.Add(this.dgvItems);
             this.tabItems.Location                = new System.Drawing.Point(4, 22);
             this.tabItems.Name                    = "tabItems";
             this.tabItems.Padding                 = new System.Windows.Forms.Padding(3);
@@ -478,118 +520,164 @@ namespace AppUI.ui
             this.tabItems.Text                    = "Items\' Status";
             this.tabItems.UseVisualStyleBackColor = true;
             // 
-            // listView3
+            // groupBox2
             // 
-            this.listView3.Anchor = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.listView3.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chIChunk, this.chcName, this.chIStart, this.chIEnd, this.chIDuration, this.chIStatus});
-            this.listView3.GridLines                       = true;
-            this.listView3.Location                        = new System.Drawing.Point(6, 38);
-            this.listView3.Name                            = "listView3";
-            this.listView3.Size                            = new System.Drawing.Size(756, 332);
-            this.listView3.TabIndex                        = 12;
-            this.listView3.UseCompatibleStateImageBehavior = false;
-            this.listView3.View                            = System.Windows.Forms.View.Details;
+            this.groupBox2.Controls.Add(this.btnItemsFielter);
+            this.groupBox2.Controls.Add(this.cbIStatuses);
+            this.groupBox2.Controls.Add(this.label14);
+            this.groupBox2.Controls.Add(this.cbINames);
+            this.groupBox2.Controls.Add(this.nmIOrdinal);
+            this.groupBox2.Controls.Add(this.label16);
+            this.groupBox2.Controls.Add(this.label13);
+            this.groupBox2.Controls.Add(this.cbITypes);
+            this.groupBox2.Controls.Add(this.label15);
+            this.groupBox2.Location = new System.Drawing.Point(6, 6);
+            this.groupBox2.Name     = "groupBox2";
+            this.groupBox2.Size     = new System.Drawing.Size(756, 70);
+            this.groupBox2.TabIndex = 13;
+            this.groupBox2.TabStop  = false;
+            this.groupBox2.Text     = "Filter";
             // 
-            // chIChunk
+            // btnItemsFielter
             // 
-            this.chIChunk.Text = "Chunk";
+            this.btnItemsFielter.Location                =  new System.Drawing.Point(553, 37);
+            this.btnItemsFielter.Name                    =  "btnItemsFielter";
+            this.btnItemsFielter.Size                    =  new System.Drawing.Size(88, 23);
+            this.btnItemsFielter.TabIndex                =  12;
+            this.btnItemsFielter.Text                    =  "Filter";
+            this.btnItemsFielter.UseVisualStyleBackColor =  true;
+            this.btnItemsFielter.Click                   += new System.EventHandler(this.btnItemsFilter_Click);
             // 
-            // chcName
+            // cbIStatuses
             // 
-            this.chcName.Text  = "Name";
-            this.chcName.Width = 125;
-            // 
-            // chIStart
-            // 
-            this.chIStart.Text  = "Start";
-            this.chIStart.Width = 134;
-            // 
-            // chIEnd
-            // 
-            this.chIEnd.Text  = "End";
-            this.chIEnd.Width = 131;
-            // 
-            // chIDuration
-            // 
-            this.chIDuration.Text  = "Duration";
-            this.chIDuration.Width = 109;
-            // 
-            // chIStatus
-            // 
-            this.chIStatus.Text  = "Status";
-            this.chIStatus.Width = 167;
-            // 
-            // comboBox4
-            // 
-            this.comboBox4.FormattingEnabled = true;
-            this.comboBox4.Location          = new System.Drawing.Point(616, 11);
-            this.comboBox4.Name              = "comboBox4";
-            this.comboBox4.Size              = new System.Drawing.Size(146, 21);
-            this.comboBox4.TabIndex          = 11;
-            // 
-            // label16
-            // 
-            this.label16.Location = new System.Drawing.Point(566, 14);
-            this.label16.Name     = "label16";
-            this.label16.Size     = new System.Drawing.Size(44, 18);
-            this.label16.TabIndex = 10;
-            this.label16.Text     = "Name";
-            // 
-            // comboBox3
-            // 
-            this.comboBox3.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox3.FormattingEnabled = true;
-            this.comboBox3.Items.AddRange(new object[] {"Pre-Setup", "Chunk", "Post-Setup", "Indices"});
-            this.comboBox3.Location = new System.Drawing.Point(439, 11);
-            this.comboBox3.Name     = "comboBox3";
-            this.comboBox3.Size     = new System.Drawing.Size(121, 21);
-            this.comboBox3.TabIndex = 9;
-            // 
-            // label15
-            // 
-            this.label15.Location = new System.Drawing.Point(393, 14);
-            this.label15.Name     = "label15";
-            this.label15.Size     = new System.Drawing.Size(40, 18);
-            this.label15.TabIndex = 8;
-            this.label15.Text     = "Type";
-            // 
-            // numericUpDown2
-            // 
-            this.numericUpDown2.Location = new System.Drawing.Point(267, 12);
-            this.numericUpDown2.Minimum  = new decimal(new int[] {3, 0, 0, -2147483648});
-            this.numericUpDown2.Name     = "numericUpDown2";
-            this.numericUpDown2.Size     = new System.Drawing.Size(120, 20);
-            this.numericUpDown2.TabIndex = 7;
-            // 
-            // label13
-            // 
-            this.label13.Location = new System.Drawing.Point(180, 14);
-            this.label13.Name     = "label13";
-            this.label13.Size     = new System.Drawing.Size(81, 18);
-            this.label13.TabIndex = 6;
-            this.label13.Text     = "Chunk Ordinal:";
-            // 
-            // comboBox2
-            // 
-            this.comboBox2.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.comboBox2.FormattingEnabled = true;
-            this.comboBox2.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
-            this.comboBox2.Location = new System.Drawing.Point(53, 11);
-            this.comboBox2.Name     = "comboBox2";
-            this.comboBox2.Size     = new System.Drawing.Size(121, 21);
-            this.comboBox2.TabIndex = 5;
+            this.cbIStatuses.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbIStatuses.FormattingEnabled = true;
+            this.cbIStatuses.Items.AddRange(new object[] {"All", "Queued", "Running", "Completed", "Stopped (Error)"});
+            this.cbIStatuses.Location = new System.Drawing.Point(94, 13);
+            this.cbIStatuses.Name     = "cbIStatuses";
+            this.cbIStatuses.Size     = new System.Drawing.Size(176, 21);
+            this.cbIStatuses.TabIndex = 5;
             // 
             // label14
             // 
-            this.label14.Location = new System.Drawing.Point(6, 14);
+            this.label14.Location = new System.Drawing.Point(6, 16);
             this.label14.Name     = "label14";
             this.label14.Size     = new System.Drawing.Size(41, 18);
             this.label14.TabIndex = 4;
             this.label14.Text     = "Status";
             // 
+            // cbINames
+            // 
+            this.cbINames.FormattingEnabled = true;
+            this.cbINames.Location          = new System.Drawing.Point(350, 39);
+            this.cbINames.Name              = "cbINames";
+            this.cbINames.Size              = new System.Drawing.Size(184, 21);
+            this.cbINames.TabIndex          = 11;
+            // 
+            // nmIOrdinal
+            // 
+            this.nmIOrdinal.Location = new System.Drawing.Point(94, 40);
+            this.nmIOrdinal.Minimum  = new decimal(new int[] {3, 0, 0, -2147483648});
+            this.nmIOrdinal.Name     = "nmIOrdinal";
+            this.nmIOrdinal.Size     = new System.Drawing.Size(176, 20);
+            this.nmIOrdinal.TabIndex = 7;
+            // 
+            // label16
+            // 
+            this.label16.Location = new System.Drawing.Point(300, 42);
+            this.label16.Name     = "label16";
+            this.label16.Size     = new System.Drawing.Size(44, 18);
+            this.label16.TabIndex = 10;
+            this.label16.Text     = "Name";
+            // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(7, 42);
+            this.label13.Name     = "label13";
+            this.label13.Size     = new System.Drawing.Size(81, 18);
+            this.label13.TabIndex = 6;
+            this.label13.Text     = "Chunk Ordinal:";
+            // 
+            // cbITypes
+            // 
+            this.cbITypes.DropDownStyle     = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cbITypes.FormattingEnabled = true;
+            this.cbITypes.Items.AddRange(new object[] {"Pre-Setup", "Chunk", "Post-Setup", "Indices"});
+            this.cbITypes.Location = new System.Drawing.Point(350, 13);
+            this.cbITypes.Name     = "cbITypes";
+            this.cbITypes.Size     = new System.Drawing.Size(184, 21);
+            this.cbITypes.TabIndex = 9;
+            // 
+            // label15
+            // 
+            this.label15.Location = new System.Drawing.Point(300, 16);
+            this.label15.Name     = "label15";
+            this.label15.Size     = new System.Drawing.Size(40, 18);
+            this.label15.TabIndex = 8;
+            this.label15.Text     = "Type";
+            // 
+            // dgvItems
+            // 
+            this.dgvItems.AllowUserToAddRows          = false;
+            this.dgvItems.AllowUserToDeleteRows       = false;
+            this.dgvItems.Anchor                      = ((System.Windows.Forms.AnchorStyles) ((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.dgvItems.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvItems.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {this.clmChunk, this.clmName, this.clmStart, this.clmEnd, this.clmDur, this.clmStatus, this.clmError});
+            this.dgvItems.Location = new System.Drawing.Point(6, 82);
+            this.dgvItems.Name     = "dgvItems";
+            this.dgvItems.ReadOnly = true;
+            this.dgvItems.Size     = new System.Drawing.Size(756, 285);
+            this.dgvItems.TabIndex = 12;
+            // 
+            // clmChunk
+            // 
+            this.clmChunk.HeaderText = "Chunk";
+            this.clmChunk.Name       = "clmChunk";
+            this.clmChunk.ReadOnly   = true;
+            this.clmChunk.Width      = 60;
+            // 
+            // clmName
+            // 
+            this.clmName.HeaderText = "Name";
+            this.clmName.Name       = "clmName";
+            this.clmName.ReadOnly   = true;
+            // 
+            // clmStart
+            // 
+            this.clmStart.HeaderText = "Start";
+            this.clmStart.Name       = "clmStart";
+            this.clmStart.ReadOnly   = true;
+            // 
+            // clmEnd
+            // 
+            this.clmEnd.HeaderText = "End";
+            this.clmEnd.Name       = "clmEnd";
+            this.clmEnd.ReadOnly   = true;
+            // 
+            // clmDur
+            // 
+            this.clmDur.HeaderText = "Duration";
+            this.clmDur.Name       = "clmDur";
+            this.clmDur.ReadOnly   = true;
+            // 
+            // clmStatus
+            // 
+            this.clmStatus.HeaderText = "Status";
+            this.clmStatus.Name       = "clmStatus";
+            this.clmStatus.ReadOnly   = true;
+            // 
+            // clmError
+            // 
+            this.clmError.AutoSizeMode = System.Windows.Forms.DataGridViewAutoSizeColumnMode.Fill;
+            this.clmError.HeaderText   = "Error";
+            this.clmError.MinimumWidth = 100;
+            this.clmError.Name         = "clmError";
+            this.clmError.ReadOnly     = true;
+            this.clmError.Resizable    = System.Windows.Forms.DataGridViewTriState.True;
+            // 
             // statusStrip1
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripStatusLabel1, this.toolStripProgressBar1});
+            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.toolStripStatusLabel1, this.tsProgressBar});
             this.statusStrip1.Location = new System.Drawing.Point(0, 428);
             this.statusStrip1.Name     = "statusStrip1";
             this.statusStrip1.Size     = new System.Drawing.Size(800, 22);
@@ -602,11 +690,11 @@ namespace AppUI.ui
             this.toolStripStatusLabel1.Size = new System.Drawing.Size(118, 17);
             this.toolStripStatusLabel1.Text = "toolStripStatusLabel1";
             // 
-            // toolStripProgressBar1
+            // tsProgressBar
             // 
-            this.toolStripProgressBar1.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.toolStripProgressBar1.Name      = "toolStripProgressBar1";
-            this.toolStripProgressBar1.Size      = new System.Drawing.Size(100, 16);
+            this.tsProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsProgressBar.Name      = "tsProgressBar";
+            this.tsProgressBar.Size      = new System.Drawing.Size(100, 16);
             // 
             // linkLabel1
             // 
@@ -638,61 +726,76 @@ namespace AppUI.ui
             this.groupBox1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize) (this.scPort)).EndInit();
             this.tabProgress.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize) (this.dgvProgress)).EndInit();
             this.tabChunks.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize) (this.numericUpDown1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dgvChunks)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.nmCOrdinal)).EndInit();
             this.tabItems.ResumeLayout(false);
-            ((System.ComponentModel.ISupportInitialize) (this.numericUpDown2)).EndInit();
+            this.groupBox2.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize) (this.nmIOrdinal)).EndInit();
+            ((System.ComponentModel.ISupportInitialize) (this.dgvItems)).EndInit();
             this.statusStrip1.ResumeLayout(false);
             this.statusStrip1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
 
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmPName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmPValue;
+
+        private System.Windows.Forms.DataGridView dgvProgress;
+
+        private System.Windows.Forms.ComboBox cbPTimer;
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn clcOrdinal;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clcStart;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clcEnd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clcDuration;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clcStatus;
+        private System.Windows.Forms.DataGridViewLinkColumn    clcError;
+
+        private System.Windows.Forms.DataGridView dgvChunks;
+
+        private System.Windows.Forms.Button btnChunkFilter;
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmDur;
+
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Button   btnItemsFielter;
+
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmChunk;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmName;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmStart;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmEnd;
+        private System.Windows.Forms.DataGridViewTextBoxColumn clmStatus;
+        private System.Windows.Forms.DataGridViewLinkColumn    clmError;
+
+        private System.Windows.Forms.DataGridView dgvItems;
+
         private System.Windows.Forms.LinkLabel linkLabel1;
 
-        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar1;
+        private System.Windows.Forms.ToolStripProgressBar tsProgressBar;
 
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
 
         private System.Windows.Forms.StatusStrip statusStrip1;
 
-        private System.Windows.Forms.ColumnHeader chIChunk;
-        private System.Windows.Forms.ColumnHeader chcName;
-        private System.Windows.Forms.ColumnHeader chIStart;
-        private System.Windows.Forms.ColumnHeader chIEnd;
-        private System.Windows.Forms.ColumnHeader chIDuration;
-        private System.Windows.Forms.ColumnHeader chIStatus;
-
-        private System.Windows.Forms.ComboBox comboBox4;
-        private System.Windows.Forms.ListView listView3;
+        private System.Windows.Forms.ComboBox cbINames;
 
         private System.Windows.Forms.Label label16;
 
         private System.Windows.Forms.Label    label15;
-        private System.Windows.Forms.ComboBox comboBox3;
+        private System.Windows.Forms.ComboBox cbITypes;
 
-        private System.Windows.Forms.NumericUpDown numericUpDown2;
+        private System.Windows.Forms.NumericUpDown nmIOrdinal;
         private System.Windows.Forms.Label         label13;
-        private System.Windows.Forms.ComboBox      comboBox2;
+        private System.Windows.Forms.ComboBox      cbIStatuses;
         private System.Windows.Forms.Label         label14;
-
-        private System.Windows.Forms.ColumnHeader chOrdinal;
-        private System.Windows.Forms.ColumnHeader chStart;
-        private System.Windows.Forms.ColumnHeader chEnd;
-        private System.Windows.Forms.ColumnHeader chDuration;
-        private System.Windows.Forms.ColumnHeader chStatus;
-
-        private System.Windows.Forms.ListView lvChunks;
 
         private System.Windows.Forms.Label label12;
 
         private System.Windows.Forms.Label    label11;
-        private System.Windows.Forms.ComboBox comboBox1;
-
-        private System.Windows.Forms.ColumnHeader chName;
-        private System.Windows.Forms.ColumnHeader chValue;
-
-        private System.Windows.Forms.ListView lvAnalysis;
+        private System.Windows.Forms.ComboBox cbCStatuses;
 
         private System.Windows.Forms.GroupBox    groupBox1;
         private System.Windows.Forms.Label       label8;
@@ -714,7 +817,7 @@ namespace AppUI.ui
         private System.Windows.Forms.TextBox       scTarget;
         private System.Windows.Forms.TextBox       scSource;
         private System.Windows.Forms.TextBox       scVocabulary;
-        private System.Windows.Forms.NumericUpDown numericUpDown1;
+        private System.Windows.Forms.NumericUpDown nmCOrdinal;
 
         private System.Windows.Forms.TextBox        tbWlName;
         private System.Windows.Forms.Label          label2;

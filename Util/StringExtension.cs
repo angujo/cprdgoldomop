@@ -60,6 +60,11 @@ namespace Util
             return Regex.Replace(Regex.Replace(str.FirstCharToLower(), "([A-Z])([^A-Z])", "_$1$2").ToLower(), "[^0-9a-zA-Z]+", "_");
         }
 
+        public static string ToWords(this string str)
+        {
+            return Regex.Replace(Regex.Replace(str, "([A-Z])([^A-Z])", " $1$2"), "[^0-9a-zA-Z]+", " ");
+        }
+
         public static string FirstCharWord(this string str)
         {
             return Regex.Replace(str, "^[^0-9a-zA-Z]+", "");

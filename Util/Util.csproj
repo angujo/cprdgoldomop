@@ -62,6 +62,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CancelTokenSource.cs" />
     <Compile Include="EncryptionHelper.cs" />
     <Compile Include="NestDictionary.cs" />
     <Compile Include="SaveableAttribute.cs" />

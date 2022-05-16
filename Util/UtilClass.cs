@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -6,6 +8,12 @@ namespace Util
 {
     public static class UtilClass
     {
+        public static T[] Prepend<T>(this T[] items, params T[] args)
+        {
+            return args.Reverse().Aggregate(new List<T>(items), (current, rarg) => current.Prepend(rarg).ToList())
+                       .ToArray();
+        }
+
         public static Action<T> Debounce<T>(this Action<T> func, int milliseconds = 300)
         {
             CancellationTokenSource cancelTokenSource = null;

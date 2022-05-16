@@ -20,8 +20,8 @@ namespace Util
         public static void Info(string msg, params object[] args) => File.Info(msg, args);
         public static void Warning(string msg, params object[] args) => File.Warning(msg, args);
 
-        public static void Info(string msg, int chunkId, params object[] args) =>
-            Info($"[CHUNK {chunkId}] {msg}", args);
+        /*public static void Info(string msg, int chunkId, params object[] args) =>
+            Info($"[CHUNK {chunkId}] {msg}", args);*/
 
         public static void Error(Exception exc) => Logger.Error(exc);
 
@@ -38,10 +38,23 @@ namespace Util
 
             private LogWriter getWriter() => _writer ?? (_writer = LogWriter.ForChunk(chunkId));
 
-            public void Error(string msg, params object[] args) => getWriter().Error(msg, args);
-            public void Info(string msg, params object[] args) => getWriter().Info(msg, args);
-            public void Warning(string msg, params object[] args) => getWriter().Warning(msg, args);
+            public void Error(string msg, params object[] args) =>
+                getWriter().Error("[CHUNK #{chunkid}] " + msg, args.Prepend(chunkId));
+
+            public void Info(string msg, params object[] args) =>
+                getWriter().Info("[CHUNK #{chunkid}] " + msg, args.Prepend(chunkId));
+
+            public void Warning(string msg, params object[] args) =>
+                getWriter().Warning("[CHUNK #{chunkid}] " + msg, args.Prepend(chunkId));
+
             public void Error(Exception exception) => getWriter().Error(exception);
+
+            public void SetChunkId(long cid)
+            {
+                if (cid == chunkId) return;
+                chunkId = cid;
+                _writer = LogWriter.ForChunk(cid);
+            }
         }
 
         public class File
