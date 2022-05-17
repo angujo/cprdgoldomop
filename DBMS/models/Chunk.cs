@@ -135,7 +135,7 @@ namespace DBMS.models
             foreach (var lkey in missingTypes)
                 Loads[lkey] = new Cdmtimer
                 {
-                    WorkLoadId = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, ChunkId = ordinal,
+                    Workloadid = WorkLoadId, Name = lkey.GetStringValue(), LoadType = lkey, Chunkid = ordinal,
                     Status     = Status.SCHEDULED
                 };
         }

@@ -23,7 +23,7 @@ namespace Util
         /*public static void Info(string msg, int chunkId, params object[] args) =>
             Info($"[CHUNK {chunkId}] {msg}", args);*/
 
-        public static void Error(Exception exc) => Logger.Error(exc);
+        public static void Error(Exception exc) => File.Error(exc);
 
 
         public class Chunk

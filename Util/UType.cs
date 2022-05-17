@@ -104,11 +104,4 @@
         [StringValue("Stopped")]   STOPPED,
         [StringValue("Finished")]  FINISHED,
     }
-
-    public enum DbSchemaType
-    {
-        [StringValue("target")]     TARGET,
-        [StringValue("source")]     SOURCE,
-        [StringValue("vocabulary")] VOCABULARY,
-    }
 }

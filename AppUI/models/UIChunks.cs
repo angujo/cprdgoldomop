@@ -40,11 +40,11 @@ namespace AppUI.models
             {
                 action(new Object[]
                 {
-                    chunktimer.ChunkId,
-                    chunktimer.StartTime?.ToString("yy-MMM-dd ddd HH:m:s"),
-                    chunktimer.EndTime?.ToString("yy-MMM-dd ddd HH:m:s"),
-                    null != chunktimer.StartTime
-                        ? chunktimer.EndTime?.Subtract((DateTime) chunktimer.StartTime).ToString()
+                    chunktimer.Chunkid,
+                    chunktimer.Starttime?.ToString("yy-MMM-dd ddd HH:m:s"),
+                    chunktimer.Endtime?.ToString("yy-MMM-dd ddd HH:m:s"),
+                    null != chunktimer.Starttime
+                        ? chunktimer.Endtime?.Subtract((DateTime) chunktimer.Starttime).ToString()
                         : "",
                     chunktimer.Status.GetStringValue(),
                 });

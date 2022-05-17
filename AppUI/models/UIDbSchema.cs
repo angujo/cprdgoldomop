@@ -1,4 +1,5 @@
-﻿using DBMS.models;
+﻿using DBMS;
+using DBMS.models;
 using Util;
 
 namespace AppUI.models
@@ -28,9 +29,9 @@ namespace AppUI.models
             get => "";
             set
             {
-                target.password     = value;
-                source.password     = value;
-                vocabulary.password = value;
+                target.password     = EncryptionHelper.Encrypt(value);
+                source.password     = EncryptionHelper.Encrypt(value);
+                vocabulary.password = EncryptionHelper.Encrypt(value);
                 PropagateChange();
             }
         }
@@ -101,6 +102,36 @@ namespace AppUI.models
             }
         }
 
+        public bool vocab_test
+        {
+            get => vocabulary.testsuccess;
+            set
+            {
+                vocabulary.testsuccess = value;
+                PropagateChange();
+            }
+        }
+
+        public bool target_test
+        {
+            get => target.testsuccess;
+            set
+            {
+                target.testsuccess = value;
+                PropagateChange();
+            }
+        }
+
+        public bool source_test
+        {
+            get => source.testsuccess;
+            set
+            {
+                source.testsuccess = value;
+                PropagateChange();
+            }
+        }
+
         public UIDbSchema(long workload_id)
         {
             _uiDb = new UIDb(workload_id);
@@ -110,9 +141,9 @@ namespace AppUI.models
 
         private void loadSchemas()
         {
-            target     = _uiDb.GetSchema(DbSchemaType.TARGET);
-            source     = _uiDb.GetSchema(DbSchemaType.SOURCE);
-            vocabulary = _uiDb.GetSchema(DbSchemaType.VOCABULARY);
+            target     = _uiDb.GetSchema(SchemaType.TARGET);
+            source     = _uiDb.GetSchema(SchemaType.SOURCE);
+            vocabulary = _uiDb.GetSchema(SchemaType.VOCABULARY);
         }
 
         public void Save()
@@ -120,6 +151,21 @@ namespace AppUI.models
             target.Save();
             source.Save();
             vocabulary.Save();
+        }
+
+        public void TestTarget()
+        {
+            target_test = _uiDb.TestSchema(SchemaType.TARGET);
+        }
+
+        public void TestSource()
+        {
+            source_test = _uiDb.TestSchema(SchemaType.SOURCE);
+        }
+
+        public void TestVocabulary()
+        {
+            vocab_test = _uiDb.TestSchema(SchemaType.VOCABULARY);
         }
     }
 }

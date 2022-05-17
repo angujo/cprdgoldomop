@@ -1,5 +1,7 @@
 ﻿using DBMS.systems;
 using System.Collections.Concurrent;
+using System.Linq;
+using DBMS.models;
 using Util;
 
 namespace DBMS
@@ -8,11 +10,30 @@ namespace DBMS
     {
         static ConcurrentDictionary<string, DBMSSystem> holder = new ConcurrentDictionary<string, DBMSSystem>();
 
-        public static int VALUE_ROWS { get { return 500; } }// Modify later for custom
-        public static DBMSSystem Target { get { return GetSchema(SchemaType.TARGET); } }
-        public static DBMSSystem Source { get { return GetSchema(SchemaType.SOURCE); } }
-        public static DBMSSystem Vocabulary { get { return GetSchema(SchemaType.VOCABULARY); } }
-        public static DBMSSystem Internal { get { return GetSchema(SchemaType.INTERNAL); } }
+        public static int VALUE_ROWS
+        {
+            get { return 500; }
+        } // Modify later for custom
+
+        public static DBMSSystem Target
+        {
+            get { return GetSchema(SchemaType.TARGET); }
+        }
+
+        public static DBMSSystem Source
+        {
+            get { return GetSchema(SchemaType.SOURCE); }
+        }
+
+        public static DBMSSystem Vocabulary
+        {
+            get { return GetSchema(SchemaType.VOCABULARY); }
+        }
+
+        public static DBMSSystem Internal
+        {
+            get { return GetSchema(SchemaType.INTERNAL); }
+        }
 
         private static DBMSSystem GetSchema(SchemaType sType)
         {
@@ -21,18 +42,57 @@ namespace DBMS
             string schema_name;
             switch (sType)
             {
-                case SchemaType.TARGET: conn_string = Setting.TargetConnection; schema_name = Setting.TargetSchema; break;
-                case SchemaType.SOURCE: conn_string = Setting.SourceConnection; schema_name = Setting.SourceSchema; break;
-                case SchemaType.INTERNAL: conn_string = Setting.AppConnection; schema_name = Setting.AppSchema; break;
+                case SchemaType.TARGET:
+                    conn_string = Setting.TargetConnection;
+                    schema_name = Setting.TargetSchema;
+                    break;
+                case SchemaType.SOURCE:
+                    conn_string = Setting.SourceConnection;
+                    schema_name = Setting.SourceSchema;
+                    break;
+                case SchemaType.INTERNAL:
+                    conn_string = Setting.AppConnection;
+                    schema_name = Setting.AppSchema;
+                    break;
                 case SchemaType.VOCABULARY:
-                default: conn_string = Setting.VocabConnection; schema_name = Setting.VocabSchema; break;
+                default:
+                    conn_string = Setting.VocabConnection;
+                    schema_name = Setting.VocabSchema;
+                    break;
             }
-            var sch = new DBSchema
+            return holder[sType.GetStringValue()] = GetOne(conn_string,schema_name);
+        }
+
+        public static void FetchSchemas(long workloadId)
+        {
+            SchemaType[] cleanable = {SchemaType.SOURCE, SchemaType.TARGET, SchemaType.VOCABULARY};
+            Internal.GetAll<DBSchema>("WHERE workloadid = @wlid", new {wlid = workloadId})
+                    .Where(sc => cleanable.Select(t => t.GetStringValue()).Contains(sc.Schematype))
+                    .ToList()
+                    .ForEach(sc => holder.TryUpdate(sc.Schematype, GetOne(sc),
+                                                    holder.TryGetValue(sc.Schematype, out var osc) ? osc : default));
+        }
+
+        public static DBMSSystem FromDbSchema(Dbschema dbschema)
+        {
+            return GetOne(new DBSchema()
             {
-                SchemaName = schema_name,
-            };
+                Password   = EncryptionHelper.Decrypt(dbschema.password),
+                Port       = dbschema.port,
+                Schematype = dbschema.schematype,
+                Server     = dbschema.server,
+                Username   = dbschema.username,
+                SchemaName = dbschema.schemaname,
+                DBName     = dbschema.dbname,
+            });
+        }
+
+        private static DBMSSystem GetOne(DBSchema schema) => new PostgreSQL(schema);
+
+        private static DBMSSystem GetOne(string conn_string, string schema_name)
+        {
             //Switch depending on DBMS System
-            return holder[sType.GetStringValue()] = new PostgreSQL(conn_string) { schema = sch };
+            return new PostgreSQL(conn_string) {schema = new DBSchema {SchemaName = schema_name,}};
         }
     }
 
@@ -40,7 +100,7 @@ namespace DBMS
     {
         const string PH_SC_SOURCE = @"{ss}";
         const string PH_SC_TARGET = @"{sc}";
-        const string PH_SC_VOCAB = @"{vs}";
+        const string PH_SC_VOCAB  = @"{vs}";
 
         public static string RemovePlaceholders(this string content, params string[][] phs)
         {
@@ -49,25 +109,22 @@ namespace DBMS
                 if (2 != p.Length) continue;
                 content = content.Replace(p[0], p[1]);
             }
+
             return content
-                .Replace(PH_SC_VOCAB, DB.Vocabulary.schema.SchemaName)
-                .Replace(PH_SC_TARGET, DB.Target.schema.SchemaName)
-                .Replace(PH_SC_SOURCE, DB.Source.schema.SchemaName)
-                .Replace(PH_SC_VOCAB.ToUpper(), DB.Vocabulary.schema.SchemaName)
-                .Replace(PH_SC_TARGET.ToUpper(), DB.Target.schema.SchemaName)
-                .Replace(PH_SC_SOURCE.ToUpper(), DB.Source.schema.SchemaName);
+                   .Replace(PH_SC_VOCAB, DB.Vocabulary.schema.SchemaName)
+                   .Replace(PH_SC_TARGET, DB.Target.schema.SchemaName)
+                   .Replace(PH_SC_SOURCE, DB.Source.schema.SchemaName)
+                   .Replace(PH_SC_VOCAB.ToUpper(), DB.Vocabulary.schema.SchemaName)
+                   .Replace(PH_SC_TARGET.ToUpper(), DB.Target.schema.SchemaName)
+                   .Replace(PH_SC_SOURCE.ToUpper(), DB.Source.schema.SchemaName);
         }
     }
 
-    internal enum SchemaType
+    public enum SchemaType
     {
-        [StringValue("target")]
-        TARGET,
-        [StringValue("source")]
-        SOURCE,
-        [StringValue("vocabulary")]
-        VOCABULARY,
-        [StringValue("internal")]
-        INTERNAL
+        [StringValue("target")]     TARGET,
+        [StringValue("source")]     SOURCE,
+        [StringValue("vocabulary")] VOCABULARY,
+        [StringValue("internal")]   INTERNAL
     }
 }

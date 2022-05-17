@@ -17,6 +17,7 @@ namespace AppUI.ui
         private UIDbSchema _uiDbSchema;
         private UIItems    _uiItems;
         private UIChunks   _uiChunks;
+        private UIAnalysis   _uiAnalysis;
         public  Form       parent;
 
         private CancelTokenSource tsAnalysis = new CancelTokenSource();
@@ -49,7 +50,7 @@ namespace AppUI.ui
 
         private void DetailsTab()
         {
-            _uiWorkLoad = new UIWorkLoad(_workLoad);
+            if (null == _uiWorkLoad) _uiWorkLoad = new UIWorkLoad(_workLoad);
             tbWlName.DataBindings.Clear();
             dtWlDate.DataBindings.Clear();
 
@@ -59,7 +60,7 @@ namespace AppUI.ui
 
         private void SchemaTab()
         {
-            _uiDbSchema = new UIDbSchema(_workLoad.Id);
+            if (null == _uiDbSchema) _uiDbSchema = new UIDbSchema(_workLoad.Id);
             scServer.DataBindings.Clear();
             scDb.DataBindings.Clear();
             scUsername.DataBindings.Clear();
@@ -81,6 +82,7 @@ namespace AppUI.ui
 
         private void AnalysisTab(bool tabCall = false)
         {
+            if (null == _uiAnalysis) _uiAnalysis = new UIAnalysis(_workLoad.Id);
             if (cbPTimer.Items.Count <= 0)
             {
                 cbPTimer.Items.Add(new KeyValuePair<int, string>(0, "Paused"));
@@ -129,7 +131,7 @@ namespace AppUI.ui
             dgvProgress.Invoke(new Action(delegate
             {
                 dgvProgress.Rows.Clear();
-                UIAnalysis.LoadAnalysis(lv => dgvProgress.Rows.Add(lv));
+                _uiAnalysis.LoadAnalysis(lv => dgvProgress.Rows.Add(lv));
             }));
         }
 
@@ -252,8 +254,10 @@ namespace AppUI.ui
             switch (e.TabPage.Name.ToLower())
             {
                 case "tabprogress":
+                    if(tsAnalysis.IsDisposed) break;
                     tsAnalysis.Cancel();
                     tsAnalysis.Dispose();
+                    TsProgressIncr(0);
                     break;
             }
         }
@@ -264,6 +268,7 @@ namespace AppUI.ui
             {
                 tsAnalysis.Cancel();
                 tsAnalysis.Dispose();
+                TsProgressIncr(0);
             }
 
             if (0 >= (analysisSleep =
@@ -273,10 +278,10 @@ namespace AppUI.ui
 
         private void TsProgressIncr(int v = 1, int max = 0)
         {
-            Log.Info("Am Ticking!");
             Invoke(new Action(delegate
             {
                 if (0 < max) tsProgressBar.Maximum = max;
+                if (0 != v && tsProgressBar.Value == tsProgressBar.Maximum) return;
                 if (0 == v) tsProgressBar.Value =  0;
                 else tsProgressBar.Value        += v;
             }));
@@ -284,16 +289,37 @@ namespace AppUI.ui
 
         private async Task SleepProgress(int milliseconds, CancellationToken token)
         {
+            TsProgressIncr(0);
             if (0 >= milliseconds) return;
-            int tick            = Math.Abs(milliseconds / 100);
+            var tick            = Convert.ToInt32(Math.Floor((double) Math.Abs(milliseconds / tsProgressBar.Maximum)));
             if (10 > tick) tick = 10;
-            var timer           = new Timer();
-            timer.Enabled = true;
-            timer.Start();
-            timer.Interval = tick;
-            Log.Info("Start Ticker! Tick: {tick}", tick);
-            timer.Tick += (s, e) => Log.Info("Am ticking!");// TsProgressIncr();
-            await Task.Delay(milliseconds, token);
+            for (var i = 0; i < tsProgressBar.Maximum; i++)
+            {
+                TsProgressIncr();
+                await Task.Delay(tick, token);
+            }
+        }
+
+        private void btnTargetTest_Click(object sender, EventArgs e) => ConnectionTest(() => _uiDbSchema.TestTarget());
+
+        private void btnSourceTest_Click(object sender, EventArgs e) => ConnectionTest(() => _uiDbSchema.TestSource());
+
+        private void btnVocabTest_Click(object sender, EventArgs e) =>
+            ConnectionTest(() => _uiDbSchema.TestVocabulary());
+
+        private static void ConnectionTest(Action action)
+        {
+            try
+            {
+                action();
+                MessageBox.Show(@"Connection Successful!", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(exception);
+                MessageBox.Show(exception.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                // throw;
+            }
         }
     }
 }

@@ -1,16 +1,18 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using DBMS;
 using DBMS.models;
 using Util;
+using SchemaType = DBMS.SchemaType;
 
 namespace AppUI.models
 {
     public class UIDb : UIModel
     {
         private Dictionary<string, Dbschema> _schemata = new Dictionary<string, Dbschema>();
-        private DbSchemaType[] _schemaTypes = {DbSchemaType.SOURCE, DbSchemaType.TARGET, DbSchemaType.VOCABULARY};
+        private SchemaType[] _schemaTypes = {SchemaType.SOURCE, SchemaType.TARGET, SchemaType.VOCABULARY};
         private long workloadId;
 
         public UIDb(long workloadId)
@@ -24,11 +26,16 @@ namespace AppUI.models
             }
         }
 
-        public Dbschema GetSchema(DbSchemaType type) =>
+        public Dbschema GetSchema(SchemaType type) =>
             _schemata.TryGetValue(type.GetStringValue(), out var sc)
                 ? sc
                 : new Dbschema {workloadid = workloadId, testsuccess = false, schematype = type.GetStringValue()};
 
         public Dbschema[] GetSchemas() => _schemata.Select(kv => kv.Value).ToArray();
+
+        public bool TestSchema(SchemaType type)
+        {
+            return _schemata.TryGetValue(type.GetStringValue(), out var dbschema) && DB.FromDbSchema(dbschema).TestConnection();
+        }
     }
 }

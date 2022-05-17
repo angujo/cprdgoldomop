@@ -3,6 +3,7 @@
     public class DBSchema
     {
         public int Port { get; set; }
+        public string Schematype { get; set; }
         public string Server { get; set; }
         public string DBName { get; set; }
         public string SchemaName { get; set; }

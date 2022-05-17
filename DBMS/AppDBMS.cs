@@ -49,7 +49,7 @@ namespace DBMS
         {
             foreach (var ct in DB.Internal.GetAll<Chunktimer>(
                          "WHERE chunkid >= 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)",
-                         new {WLId = workload.Id, Stat = Status.FINISHED})) yield return ct.ChunkId;
+                         new {WLId = workload.Id, Stat = Status.FINISHED})) yield return ct.Chunkid;
         }
 
         public void CleanupNonChunk(int chunkId, string colName)

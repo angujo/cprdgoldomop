@@ -17,27 +17,32 @@ namespace DBMS.systems
 {
     public class PostgreSQL : DBMSSystem
     {
-        public PostgreSQL(DBSchema schema) : base(schema) { }
+        public PostgreSQL(DBSchema schema) : base(schema)
+        {
+        }
 
-        public PostgreSQL(string conn_string) : base(conn_string) { }
+        public PostgreSQL(string conn_string) : base(conn_string)
+        {
+        }
 
         public override string ConnectionString()
         {
-            return string.IsNullOrEmpty(conn_string) ?
-                String.Join(";", new string[] {
-                @"Server="+ schema.Server,
-                @"Port="+ schema.Port,
-                @"User Id="+ schema.Username,
-                @"Password="+ schema.Password,
-                @"Database="+ schema.DBName,
-                @"ApplicationName=OMOPBuilder",
-                @"Pooling=false",
-                @"IncludeErrorDetail=true",
-                @"CommandTimeout=36000",
-                @"Options="+String.Join(" ", (new string[] {
-                    "synchronous_commit=off"
-                }).Select(o=>$"-c {o}"))
-            }) : conn_string;
+            return string.IsNullOrEmpty(conn_string)
+                ? string.Join(";",
+                              @"Server=" + schema.Server,
+                              @"Port=" + schema.Port,
+                              @"User Id=" + schema.Username,
+                              @"Password=" + schema.Password,
+                              @"Database=" + schema.DBName,
+                              @"ApplicationName=OMOPBuilder",
+                              @"Pooling=false",
+                              @"IncludeErrorDetail=true",
+                              @"CommandTimeout=36000",
+                              @"Options=" + string.Join(" ", new[]
+                              {
+                                  "synchronous_commit=off"
+                              }.Select(o => $"-c {o}")))
+                : conn_string;
         }
 
         public override IDbConnection GetConnection()
@@ -59,8 +64,9 @@ namespace DBMS.systems
 
         public override void CopyText(string table_name, string[] cols, Action<TextWriter> addData)
         {
-            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN", schema.SchemaName, table_name, string.Join(", ", cols));
-            using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
+            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN", schema.SchemaName, table_name,
+                                       string.Join(", ", cols));
+            using (NpgsqlConnection conn = (NpgsqlConnection) GetConnection())
             {
                 conn.Open();
                 using (var writer = conn.BeginTextImport(sql))
@@ -71,25 +77,29 @@ namespace DBMS.systems
             }
         }
 
-        public override void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData) => CopyBinary(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
-        public override void CopyBinaryRows<T>(string[] cols, Action<Action, Action<object>> addData) => CopyBinaryRows(typeof(T).Name.ToSnakeCase(), cols, addData);
+        public override void CopyBinary<T>(Action<NpgsqlBinaryImporter> addData) =>
+            CopyBinary(typeof(T).Name.ToSnakeCase(), ColumnNames<T>(), addData);
+
+        public override void CopyBinaryRows<T>(string[] cols, Action<Action, Action<object>> addData) =>
+            CopyBinaryRows(typeof(T).Name.ToSnakeCase(), cols, addData);
 
         public override void CopyBinaryRows(string table_name, string[] cols, Action<Action, Action<object>> addData)
         {
             CopyBinary(table_name, cols, writer =>
             {
                 addData(
-                    () => writer.StartRow(), //For starting new row
+                    () => writer.StartRow(),             //For starting new row
                     value => writer.PgBinaryWrite(value) //For adding data to row
-                    );
+                );
             });
         }
 
         public override void CopyBinary(string table_name, string[] cols, Action<NpgsqlBinaryImporter> addData)
         {
-            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN (FORMAT BINARY)", schema.SchemaName, table_name, string.Join(", ", cols));
+            string sql = string.Format("COPY {0}.{1} ({2}) FROM STDIN (FORMAT BINARY)", schema.SchemaName, table_name,
+                                       string.Join(", ", cols));
             Log.Info($"Start SQL: {sql}");
-            using (NpgsqlConnection conn = (NpgsqlConnection)GetConnection())
+            using (NpgsqlConnection conn = (NpgsqlConnection) GetConnection())
             {
                 conn.Open();
                 using (NpgsqlBinaryImporter writer = conn.BeginBinaryImport(sql))
@@ -103,10 +113,10 @@ namespace DBMS.systems
 
         public override void BinaryCopy(DBMSSystem toSchema, string fromQuery, string toQuery)
         {
-            using (NpgsqlConnection f_conn = (NpgsqlConnection)GetConnection())
+            using (NpgsqlConnection f_conn = (NpgsqlConnection) GetConnection())
             {
                 f_conn.Open();
-                using (NpgsqlConnection t_conn = (NpgsqlConnection)toSchema.GetConnection())
+                using (NpgsqlConnection t_conn = (NpgsqlConnection) toSchema.GetConnection())
                 {
                     t_conn.Open();
                     using (NpgsqlRawCopyStream inStream = f_conn.BeginRawBinaryCopy(fromQuery))
@@ -121,10 +131,7 @@ namespace DBMS.systems
         public static void PgBinaryRow(NpgsqlBinaryImporter writer, Action<Action<object>> cell)
         {
             writer.StartRow();
-            cell(val =>
-            {
-                writer.PgBinaryWrite(val);
-            });
+            cell(val => { writer.PgBinaryWrite(val); });
         }
 
         public static NpgsqlDbType? PgTypeCoherse(object value)
@@ -160,9 +167,10 @@ namespace DBMS.systems
                 writer.WriteNull();
                 return;
             }
+
             var t = PostgreSQL.PgTypeCoherse(value);
             if (null == t) writer.Write(value);
-            else writer.Write(value, (NpgsqlDbType)t);
+            else writer.Write(value, (NpgsqlDbType) t);
         }
     }
 }

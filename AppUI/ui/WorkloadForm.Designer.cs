@@ -710,10 +710,12 @@ namespace AppUI.ui
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor           = System.Drawing.SystemColors.Control;
             this.ClientSize          = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.linkLabel1);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.tabWorkload);
+            this.Location    = new System.Drawing.Point(15, 15);
             this.MinimumSize = new System.Drawing.Size(300, 200);
             this.Name        = "WorkloadForm";
             this.Text        = "Workload Form";

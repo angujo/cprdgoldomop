@@ -128,6 +128,21 @@ namespace DBMS.systems
             }
         }
 
+        public bool TestConnection()
+        {
+            try
+            {
+                RunQuery("/** ping **/");
+                Log.Info("Connection Test Success!");
+                return true;
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
+            }
+        }
+
         public void RunConnection(Action<IDbConnection> action)
         {
             using (var conn = GetConnection())

@@ -72,11 +72,11 @@ namespace AppUI.models
             {
                 action(new Object[]
                 {
-                    cdmtimer.ChunkId + "", cdmtimer.Name, cdmtimer.StartTime?.ToString(), cdmtimer.EndTime?.ToString(),
-                    cdmtimer.StartTime == null
+                    cdmtimer.Chunkid + "", cdmtimer.Name, cdmtimer.Starttime?.ToString(), cdmtimer.Endtime?.ToString(),
+                    cdmtimer.Starttime == null
                         ? ""
-                        : cdmtimer.EndTime?.Subtract((DateTime) cdmtimer.StartTime).ToString(),
-                    cdmtimer.Status.GetStringValue(), cdmtimer.ErrorLog?.Truncate(100)
+                        : cdmtimer.Endtime?.Subtract((DateTime) cdmtimer.Starttime).ToString(),
+                    cdmtimer.Status.GetStringValue(), cdmtimer.Errorlog?.Truncate(100)
                 });
             }
         }
