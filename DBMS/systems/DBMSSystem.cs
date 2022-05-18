@@ -157,6 +157,11 @@ namespace DBMS.systems
             return string.Join(".", new string[] {schema, table});
         }
 
+        public T Load<T>()
+        {
+            return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).FirstOrDefault<T>();
+        }
+
         public T Load<T>(object args)
         {
             if (args.IsNumber())
@@ -169,6 +174,17 @@ namespace DBMS.systems
             }
 
             return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).FirstOrDefault<T>();
+        }
+
+        public R Scalar<T, R>(string column, string where = null, object args = null)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                return conn.QuerySingle<R>(
+                    $"SELECT {column} FROM {typeof(T).Name.ToSnakeCase()} " +
+                    (string.IsNullOrEmpty(where) ? "" : where), args ?? new { });
+            }
         }
 
         public int Update<T>(T obj, object where)

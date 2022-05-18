@@ -9,13 +9,13 @@ namespace DBMS.models
     {
         [Column("name")] public string Name { get; set; }
 
-        public int         ChunkId    { get; set; }
+        public int         Chunkid    { get; set; }
         public string      Query      { get; set; }
-        public DateTime?   StartTime  { get; set; }
-        public DateTime?   EndTime    { get; set; }
-        public long        WorkLoadId { get; set; }
+        public DateTime?   Starttime  { get; set; }
+        public DateTime?   Endtime    { get; set; }
+        public long        Workloadid { get; set; }
         public Util.Status Status     { get; set; }
-        public string      ErrorLog   { get; set; }
+        public string      Errorlog   { get; set; }
 
         [Editable(false)] public Util.LoadType LoadType { get; set; }
 
@@ -33,14 +33,14 @@ namespace DBMS.models
 
         public void Start()
         {
-            StartTime = DateTime.Now;
+            Starttime = DateTime.Now;
             Status    = Status.RUNNING;
             Save();
         }
 
         public void Stop()
         {
-            EndTime = DateTime.Now;
+            Endtime = DateTime.Now;
             Save();
         }
 
@@ -63,7 +63,7 @@ namespace DBMS.models
             catch (Exception ex)
             {
                 Status   = Status.STOPPED;
-                ErrorLog = ex.Message + "\n" + ex.StackTrace;
+                Errorlog = ex.Message + "\n" + ex.StackTrace;
                 Log.Error(ex);
                 Stop();
                 throw;

@@ -5,32 +5,32 @@ namespace DBMS.models
 {
     public class Chunktimer : CRUDModel<Chunktimer>
     {
-        public int ChunkId { get; set; }
-        public DateTime? StartTime { get; set; }
-        public DateTime? EndTime { get; set; }
+        public int Chunkid { get; set; }
+        public DateTime? Starttime { get; set; }
+        public DateTime? Endtime { get; set; }
         public bool Touched { get; set; }
-        public long WorkLoadId { get; set; }
+        public long Workloadid { get; set; }
         public Status Status { get; set; }
-        public string ErrorLog { get; set; }
+        public string Errorlog { get; set; }
 
         public void Start()
         {
-            StartTime = DateTime.Now;
+            Starttime = DateTime.Now;
             Status = Status.RUNNING;
             Save();
         }
 
         public void Stop(Exception ex = null)
         {
-            ErrorLog = null == ex ? ex.Message + "\n" + ex.StackTrace : null;
+            Errorlog = null == ex ? ex.Message + "\n" + ex.StackTrace : null;
             Status = Status.STOPPED;
-            EndTime = DateTime.Now;
+            Endtime = DateTime.Now;
             Save();
         }
 
         public void Implemented()
         {
-            EndTime = DateTime.Now;
+            Endtime = DateTime.Now;
             Status = Status.FINISHED;
             Save();
         }

@@ -16,20 +16,14 @@ namespace AppUI
 {
     public partial class MainForm : Form
     {
-        private WorkloadForm activeWorkload;
+        private WorkloadForm  activeWorkload;
+        private Servicestatus _serviceStatus;
 
         public MainForm()
         {
             InitializeComponent();
             loadWorkPlans();
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            activeWorkload = new WorkloadForm();
-            activeWorkload.Show();
-            Hide();
-            activeWorkload.Closed += (s, args) => this.Close();
+            LoadService();
         }
 
         private void loadWorkPlans()
@@ -48,10 +42,27 @@ namespace AppUI
             }
         }
 
+        private void LoadService()
+        {
+            _serviceStatus    = DB.Internal.Load<Servicestatus>();
+            txtServName.Text  = _serviceStatus.servicename;
+            txtSrvStatus.Text = _serviceStatus.status.GetStringValue();
+            txtServLast.Text  = _serviceStatus.lastrun.ToString("R");
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            activeWorkload = new WorkloadForm();
+            activeWorkload.Show();
+            Hide();
+            activeWorkload.Closed += (s, args) => this.Close();
+        }
+
         private void lvWorkplans_DoubleClick(object sender, EventArgs e)
         {
             if (lvWorkplans.SelectedItems.Count <= 0) return;
-            activeWorkload        = new WorkloadForm((WorkLoad) lvWorkplans.SelectedItems[0].Tag);
+            activeWorkload =
+                new WorkloadForm(DB.Internal.Load<WorkLoad>(((WorkLoad) lvWorkplans.SelectedItems[0].Tag).Id));
             activeWorkload.parent = this;
             activeWorkload.Show();
             Hide();
@@ -61,6 +72,16 @@ namespace AppUI
         private void reloadToolStripMenuItem_Click(object sender, EventArgs e)
         {
             loadWorkPlans();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void minimizeToTrayToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            Hide();
         }
     }
 }

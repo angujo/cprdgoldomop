@@ -1,4 +1,5 @@
-﻿using DBMS;
+﻿using System;
+using DBMS;
 using DBMS.models;
 using Util;
 
@@ -155,17 +156,44 @@ namespace AppUI.models
 
         public void TestTarget()
         {
-            target_test = _uiDb.TestSchema(SchemaType.TARGET);
+            try
+            {
+                target_test = _uiDb.TestSchema(SchemaType.TARGET);
+            }
+            catch (Exception e)
+            {
+                target.testsuccess = false;
+                target.Save();
+                throw;
+            }
         }
 
         public void TestSource()
         {
-            source_test = _uiDb.TestSchema(SchemaType.SOURCE);
+            try
+            {
+                source_test = _uiDb.TestSchema(SchemaType.SOURCE);
+            }
+            catch (Exception e)
+            {
+                source.testsuccess = false;
+                source.Save();
+                throw;
+            }
         }
 
         public void TestVocabulary()
         {
-            vocab_test = _uiDb.TestSchema(SchemaType.VOCABULARY);
+            try
+            {
+                vocab_test = _uiDb.TestSchema(SchemaType.VOCABULARY);
+            }
+            catch (Exception e)
+            {
+                vocabulary.testsuccess = false;
+                vocabulary.Save();
+                throw;
+            }
         }
     }
 }

@@ -9,12 +9,14 @@ namespace AppUI.models
 {
     internal class UIChunks : UIModel
     {
-        public int                     status  { get; set; }
-        public int                     chunkId { get; set; }
-        public Dictionary<int, string> statuses = new Dictionary<int, string>();
+        public  int                     status  { get; set; }
+        public  int                     chunkId { get; set; }
+        public  Dictionary<int, string> statuses = new Dictionary<int, string>();
+        private long                    workload_id;
 
-        public UIChunks()
+        public UIChunks(long workloadId)
         {
+            workload_id = workloadId;
             PopulateStatuses();
         }
 
@@ -28,9 +30,9 @@ namespace AppUI.models
             }
         }
 
-        public void LoadChunks(Action<Object[]> action)
+        public void LoadChunks(Action<object[]> action)
         {
-            var where = new List<string>();
+            var where = new List<string> {$"workloadid = {workload_id}"};
             var _w    = "";
             if (status > -1) where.Add($"status = {status}");
             if (chunkId > -1) where.Add($"chunkid = {chunkId}");

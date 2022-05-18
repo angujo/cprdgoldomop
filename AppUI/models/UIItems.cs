@@ -10,17 +10,19 @@ namespace AppUI.models
 {
     internal class UIItems : UIModel
     {
-        public int    status  { get; set; }
-        public int    chunkId { get; set; }
-        public int    type    { get; set; }
-        public string name    { get; set; }
+        public  int    status  { get; set; }
+        public  int    chunkId { get; set; }
+        public  int    type    { get; set; }
+        public  string name    { get; set; }
+        private long   workload_id;
 
         public Dictionary<int, string>    statuses = new Dictionary<int, string>();
         public Dictionary<int, string>    types    = new Dictionary<int, string>();
         public Dictionary<string, string> names    = new Dictionary<string, string>();
 
-        public UIItems()
+        public UIItems(long workloadId)
         {
+            workload_id = workloadId;
             PopulateNames();
             PopulateStatuses();
             PopulateTypes();
@@ -55,12 +57,12 @@ namespace AppUI.models
             }
         }
 
-        public void LoadItems(Action<Object[]> action)
+        public void LoadItems(Action<object[]> action)
         {
-            var where = new List<string>();
+            var where = new List<string> {$"workloadid = {workload_id}"};
             var _w    = "";
             if (status > -1) where.Add($"status = {status}");
-            if (null!=name && name != "*" && name.Trim().Length>0) where.Add($"name = '{name}'");
+            if (null != name && name != "*" && name.Trim().Length > 0) where.Add($"name = '{name}'");
             if (type > -99)
             {
                 if (type < 0) where.Add($"chunkid = {type}");

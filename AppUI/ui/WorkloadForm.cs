@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using AppUI.models;
+using DBMS;
 using DBMS.models;
 using Util;
 using Timer = System.Windows.Forms.Timer;
@@ -17,7 +19,7 @@ namespace AppUI.ui
         private UIDbSchema _uiDbSchema;
         private UIItems    _uiItems;
         private UIChunks   _uiChunks;
-        private UIAnalysis   _uiAnalysis;
+        private UIAnalysis _uiAnalysis;
         public  Form       parent;
 
         private CancelTokenSource tsAnalysis = new CancelTokenSource();
@@ -43,7 +45,7 @@ namespace AppUI.ui
                 IsRunning       = false,
                 MaxParallels    = 3,
             };
-            nmCOrdinal.Maximum = nmIOrdinal.Maximum = int.MaxValue;
+            nmCOrdinal.Maximum = nmIOrdinal.Maximum = ndChunkSize.Maximum = int.MaxValue;
 
             DetailsTab();
         }
@@ -51,33 +53,75 @@ namespace AppUI.ui
         private void DetailsTab()
         {
             if (null == _uiWorkLoad) _uiWorkLoad = new UIWorkLoad(_workLoad);
+            if (!(_workLoad.ChunksSetup || _workLoad.IsRunning))
+            {
+                ndParallels.DataBindings.Clear();
+                ndChunkSize.DataBindings.Clear();
+                ndParallels.DataBindings.Add("Value", _uiWorkLoad, "MaxParallels");
+                ndChunkSize.DataBindings.Add("Value", _uiWorkLoad, "ChunkSize");
+            }
+            else
+            {
+                ndParallels.Enabled = ndChunkSize.Enabled = false;
+                ndParallels.Value   = _uiWorkLoad.MaxParallels;
+                ndChunkSize.Value   = _uiWorkLoad.ChunkSize;
+            }
+
+            btnQueue.Enabled = !(_workLoad.IsRunning || _workLoad.CdmProcessed);
+            btnStop.Enabled  = _workLoad.IsRunning && !_workLoad.CdmProcessed;
+
             tbWlName.DataBindings.Clear();
             dtWlDate.DataBindings.Clear();
 
             tbWlName.DataBindings.Add("Text", _uiWorkLoad, "Name");
             dtWlDate.DataBindings.Add("Value", _uiWorkLoad, "ReleaseDate");
+
+            txtFull.Text      = _workLoad.CdmProcessed.ToString();
+            txtIdx.Text       = _workLoad.indices_loaded.ToString();
+            txtRun.Text       = _workLoad.IsRunning.ToString();
+            txtChunkLoad.Text = _workLoad.ChunksLoaded.ToString();
+            txtPsChunk.Text   = _workLoad.post_chunk_loaded.ToString();
+            txtPChunk.Text    = _workLoad.CdmLoaded.ToString();
+            txtChunkSet.Text  = _workLoad.ChunksSetup.ToString();
         }
 
         private void SchemaTab()
         {
             if (null == _uiDbSchema) _uiDbSchema = new UIDbSchema(_workLoad.Id);
-            scServer.DataBindings.Clear();
-            scDb.DataBindings.Clear();
-            scUsername.DataBindings.Clear();
-            scPort.DataBindings.Clear();
-            scPassword.DataBindings.Clear();
-            scTarget.DataBindings.Clear();
-            scSource.DataBindings.Clear();
-            scVocabulary.DataBindings.Clear();
+            if (!(_workLoad.CdmProcessed || _workLoad.IsRunning || _workLoad.ChunksLoaded || _workLoad.ChunksSetup ||
+                  _workLoad.indices_loaded || _workLoad.post_chunk_loaded || _workLoad.CdmLoaded))
+            {
+                scServer.DataBindings.Clear();
+                scDb.DataBindings.Clear();
+                scUsername.DataBindings.Clear();
+                scPort.DataBindings.Clear();
+                scPassword.DataBindings.Clear();
+                scTarget.DataBindings.Clear();
+                scSource.DataBindings.Clear();
+                scVocabulary.DataBindings.Clear();
 
-            scServer.DataBindings.Add("Text", _uiDbSchema, "server");
-            scDb.DataBindings.Add("Text", _uiDbSchema, "dbname");
-            scUsername.DataBindings.Add("Text", _uiDbSchema, "user");
-            scPort.DataBindings.Add("Text", _uiDbSchema, "portnumber");
-            scPassword.DataBindings.Add("Text", _uiDbSchema, "password");
-            scTarget.DataBindings.Add("Text", _uiDbSchema, "target_schemaname");
-            scSource.DataBindings.Add("Text", _uiDbSchema, "source_schemaname");
-            scVocabulary.DataBindings.Add("Text", _uiDbSchema, "vocab_schemaname");
+                scServer.DataBindings.Add("Text", _uiDbSchema, "server");
+                scDb.DataBindings.Add("Text", _uiDbSchema, "dbname");
+                scUsername.DataBindings.Add("Text", _uiDbSchema, "user");
+                scPort.DataBindings.Add("Text", _uiDbSchema, "portnumber");
+                scPassword.DataBindings.Add("Text", _uiDbSchema, "password");
+                scTarget.DataBindings.Add("Text", _uiDbSchema, "target_schemaname");
+                scSource.DataBindings.Add("Text", _uiDbSchema, "source_schemaname");
+                scVocabulary.DataBindings.Add("Text", _uiDbSchema, "vocab_schemaname");
+            }
+            else
+            {
+                scServer.Enabled = scDb.Enabled = scUsername.Enabled = scPort.Enabled =
+                    scPassword.Enabled = scTarget.Enabled = scSource.Enabled = scVocabulary.Enabled = false;
+                scServer.Text     = _uiDbSchema.server;
+                scDb.Text         = _uiDbSchema.dbname;
+                scUsername.Text   = _uiDbSchema.user;
+                scPort.Text       = _uiDbSchema.portnumber.ToString();
+                scPassword.Text   = @"****************************";
+                scTarget.Text     = _uiDbSchema.target_schemaname;
+                scSource.Text     = _uiDbSchema.source_schemaname;
+                scVocabulary.Text = _uiDbSchema.vocab_schemaname;
+            }
         }
 
         private void AnalysisTab(bool tabCall = false)
@@ -140,7 +184,7 @@ namespace AppUI.ui
             if (default != _uiChunks) return;
 
             Log.Info("Loading Chunks Tab");
-            _uiChunks = new UIChunks();
+            _uiChunks = new UIChunks(_workLoad.Id);
 
             cbCStatuses.DataSource    = new BindingSource(_uiChunks.statuses, null);
             cbCStatuses.ValueMember   = "Key";
@@ -166,7 +210,7 @@ namespace AppUI.ui
             if (default != _uiItems) return;
 
             Log.Info("Loading Items Tab");
-            _uiItems = new UIItems();
+            _uiItems = new UIItems(_workLoad.Id);
 
             cbINames.DataSource    = new BindingSource(_uiItems.names, null);
             cbINames.ValueMember   = "Key";
@@ -254,7 +298,7 @@ namespace AppUI.ui
             switch (e.TabPage.Name.ToLower())
             {
                 case "tabprogress":
-                    if(tsAnalysis.IsDisposed) break;
+                    if (tsAnalysis.IsDisposed) break;
                     tsAnalysis.Cancel();
                     tsAnalysis.Dispose();
                     TsProgressIncr(0);
@@ -312,7 +356,8 @@ namespace AppUI.ui
             try
             {
                 action();
-                MessageBox.Show(@"Connection Successful!", @"Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"Connection Successful!", @"Information", MessageBoxButtons.OK,
+                                MessageBoxIcon.Information);
             }
             catch (Exception exception)
             {
@@ -320,6 +365,38 @@ namespace AppUI.ui
                 MessageBox.Show(exception.Message, @"Error", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
                 // throw;
             }
+        }
+
+        private void btnQueue_Click(object sender, EventArgs e)
+        {
+            SchemaType[] schemas = {SchemaType.SOURCE, SchemaType.TARGET, SchemaType.VOCABULARY};
+            if (schemas.Length !=
+                DB.Internal.Scalar<Dbschema, int>(@"count(1)",
+                                                  @"Where workloadid = @wlid AND testsuccess = true AND schematype = ANY(@types)",
+                                                  new
+                                                  {
+                                                      wlid  = _workLoad.Id,
+                                                      types = schemas.Select(s => s.GetStringValue()).ToArray()
+                                                  }))
+            {
+                MessageBox.Show(@"Schemas need to be set and tested!", @"Error", MessageBoxButtons.OK,
+                                MessageBoxIcon.Exclamation);
+                return;
+            }
+
+            _workLoad.CdmProcessed = false;
+            _workLoad.IsRunning    = false;
+            _workLoad.Save();
+            MessageBox.Show(@"Workload Scheduled!", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnStop_Click(object sender, EventArgs e)
+        {
+            if (DialogResult.Cancel == MessageBox.Show(
+                    @"Are you sure you wish to stop the workload from being executed?",
+                    @"Stop", MessageBoxButtons.OK, MessageBoxIcon.Question)) return;
+            _workLoad.intervene = true;
+            _workLoad.Save();
         }
     }
 }

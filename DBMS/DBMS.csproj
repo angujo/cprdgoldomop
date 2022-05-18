@@ -118,6 +118,7 @@
     <Compile Include="models\ChunksAnalysis.cs" />
     <Compile Include="models\Chunktimer.cs" />
     <Compile Include="models\Dbschema.cs" />
+    <Compile Include="models\Servicestatus.cs" />
     <Compile Include="models\StatusView.cs" />
     <Compile Include="models\WorkLoad.cs" />
     <Compile Include="models\WorkQueue.cs" />

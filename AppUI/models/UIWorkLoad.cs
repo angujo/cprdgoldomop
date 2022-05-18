@@ -17,6 +17,26 @@ namespace AppUI.models
                 PropagateChange();
             }
         }
+        
+        public int ChunkSize
+        {
+            get => _WorkLoad.ChunkSize;
+            set
+            {
+                _WorkLoad.ChunkSize = value;
+                PropagateChange();
+            }
+        }
+        
+        public int MaxParallels
+        {
+            get => _WorkLoad.MaxParallels;
+            set
+            {
+                _WorkLoad.MaxParallels = value;
+                PropagateChange();
+            }
+        }
 
         public DateTime ReleaseDate
         {
