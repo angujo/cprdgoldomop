@@ -1,5 +1,49 @@
-﻿namespace Util
+﻿using System;
+using System.Linq;
+
+namespace Util
 {
+    public static class EnumGroups
+    {
+        public static readonly LoadType[] POST_LOAD_TYPES =
+            {LoadType.CONDITIONERA, LoadType.DRUGERA, LoadType.P_VISIT_DETAIL}; // LoadType.DOSE_ERA, //Disable for now
+
+        public static readonly LoadType[] INDICES_LOAD_TYPES =
+        {
+            LoadType.IDX_CARE_SITE, LoadType.IDX_CDM_SOURCE, LoadType.IDX_COHORT_ATTRIBUTE,
+            LoadType.IDX_COHORT_DEFINITION, LoadType.IDX_COHORT,
+            LoadType.IDX_CONDITION_ERA, LoadType.IDX_CONDITION_OCCURRENCE, LoadType.IDX_COST,
+            LoadType.IDX_DEATH, LoadType.IDX_DEVICE_EXPOSURE, LoadType.IDX_DOSE_ERA,
+            LoadType.IDX_DRUG_ERA, LoadType.IDX_DRUG_EXPOSURE, LoadType.IDX_LOCATION, LoadType.IDX_MEASUREMENT,
+            LoadType.IDX_NOTE_NLP,
+            LoadType.IDX_NOTE, LoadType.IDX_OBSERVATION_PERIOD,
+            LoadType.IDX_PAYER_PLAN_PERIOD, LoadType.IDX_PERSON, LoadType.IDX_PROCEDURE_OCCURRENCE,
+            LoadType.IDX_PROVIDER, LoadType.IDX_SPECIMEN, LoadType.IDX_VISIT_DETAIL,
+            LoadType.IDX_VISIT_OCCURRENCE, LoadType.IDX_OBSERVATION,
+            // /** We disable below for now */
+            // LoadType.IDX_CONCEPT_ANCESTOR, LoadType.IDX_CONCEPT_CLASS, LoadType.IDX_CONCEPT_RELATIONSHIP,
+            // LoadType.IDX_CONCEPT_SYNONYM, LoadType.IDX_CONCEPT, LoadType.IDX_DOMAIN,LoadType.IDX_DRUG_STRENGTH,
+            // LoadType.IDX_FACT_RELATIONSHIP, LoadType.IDX_RELATIONSHIP, LoadType.IDX_VOCABULARY,
+        };
+
+        public static readonly LoadType[] ONCE_LOAD_TYPES =
+        {
+            LoadType.PROVIDER, LoadType.CARESITE, LoadType.LOCATION, LoadType.CDMSOURCE, LoadType.COHORTDEFINITION,
+            LoadType.DAY_SUPPLY_DECODE_SETUP, LoadType.DAYSUPPLYMODESETUP,
+            LoadType.SOURCETOSOURCE, LoadType.SOURCETOSTANDARD, LoadType.CREATETABLES, LoadType.CHUNKSETUP,
+            LoadType.CHUNKLOAD
+        };
+
+        public static LoadType[] CHUNK_LOAD_TYPES
+        {
+            get
+            {
+                var excludes = ONCE_LOAD_TYPES.Concat(POST_LOAD_TYPES).Concat(INDICES_LOAD_TYPES);
+                return Enum.GetValues(typeof(LoadType)).Cast<LoadType>().Where(lt => !excludes.Contains(lt)).ToArray();
+            }
+        }
+    }
+
     public enum LoadType
     {
         /**

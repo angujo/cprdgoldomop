@@ -1,6 +1,7 @@
 ﻿using DBMS.models;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using SqlKata.Execution;
 using Util;
 
@@ -31,7 +32,9 @@ namespace DBMS
                 nameof(WorkLoad),
                 (query, schemaName) => { query.WhereRaw("isrunning = true").Update(new {isrunning = false}); }
             );
-            workload.IsRunning = true;
+            workload.Isrunning = true;
+            workload.intervene = false;
+            workload.Status    = Status.RUNNING;
             workload.Save();
         }
 
@@ -41,15 +44,16 @@ namespace DBMS
             workqueue.ErrorLog = ex == null ? null : ex.Message + "\n" + ex.StackTrace;
             workqueue.Save();
 
-            workload.IsRunning = false;
+            workload.Isrunning = false;
+            workload.Status    = ex == null ? Status.STOPPED : Status.FINISHED;
             workload.Save();
         }
 
         public IEnumerable<int> ChunkOrdinals()
         {
-            foreach (var ct in DB.Internal.GetAll<Chunktimer>(
-                         "WHERE chunkid >= 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)",
-                         new {WLId = workload.Id, Stat = Status.FINISHED})) yield return ct.Chunkid;
+            return DB.Internal.GetAll<Chunktimer>(
+                "WHERE chunkid >= 0 AND workloadid = @WLId AND (status IS NULL OR status <> @Stat)",
+                new {WLId = workload.Id, Stat = Status.FINISHED}).Select(ct => ct.Chunkid);
         }
 
         public void CleanupNonChunk(int chunkId, string colName)

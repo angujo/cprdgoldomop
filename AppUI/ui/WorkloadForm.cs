@@ -36,14 +36,14 @@ namespace AppUI.ui
             _workLoad = workLoad ?? new WorkLoad
             {
                 Name            = Guid.NewGuid().ToString(),
-                FilesLocked     = false,
-                SourceProcessed = false,
-                CdmLoaded       = false,
-                ChunksSetup     = false,
-                ChunksLoaded    = false,
-                CdmProcessed    = false,
-                IsRunning       = false,
-                MaxParallels    = 3,
+                Fileslocked     = false,
+                Sourceprocessed = false,
+                Cdmloaded       = false,
+                Chunkssetup     = false,
+                Chunksloaded    = false,
+                Cdmprocessed    = false,
+                Isrunning       = false,
+                Maxparallels    = 3,
             };
             nmCOrdinal.Maximum = nmIOrdinal.Maximum = ndChunkSize.Maximum = int.MaxValue;
 
@@ -53,7 +53,7 @@ namespace AppUI.ui
         private void DetailsTab()
         {
             if (null == _uiWorkLoad) _uiWorkLoad = new UIWorkLoad(_workLoad);
-            if (!(_workLoad.ChunksSetup || _workLoad.IsRunning))
+            if (!(_workLoad.Chunkssetup || _workLoad.Isrunning))
             {
                 ndParallels.DataBindings.Clear();
                 ndChunkSize.DataBindings.Clear();
@@ -67,8 +67,8 @@ namespace AppUI.ui
                 ndChunkSize.Value   = _uiWorkLoad.ChunkSize;
             }
 
-            btnQueue.Enabled = !(_workLoad.IsRunning || _workLoad.CdmProcessed);
-            btnStop.Enabled  = _workLoad.IsRunning && !_workLoad.CdmProcessed;
+            btnQueue.Enabled = !(_workLoad.Isrunning || _workLoad.Cdmprocessed);
+            btnStop.Enabled  = _workLoad.Isrunning && !_workLoad.Cdmprocessed;
 
             tbWlName.DataBindings.Clear();
             dtWlDate.DataBindings.Clear();
@@ -76,20 +76,20 @@ namespace AppUI.ui
             tbWlName.DataBindings.Add("Text", _uiWorkLoad, "Name");
             dtWlDate.DataBindings.Add("Value", _uiWorkLoad, "ReleaseDate");
 
-            txtFull.Text      = _workLoad.CdmProcessed.ToString();
+            txtFull.Text      = _workLoad.Cdmprocessed.ToString();
             txtIdx.Text       = _workLoad.indices_loaded.ToString();
-            txtRun.Text       = _workLoad.IsRunning.ToString();
-            txtChunkLoad.Text = _workLoad.ChunksLoaded.ToString();
+            txtRun.Text       = _workLoad.Isrunning.ToString();
+            txtChunkLoad.Text = _workLoad.Chunksloaded.ToString();
             txtPsChunk.Text   = _workLoad.post_chunk_loaded.ToString();
-            txtPChunk.Text    = _workLoad.CdmLoaded.ToString();
-            txtChunkSet.Text  = _workLoad.ChunksSetup.ToString();
+            txtPChunk.Text    = _workLoad.Cdmloaded.ToString();
+            txtChunkSet.Text  = _workLoad.Chunkssetup.ToString();
         }
 
         private void SchemaTab()
         {
             if (null == _uiDbSchema) _uiDbSchema = new UIDbSchema(_workLoad.Id);
-            if (!(_workLoad.CdmProcessed || _workLoad.IsRunning || _workLoad.ChunksLoaded || _workLoad.ChunksSetup ||
-                  _workLoad.indices_loaded || _workLoad.post_chunk_loaded || _workLoad.CdmLoaded))
+            if (!(_workLoad.Cdmprocessed || _workLoad.Isrunning || _workLoad.Chunksloaded || _workLoad.Chunkssetup ||
+                  _workLoad.indices_loaded || _workLoad.post_chunk_loaded || _workLoad.Cdmloaded))
             {
                 scServer.DataBindings.Clear();
                 scDb.DataBindings.Clear();
@@ -175,7 +175,9 @@ namespace AppUI.ui
             dgvProgress.Invoke(new Action(delegate
             {
                 dgvProgress.Rows.Clear();
-                _uiAnalysis.LoadAnalysis(lv => dgvProgress.Rows.Add(lv));
+                _uiAnalysis.LoadAnalysis(
+                    lv => dgvProgress.Rows.Add(lv),
+                    pb => pbItems.Value = (int) pb);
             }));
         }
 
@@ -384,8 +386,8 @@ namespace AppUI.ui
                 return;
             }
 
-            _workLoad.CdmProcessed = false;
-            _workLoad.IsRunning    = false;
+            _workLoad.Cdmprocessed = false;
+            _workLoad.Isrunning    = false;
             _workLoad.Save();
             MessageBox.Show(@"Workload Scheduled!", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }

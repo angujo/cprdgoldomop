@@ -20,30 +20,30 @@ namespace AppUI.models
         
         public int ChunkSize
         {
-            get => _WorkLoad.ChunkSize;
+            get => _WorkLoad.Chunksize;
             set
             {
-                _WorkLoad.ChunkSize = value;
+                _WorkLoad.Chunksize = value;
                 PropagateChange();
             }
         }
         
         public int MaxParallels
         {
-            get => _WorkLoad.MaxParallels;
+            get => _WorkLoad.Maxparallels;
             set
             {
-                _WorkLoad.MaxParallels = value;
+                _WorkLoad.Maxparallels = value;
                 PropagateChange();
             }
         }
 
         public DateTime ReleaseDate
         {
-            get => _WorkLoad.ReleaseDate;
+            get => _WorkLoad.Releasedate;
             set
             {
-                _WorkLoad.ReleaseDate = value;
+                _WorkLoad.Releasedate = value;
                 PropagateChange();
             }
         }

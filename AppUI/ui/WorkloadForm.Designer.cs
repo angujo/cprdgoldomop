@@ -96,7 +96,7 @@ namespace AppUI.ui
             this.clmPName          = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmPValue         = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.cbPTimer          = new System.Windows.Forms.ComboBox();
-            this.progressBar1      = new System.Windows.Forms.ProgressBar();
+            this.pbItems           = new System.Windows.Forms.ProgressBar();
             this.tabChunks         = new System.Windows.Forms.TabPage();
             this.dgvChunks         = new System.Windows.Forms.DataGridView();
             this.clcOrdinal        = new System.Windows.Forms.DataGridViewTextBoxColumn();
@@ -648,7 +648,7 @@ namespace AppUI.ui
             this.tabProgress.AutoScroll = true;
             this.tabProgress.Controls.Add(this.dgvProgress);
             this.tabProgress.Controls.Add(this.cbPTimer);
-            this.tabProgress.Controls.Add(this.progressBar1);
+            this.tabProgress.Controls.Add(this.pbItems);
             this.tabProgress.Location                = new System.Drawing.Point(4, 22);
             this.tabProgress.Name                    = "tabProgress";
             this.tabProgress.Padding                 = new System.Windows.Forms.Padding(3);
@@ -718,13 +718,13 @@ namespace AppUI.ui
             this.cbPTimer.TabIndex             =  2;
             this.cbPTimer.SelectedIndexChanged += new System.EventHandler(this.cbPTimer_SelectedIndexChanged);
             // 
-            // progressBar1
+            // pbItems
             // 
-            this.progressBar1.Anchor   = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
-            this.progressBar1.Location = new System.Drawing.Point(120, 11);
-            this.progressBar1.Name     = "progressBar1";
-            this.progressBar1.Size     = new System.Drawing.Size(642, 16);
-            this.progressBar1.TabIndex = 0;
+            this.pbItems.Anchor   = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
+            this.pbItems.Location = new System.Drawing.Point(120, 11);
+            this.pbItems.Name     = "pbItems";
+            this.pbItems.Size     = new System.Drawing.Size(642, 16);
+            this.pbItems.TabIndex = 0;
             // 
             // tabChunks
             // 
@@ -1213,7 +1213,7 @@ namespace AppUI.ui
         private System.Windows.Forms.Label       label8;
         private System.Windows.Forms.Label       label9;
         private System.Windows.Forms.Label       label10;
-        private System.Windows.Forms.ProgressBar progressBar1;
+        private System.Windows.Forms.ProgressBar pbItems;
 
         private System.Windows.Forms.TextBox       scPassword;
         private System.Windows.Forms.TextBox       scServer;

@@ -37,8 +37,8 @@ namespace AppUI
             foreach (var workLoad in plans)
             {
                 var listViewItem = new ListViewItem(workLoad.Name);
-                listViewItem.SubItems.Add(workLoad.ReleaseDate.ToString("yy-MMM-dd ddd"));
-                listViewItem.SubItems.Add(workLoad.IsRunning ? "Running" : "Not Running");
+                listViewItem.SubItems.Add(workLoad.Releasedate.ToString("yy-MMM-dd ddd"));
+                listViewItem.SubItems.Add(workLoad.Isrunning ? "Running" : "Not Running");
                 listViewItem.Tag = workLoad;
 
                 lvWorkplans.Items.Add(listViewItem);
@@ -51,9 +51,6 @@ namespace AppUI
             txtServName.Text  = Consts.SERVICE_NAME;
             txtServTick.Text  = TimeSpan.FromMilliseconds(Consts.SERVICE_TIMER).ToString();
             txtSrvStatus.Text = _uiService.Status<string>(); // _serviceStatus.status.GetStringValue();
-            txtServLast.Text = 0 == _uiService.Status<int>()
-                ? _serviceStatus.lastrun.ToString("R")
-                : DateTime.Now.ToString("R");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -92,7 +89,7 @@ namespace AppUI
 
         private void btnServInstall_Click(object sender, EventArgs e)
         {
-            _uiService.Install();
+            (new ServiceInfoForm()).ShowDialog(this);
         }
     }
 }

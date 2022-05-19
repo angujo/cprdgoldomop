@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using System;
+using Util;
 
 namespace DBMS.models
 {
@@ -8,35 +9,36 @@ namespace DBMS.models
     {
         private int      _parallels = 3;
         public  string   Name              { get; set; }
-        public  DateTime ReleaseDate       { get; set; }
-        public  bool     FilesLocked       { get; set; }
-        public  bool     SourceProcessed   { get; set; }
-        public  bool     CdmLoaded         { get; set; }
-        public  bool     ChunksSetup       { get; set; }
-        public  bool     ChunksLoaded      { get; set; }
-        public  bool     CdmProcessed      { get; set; }
+        public  DateTime Releasedate       { get; set; }
+        public  bool     Fileslocked       { get; set; }
+        public  bool     Sourceprocessed   { get; set; }
+        public  bool     Cdmloaded         { get; set; }
+        public  bool     Chunkssetup       { get; set; }
+        public  bool     Chunksloaded      { get; set; }
+        public  bool     Cdmprocessed      { get; set; }
         public  bool     indices_loaded    { get; set; }
         public  bool     intervene         { get; set; }
         public  bool     post_chunk_loaded { get; set; }
-        public  int      ChunkSize         { get; set; }
-        public  bool     IsRunning         { get; set; }
+        public  int      Chunksize         { get; set; }
+        public  bool     Isrunning         { get; set; }
+        public  Status   Status            { get; set; }
 
-        public int MaxParallels
+        public int Maxparallels
         {
             get { return _parallels; }
             set { _parallels = value > 1 ? value : _parallels; }
         }
 
-        public int TestChunkCount { get; set; }
-        public int ChunkStart     { get; set; }
-        public int ChunkEnd       { get; set; }
+        public int Testchunkcount { get; set; }
+        public int Chunkstart     { get; set; }
+        public int Chunkend       { get; set; }
 
         public WorkLoad()
         {
-            ReleaseDate    = DateTime.Now;
-            ChunkSize      = 500;
-            MaxParallels   = 3;
-            TestChunkCount = 0;
+            Releasedate    = DateTime.Now;
+            Chunksize      = 500;
+            Maxparallels   = 3;
+            Testchunkcount = 0;
         }
     }
 }

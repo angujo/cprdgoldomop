@@ -34,15 +34,13 @@
             this.chRelease                       = new System.Windows.Forms.ColumnHeader();
             this.chStatus                        = new System.Windows.Forms.ColumnHeader();
             this.groupBox1                       = new System.Windows.Forms.GroupBox();
-            this.btnServInstall                  = new System.Windows.Forms.Button();
-            this.button3                         = new System.Windows.Forms.Button();
-            this.button2                         = new System.Windows.Forms.Button();
             this.txtServName                     = new System.Windows.Forms.Label();
-            this.txtServLast                     = new System.Windows.Forms.Label();
+            this.txtServTick                     = new System.Windows.Forms.Label();
             this.txtSrvStatus                    = new System.Windows.Forms.Label();
-            this.label3                          = new System.Windows.Forms.Label();
+            this.label4                          = new System.Windows.Forms.Label();
             this.label2                          = new System.Windows.Forms.Label();
             this.label1                          = new System.Windows.Forms.Label();
+            this.btnServInstall                  = new System.Windows.Forms.Button();
             this.statusStrip1                    = new System.Windows.Forms.StatusStrip();
             this.toolStripProgressBar1           = new System.Windows.Forms.ToolStripProgressBar();
             this.menuStrip1                      = new System.Windows.Forms.MenuStrip();
@@ -51,8 +49,6 @@
             this.closeToolStripMenuItem          = new System.Windows.Forms.ToolStripMenuItem();
             this.minimizeToTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.groupBox2                       = new System.Windows.Forms.GroupBox();
-            this.label4                          = new System.Windows.Forms.Label();
-            this.txtServTick                     = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
@@ -75,10 +71,10 @@
             this.lvWorkplans.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chName, this.chRelease, this.chStatus});
             this.lvWorkplans.FullRowSelect                   =  true;
             this.lvWorkplans.GridLines                       =  true;
-            this.lvWorkplans.Location                        =  new System.Drawing.Point(12, 175);
+            this.lvWorkplans.Location                        =  new System.Drawing.Point(12, 125);
             this.lvWorkplans.MultiSelect                     =  false;
             this.lvWorkplans.Name                            =  "lvWorkplans";
-            this.lvWorkplans.Size                            =  new System.Drawing.Size(776, 263);
+            this.lvWorkplans.Size                            =  new System.Drawing.Size(776, 313);
             this.lvWorkplans.TabIndex                        =  1;
             this.lvWorkplans.UseCompatibleStateImageBehavior =  false;
             this.lvWorkplans.View                            =  System.Windows.Forms.View.Details;
@@ -103,46 +99,16 @@
             // 
             this.groupBox1.Controls.Add(this.txtServName);
             this.groupBox1.Controls.Add(this.txtServTick);
-            this.groupBox1.Controls.Add(this.txtServLast);
             this.groupBox1.Controls.Add(this.txtSrvStatus);
             this.groupBox1.Controls.Add(this.label4);
-            this.groupBox1.Controls.Add(this.label3);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name     = "groupBox1";
-            this.groupBox1.Size     = new System.Drawing.Size(412, 125);
+            this.groupBox1.Size     = new System.Drawing.Size(412, 92);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop  = false;
             this.groupBox1.Text     = "Service";
-            // 
-            // btnServInstall
-            // 
-            this.btnServInstall.Location                =  new System.Drawing.Point(118, 19);
-            this.btnServInstall.Name                    =  "btnServInstall";
-            this.btnServInstall.Size                    =  new System.Drawing.Size(106, 23);
-            this.btnServInstall.TabIndex                =  7;
-            this.btnServInstall.Text                    =  "Install";
-            this.btnServInstall.UseVisualStyleBackColor =  true;
-            this.btnServInstall.Click                   += new System.EventHandler(this.btnServInstall_Click);
-            // 
-            // button3
-            // 
-            this.button3.Location                = new System.Drawing.Point(118, 48);
-            this.button3.Name                    = "button3";
-            this.button3.Size                    = new System.Drawing.Size(106, 23);
-            this.button3.TabIndex                = 6;
-            this.button3.Text                    = "Start Service";
-            this.button3.UseVisualStyleBackColor = true;
-            // 
-            // button2
-            // 
-            this.button2.Location                = new System.Drawing.Point(6, 48);
-            this.button2.Name                    = "button2";
-            this.button2.Size                    = new System.Drawing.Size(106, 23);
-            this.button2.TabIndex                = 5;
-            this.button2.Text                    = "Stop Service";
-            this.button2.UseVisualStyleBackColor = true;
             // 
             // txtServName
             // 
@@ -152,13 +118,13 @@
             this.txtServName.TabIndex = 4;
             this.txtServName.Text     = "Service 101";
             // 
-            // txtServLast
+            // txtServTick
             // 
-            this.txtServLast.Location = new System.Drawing.Point(112, 62);
-            this.txtServLast.Name     = "txtServLast";
-            this.txtServLast.Size     = new System.Drawing.Size(140, 23);
-            this.txtServLast.TabIndex = 3;
-            this.txtServLast.Text     = "[Unknown]";
+            this.txtServTick.Location = new System.Drawing.Point(112, 62);
+            this.txtServTick.Name     = "txtServTick";
+            this.txtServTick.Size     = new System.Drawing.Size(140, 23);
+            this.txtServTick.TabIndex = 3;
+            this.txtServTick.Text     = "[Unknown]";
             // 
             // txtSrvStatus
             // 
@@ -168,13 +134,13 @@
             this.txtSrvStatus.TabIndex = 3;
             this.txtSrvStatus.Text     = "Running";
             // 
-            // label3
+            // label4
             // 
-            this.label3.Location = new System.Drawing.Point(6, 62);
-            this.label3.Name     = "label3";
-            this.label3.Size     = new System.Drawing.Size(100, 23);
-            this.label3.TabIndex = 2;
-            this.label3.Text     = "Last Run";
+            this.label4.Location = new System.Drawing.Point(6, 62);
+            this.label4.Name     = "label4";
+            this.label4.Size     = new System.Drawing.Size(100, 23);
+            this.label4.TabIndex = 2;
+            this.label4.Text     = "Tick";
             // 
             // label2
             // 
@@ -191,6 +157,16 @@
             this.label1.Size     = new System.Drawing.Size(100, 23);
             this.label1.TabIndex = 1;
             this.label1.Text     = "Name";
+            // 
+            // btnServInstall
+            // 
+            this.btnServInstall.Location                =  new System.Drawing.Point(118, 19);
+            this.btnServInstall.Name                    =  "btnServInstall";
+            this.btnServInstall.Size                    =  new System.Drawing.Size(152, 23);
+            this.btnServInstall.TabIndex                =  7;
+            this.btnServInstall.Text                    =  "? Service (Un)Install";
+            this.btnServInstall.UseVisualStyleBackColor =  true;
+            this.btnServInstall.Click                   += new System.EventHandler(this.btnServInstall_Click);
             // 
             // statusStrip1
             // 
@@ -246,31 +222,13 @@
             // groupBox2
             // 
             this.groupBox2.Controls.Add(this.btnServInstall);
-            this.groupBox2.Controls.Add(this.button3);
             this.groupBox2.Controls.Add(this.button1);
-            this.groupBox2.Controls.Add(this.button2);
             this.groupBox2.Location = new System.Drawing.Point(430, 28);
             this.groupBox2.Name     = "groupBox2";
-            this.groupBox2.Size     = new System.Drawing.Size(358, 100);
+            this.groupBox2.Size     = new System.Drawing.Size(358, 91);
             this.groupBox2.TabIndex = 5;
             this.groupBox2.TabStop  = false;
             this.groupBox2.Text     = "Actions";
-            // 
-            // label4
-            // 
-            this.label4.Location = new System.Drawing.Point(6, 85);
-            this.label4.Name     = "label4";
-            this.label4.Size     = new System.Drawing.Size(100, 23);
-            this.label4.TabIndex = 2;
-            this.label4.Text     = "Tick";
-            // 
-            // txtServTick
-            // 
-            this.txtServTick.Location = new System.Drawing.Point(112, 85);
-            this.txtServTick.Name     = "txtServTick";
-            this.txtServTick.Size     = new System.Drawing.Size(140, 23);
-            this.txtServTick.TabIndex = 3;
-            this.txtServTick.Text     = "[Unknown]";
             // 
             // MainForm
             // 
@@ -301,9 +259,6 @@
 
         private System.Windows.Forms.Button btnServInstall;
 
-        private System.Windows.Forms.Label label3;
-        private System.Windows.Forms.Label txtServLast;
-
         private System.Windows.Forms.ToolStripMenuItem infoToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem closeToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem minimizeToTrayToolStripMenuItem;
@@ -326,8 +281,6 @@
         private System.Windows.Forms.Label    label2;
         private System.Windows.Forms.Label    txtSrvStatus;
         private System.Windows.Forms.Label    txtServName;
-        private System.Windows.Forms.Button   button2;
-        private System.Windows.Forms.Button   button3;
 
         private System.Windows.Forms.Button button1;
 

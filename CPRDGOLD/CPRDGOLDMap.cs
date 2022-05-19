@@ -45,7 +45,7 @@ namespace CPRDGOLD
                     Chunk.ForPost();
                     Chunk.ForIndexes();
 
-                    if (appDBMS.workload.ChunksLoaded)
+                    if (appDBMS.workload.Chunksloaded)
                     {
                         PostSetup();
                         appDBMS.CleanupNonChunk(-3, "post_chunk_loaded");
@@ -53,10 +53,10 @@ namespace CPRDGOLD
                         PostIndices();
                         appDBMS.CleanupNonChunk(-2, "indices_loaded");
 
-                        if (appDBMS.workload.ChunksLoaded && appDBMS.workload.ChunksSetup &&
+                        if (appDBMS.workload.Chunksloaded && appDBMS.workload.Chunkssetup &&
                             appDBMS.workload.post_chunk_loaded && appDBMS.workload.indices_loaded)
                         {
-                            appDBMS.workload.CdmProcessed = true;
+                            appDBMS.workload.Cdmprocessed = true;
                             appDBMS.workload.Save();
                         }
                     }
@@ -91,9 +91,9 @@ namespace CPRDGOLD
 
         private static void RunChunks()
         {
-            if (!appDBMS.workload.ChunksSetup)
+            if (!appDBMS.workload.Chunkssetup)
             {
-                appDBMS.workload.ChunksLoaded = false;
+                appDBMS.workload.Chunksloaded = false;
                 return;
             }
 
@@ -103,7 +103,7 @@ namespace CPRDGOLD
             Parallel.ForEach(ordinals,
                              new ParallelOptions
                              {
-                                 MaxDegreeOfParallelism = appDBMS.workload.MaxParallels,
+                                 MaxDegreeOfParallelism = appDBMS.workload.Maxparallels,
                                  CancellationToken      = Runner.Token
                              },
                              chunkOrdinal =>
@@ -156,7 +156,7 @@ namespace CPRDGOLD
                              });
 
             appDBMS.CleanUpChunks();
-            if (!appDBMS.workload.ChunksLoaded) RunChunks(); // Chunks are not fully run, redo
+            if (!appDBMS.workload.Chunksloaded) RunChunks(); // Chunks are not fully run, redo
         }
 
         private static void ChunkBased(Chunk chunk)
@@ -237,7 +237,7 @@ namespace CPRDGOLD
             {
                 var chunks = new ChunkSetup();
                 chunks.Create();
-                chunks.ChunkLoad(appDBMS.workload.ChunkSize);
+                chunks.ChunkLoad(appDBMS.workload.Chunksize);
             });
 
             Chunk.SUImplement(LoadType.CHUNKLOAD, () =>

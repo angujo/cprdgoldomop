@@ -24,7 +24,7 @@ namespace OMOPBuilderService
                 Intervene();
                 if (0 == r) Action();
                 r++;
-                r = 0 == (r % Consts.SERVICE_CHECKS) ? 0 : r;
+                r = 0 == r % Consts.SERVICE_CHECKS ? 0 : r;
             };
         }
 
@@ -32,14 +32,16 @@ namespace OMOPBuilderService
         {
             if (default == _workload_id) return;
             WorkLoad wl;
-            if ((wl = DB.Internal.Load<WorkLoad>(_workload_id))?.Id == default || wl.intervene) return;
+            if ((wl = DB.Internal.Load<WorkLoad>(_workload_id))?.Id == default ||
+                (wl.intervene && Status.RUNNING != wl.Status)) return;
             wl.intervene = true;
+            wl.Status    = Status.STOPPED;
             wl.Save();
 
             Runner.TokenSource.Cancel();
         }
 
-        public void Action()
+        private void Action()
         {
             Log.Warning("Service Checkup Round...");
             // Do Cleanup in the system.

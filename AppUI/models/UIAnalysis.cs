@@ -12,13 +12,15 @@ namespace AppUI.models
     public class UIAnalysis : UIModel
     {
         private long workload_id;
+        private long totalChunks;
+        private long finishedItems;
 
         public UIAnalysis(long work_id)
         {
             workload_id = work_id;
         }
 
-        public void LoadAnalysis(Action<object[]> action)
+        public void LoadAnalysis(Action<object[]> action, Action<long> progress)
         {
             foreach (var analysis in theData())
             {
@@ -26,12 +28,15 @@ namespace AppUI.models
                 // lv.SubItems.Add();
                 action(new object[] {analysis.txt, analysis.value});
             }
+
+            progress(generalProgress());
         }
 
         private IEnumerable<StatusView> theData()
         {
-            long     totalChunks = 0, finishedChunks = 0;
-            TimeSpan chunkTime   = default;
+            totalChunks = finishedItems = 0;
+            long     finishedChunks     = 0;
+            TimeSpan chunkTime          = default;
             foreach (var statusView in DB.Internal.GetAll<StatusView>("WHERE workloadid = @wlid",
                                                                       new {wlid = workload_id}))
             {
@@ -45,6 +50,7 @@ namespace AppUI.models
                         continue;
                     case "item_count":
                         statusView.txt = ((Status) num).GetStringValue() + " Items Count";
+                        if ((int) Status.FINISHED == num) finishedItems += Convert.ToInt64(statusView.value);
                         break;
                     case "chunk_count":
                         statusView.txt =  ((Status) num).GetStringValue() + " Chunks Count";
@@ -64,7 +70,8 @@ namespace AppUI.models
             if (default != chunkTime && finishedChunks > 0)
             {
                 var r = Convert.ToInt64((totalChunks - finishedChunks) * chunkTime.TotalMilliseconds / finishedChunks);
-                yield return new StatusView {txt = "Remaining Chunks Time", value = TimeSpan.FromMilliseconds(r).ToString()};
+                yield return new StatusView
+                    {txt = "Remaining Chunks Time", value = TimeSpan.FromMilliseconds(r).ToString()};
                 if (r > 0)
                     yield return new StatusView
                         {txt = "Est. Chunks Finish", value = DateTime.Now.AddMilliseconds(r).ToString()};
@@ -79,6 +86,15 @@ namespace AppUI.models
                     value = (finishedChunks / chunkTime.TotalMinutes).ToString()
                 };
             }
+        }
+
+        private long generalProgress()
+        {
+            var expItems = (totalChunks * EnumGroups.CHUNK_LOAD_TYPES.Length) +
+                           EnumGroups.ONCE_LOAD_TYPES.Length +
+                           EnumGroups.POST_LOAD_TYPES.Length +
+                           EnumGroups.INDICES_LOAD_TYPES.Length;
+            return Convert.ToInt64(finishedItems * 100 / expItems);
         }
     }
 }
