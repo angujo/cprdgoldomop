@@ -28,7 +28,7 @@ namespace CPRDGOLD.mergers
                 ()=>stem.Test(),
                 ()=>stem.Therapy(),
             };
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions,Runner.ParallelOptions, action => action());
             Log.Info($"Total Data StemTable [{stem.data.Count}]");
             Log.Info("Finished StemTable Creator");
             return stem;

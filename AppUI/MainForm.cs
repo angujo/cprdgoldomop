@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using AppUI.models;
 using AppUI.ui;
 using DBMS;
 using DBMS.models;
@@ -18,10 +19,12 @@ namespace AppUI
     {
         private WorkloadForm  activeWorkload;
         private Servicestatus _serviceStatus;
+        private UIService     _uiService;
 
         public MainForm()
         {
             InitializeComponent();
+            _uiService = new UIService();
             loadWorkPlans();
             LoadService();
         }
@@ -45,9 +48,12 @@ namespace AppUI
         private void LoadService()
         {
             _serviceStatus    = DB.Internal.Load<Servicestatus>();
-            txtServName.Text  = _serviceStatus.servicename;
-            txtSrvStatus.Text = _serviceStatus.status.GetStringValue();
-            txtServLast.Text  = _serviceStatus.lastrun.ToString("R");
+            txtServName.Text  = Consts.SERVICE_NAME;
+            txtServTick.Text  = TimeSpan.FromMilliseconds(Consts.SERVICE_TIMER).ToString();
+            txtSrvStatus.Text = _uiService.Status<string>(); // _serviceStatus.status.GetStringValue();
+            txtServLast.Text = 0 == _uiService.Status<int>()
+                ? _serviceStatus.lastrun.ToString("R")
+                : DateTime.Now.ToString("R");
         }
 
         private void button1_Click(object sender, EventArgs e)
@@ -82,6 +88,11 @@ namespace AppUI
         private void minimizeToTrayToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Hide();
+        }
+
+        private void btnServInstall_Click(object sender, EventArgs e)
+        {
+            _uiService.Install();
         }
     }
 }

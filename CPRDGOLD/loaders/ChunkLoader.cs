@@ -215,7 +215,7 @@ namespace CPRDGOLD.loaders
         {
             Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
             Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
-            Parallel.ForEach(dataset, new ParallelOptions { MaxDegreeOfParallelism = 10 }, c => looper(c));
+            Parallel.ForEach(dataset, new ParallelOptions { MaxDegreeOfParallelism = 10,CancellationToken = Runner.Token}, c => looper(c));
             Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 

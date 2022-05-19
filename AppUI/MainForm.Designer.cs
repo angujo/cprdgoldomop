@@ -34,10 +34,13 @@
             this.chRelease                       = new System.Windows.Forms.ColumnHeader();
             this.chStatus                        = new System.Windows.Forms.ColumnHeader();
             this.groupBox1                       = new System.Windows.Forms.GroupBox();
+            this.btnServInstall                  = new System.Windows.Forms.Button();
             this.button3                         = new System.Windows.Forms.Button();
             this.button2                         = new System.Windows.Forms.Button();
             this.txtServName                     = new System.Windows.Forms.Label();
+            this.txtServLast                     = new System.Windows.Forms.Label();
             this.txtSrvStatus                    = new System.Windows.Forms.Label();
+            this.label3                          = new System.Windows.Forms.Label();
             this.label2                          = new System.Windows.Forms.Label();
             this.label1                          = new System.Windows.Forms.Label();
             this.statusStrip1                    = new System.Windows.Forms.StatusStrip();
@@ -47,16 +50,18 @@
             this.infoToolStripMenuItem           = new System.Windows.Forms.ToolStripMenuItem();
             this.closeToolStripMenuItem          = new System.Windows.Forms.ToolStripMenuItem();
             this.minimizeToTrayToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
-            this.label3                          = new System.Windows.Forms.Label();
-            this.txtServLast                     = new System.Windows.Forms.Label();
+            this.groupBox2                       = new System.Windows.Forms.GroupBox();
+            this.label4                          = new System.Windows.Forms.Label();
+            this.txtServTick                     = new System.Windows.Forms.Label();
             this.groupBox1.SuspendLayout();
             this.statusStrip1.SuspendLayout();
             this.menuStrip1.SuspendLayout();
+            this.groupBox2.SuspendLayout();
             this.SuspendLayout();
             // 
             // button1
             // 
-            this.button1.Location                =  new System.Drawing.Point(302, 11);
+            this.button1.Location                =  new System.Drawing.Point(6, 19);
             this.button1.Name                    =  "button1";
             this.button1.Size                    =  new System.Drawing.Size(106, 23);
             this.button1.TabIndex                =  0;
@@ -70,10 +75,10 @@
             this.lvWorkplans.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {this.chName, this.chRelease, this.chStatus});
             this.lvWorkplans.FullRowSelect                   =  true;
             this.lvWorkplans.GridLines                       =  true;
-            this.lvWorkplans.Location                        =  new System.Drawing.Point(12, 148);
+            this.lvWorkplans.Location                        =  new System.Drawing.Point(12, 175);
             this.lvWorkplans.MultiSelect                     =  false;
             this.lvWorkplans.Name                            =  "lvWorkplans";
-            this.lvWorkplans.Size                            =  new System.Drawing.Size(776, 290);
+            this.lvWorkplans.Size                            =  new System.Drawing.Size(776, 263);
             this.lvWorkplans.TabIndex                        =  1;
             this.lvWorkplans.UseCompatibleStateImageBehavior =  false;
             this.lvWorkplans.View                            =  System.Windows.Forms.View.Details;
@@ -96,25 +101,34 @@
             // 
             // groupBox1
             // 
-            this.groupBox1.Controls.Add(this.button3);
-            this.groupBox1.Controls.Add(this.button2);
             this.groupBox1.Controls.Add(this.txtServName);
+            this.groupBox1.Controls.Add(this.txtServTick);
             this.groupBox1.Controls.Add(this.txtServLast);
             this.groupBox1.Controls.Add(this.txtSrvStatus);
+            this.groupBox1.Controls.Add(this.label4);
             this.groupBox1.Controls.Add(this.label3);
-            this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.label2);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Location = new System.Drawing.Point(12, 27);
             this.groupBox1.Name     = "groupBox1";
-            this.groupBox1.Size     = new System.Drawing.Size(540, 101);
+            this.groupBox1.Size     = new System.Drawing.Size(412, 125);
             this.groupBox1.TabIndex = 2;
             this.groupBox1.TabStop  = false;
             this.groupBox1.Text     = "Service";
             // 
+            // btnServInstall
+            // 
+            this.btnServInstall.Location                =  new System.Drawing.Point(118, 19);
+            this.btnServInstall.Name                    =  "btnServInstall";
+            this.btnServInstall.Size                    =  new System.Drawing.Size(106, 23);
+            this.btnServInstall.TabIndex                =  7;
+            this.btnServInstall.Text                    =  "Install";
+            this.btnServInstall.UseVisualStyleBackColor =  true;
+            this.btnServInstall.Click                   += new System.EventHandler(this.btnServInstall_Click);
+            // 
             // button3
             // 
-            this.button3.Location                = new System.Drawing.Point(414, 40);
+            this.button3.Location                = new System.Drawing.Point(118, 48);
             this.button3.Name                    = "button3";
             this.button3.Size                    = new System.Drawing.Size(106, 23);
             this.button3.TabIndex                = 6;
@@ -123,7 +137,7 @@
             // 
             // button2
             // 
-            this.button2.Location                = new System.Drawing.Point(302, 40);
+            this.button2.Location                = new System.Drawing.Point(6, 48);
             this.button2.Name                    = "button2";
             this.button2.Size                    = new System.Drawing.Size(106, 23);
             this.button2.TabIndex                = 5;
@@ -134,17 +148,33 @@
             // 
             this.txtServName.Location = new System.Drawing.Point(112, 16);
             this.txtServName.Name     = "txtServName";
-            this.txtServName.Size     = new System.Drawing.Size(184, 23);
+            this.txtServName.Size     = new System.Drawing.Size(140, 23);
             this.txtServName.TabIndex = 4;
             this.txtServName.Text     = "Service 101";
+            // 
+            // txtServLast
+            // 
+            this.txtServLast.Location = new System.Drawing.Point(112, 62);
+            this.txtServLast.Name     = "txtServLast";
+            this.txtServLast.Size     = new System.Drawing.Size(140, 23);
+            this.txtServLast.TabIndex = 3;
+            this.txtServLast.Text     = "[Unknown]";
             // 
             // txtSrvStatus
             // 
             this.txtSrvStatus.Location = new System.Drawing.Point(112, 39);
             this.txtSrvStatus.Name     = "txtSrvStatus";
-            this.txtSrvStatus.Size     = new System.Drawing.Size(184, 23);
+            this.txtSrvStatus.Size     = new System.Drawing.Size(140, 23);
             this.txtSrvStatus.TabIndex = 3;
             this.txtSrvStatus.Text     = "Running";
+            // 
+            // label3
+            // 
+            this.label3.Location = new System.Drawing.Point(6, 62);
+            this.label3.Name     = "label3";
+            this.label3.Size     = new System.Drawing.Size(100, 23);
+            this.label3.TabIndex = 2;
+            this.label3.Text     = "Last Run";
             // 
             // label2
             // 
@@ -213,27 +243,41 @@
             this.minimizeToTrayToolStripMenuItem.Text  =  "Minimize To Tray";
             this.minimizeToTrayToolStripMenuItem.Click += new System.EventHandler(this.minimizeToTrayToolStripMenuItem_Click);
             // 
-            // label3
+            // groupBox2
             // 
-            this.label3.Location = new System.Drawing.Point(6, 62);
-            this.label3.Name     = "label3";
-            this.label3.Size     = new System.Drawing.Size(100, 23);
-            this.label3.TabIndex = 2;
-            this.label3.Text     = "Last Run";
+            this.groupBox2.Controls.Add(this.btnServInstall);
+            this.groupBox2.Controls.Add(this.button3);
+            this.groupBox2.Controls.Add(this.button1);
+            this.groupBox2.Controls.Add(this.button2);
+            this.groupBox2.Location = new System.Drawing.Point(430, 28);
+            this.groupBox2.Name     = "groupBox2";
+            this.groupBox2.Size     = new System.Drawing.Size(358, 100);
+            this.groupBox2.TabIndex = 5;
+            this.groupBox2.TabStop  = false;
+            this.groupBox2.Text     = "Actions";
             // 
-            // txtServLast
+            // label4
             // 
-            this.txtServLast.Location = new System.Drawing.Point(112, 62);
-            this.txtServLast.Name     = "txtServLast";
-            this.txtServLast.Size     = new System.Drawing.Size(184, 23);
-            this.txtServLast.TabIndex = 3;
-            this.txtServLast.Text     = "[Unknown]";
+            this.label4.Location = new System.Drawing.Point(6, 85);
+            this.label4.Name     = "label4";
+            this.label4.Size     = new System.Drawing.Size(100, 23);
+            this.label4.TabIndex = 2;
+            this.label4.Text     = "Tick";
+            // 
+            // txtServTick
+            // 
+            this.txtServTick.Location = new System.Drawing.Point(112, 85);
+            this.txtServTick.Name     = "txtServTick";
+            this.txtServTick.Size     = new System.Drawing.Size(140, 23);
+            this.txtServTick.TabIndex = 3;
+            this.txtServTick.Text     = "[Unknown]";
             // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize          = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.statusStrip1);
             this.Controls.Add(this.menuStrip1);
             this.Controls.Add(this.groupBox1);
@@ -246,9 +290,16 @@
             this.statusStrip1.PerformLayout();
             this.menuStrip1.ResumeLayout(false);
             this.menuStrip1.PerformLayout();
+            this.groupBox2.ResumeLayout(false);
             this.ResumeLayout(false);
             this.PerformLayout();
         }
+
+        private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label    label4;
+        private System.Windows.Forms.Label    txtServTick;
+
+        private System.Windows.Forms.Button btnServInstall;
 
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.Label txtServLast;

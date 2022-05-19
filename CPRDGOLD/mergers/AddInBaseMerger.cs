@@ -82,7 +82,7 @@ namespace CPRDGOLD.mergers
                     () => bm.ForUnion10(addInBase),
                     () => bm.ForUnion11(addInBase),
                 };
-               Parallel.ForEach(actions, action => action());
+               Parallel.ForEach(actions,Runner.ParallelOptions, action => action());
            });
             foreach (var un in bm.unions) Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
             Log.Info("Finished AddInBase Loader!");
@@ -97,7 +97,7 @@ namespace CPRDGOLD.mergers
                 return;
             }
             Log.Info($"Started Loading Union #{union} Data: [{unions[union].Count}]!");
-            Parallel.ForEach(unions[union], abAct);
+            Parallel.ForEach(unions[union],Runner.ParallelOptions, abAct);
             // foreach (var item in GetMe(chunk).unions[union]) abAct(item);
             Log.Info($"Finished Loading Union #{union}!");
         }

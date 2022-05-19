@@ -41,7 +41,7 @@ namespace CPRDGOLD.mergers
                 ()=>addM.Union10(),
                 ()=>addM.Union11(),
             };
-            Parallel.ForEach(unions, union => union());
+            Parallel.ForEach(unions,Runner.ParallelOptions, union => union());
             Log.Info($"Total AddIn Table Data: {addM.data.Count}");
             if (0 == addM.data.Count) Log.Info("No AddIn Data for Source to standards");
             else

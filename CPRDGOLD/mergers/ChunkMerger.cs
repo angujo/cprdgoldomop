@@ -8,21 +8,28 @@ namespace CPRDGOLD.mergers
 {
     internal abstract class ChunkMerger<T, C> where T : new()
     {
-        protected Chunk chunk;
-        protected ConcurrentBag<C> data = new ConcurrentBag<C>();
+        protected        Chunk                        chunk;
+        protected        ConcurrentBag<C>             data       = new ConcurrentBag<C>();
         protected static ConcurrentDictionary<int, T> _instances = new ConcurrentDictionary<int, T>();
-        protected ChunkMerger(Chunk chunk) { this.chunk = chunk; chunk.AddCleaner(Clear); }
 
-        public ChunkMerger() { }
+        protected ChunkMerger(Chunk chunk)
+        {
+            this.chunk = chunk;
+            chunk.AddCleaner(Clear);
+        }
+
+        public ChunkMerger()
+        {
+        }
 
         protected void Add(C c) => data.Add(c);
 
         public static T Init(Chunk chunk)
         {
             var _inst = new T();
-            ((ChunkMerger<T, C>)(object)_inst).chunk = chunk;
+            ((ChunkMerger<T, C>) (object) _inst).chunk = chunk;
             Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
-            ((ChunkMerger<T, C>)(object)_inst).LoadData();
+            ((ChunkMerger<T, C>) (object) _inst).LoadData();
             Log.Info($"Finished Data Load #ChunkMerger [{typeof(T).Name}]");
             return _inst;
         }
@@ -65,7 +72,9 @@ namespace CPRDGOLD.mergers
         {
             Log.Info($"Starting LoopAll #{typeof(T).Name}");
             Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
-            Parallel.ForEach(data, new ParallelOptions { MaxDegreeOfParallelism = 10 }, c => looper(c));
+            Parallel.ForEach(data,
+                             new ParallelOptions {MaxDegreeOfParallelism = 10, CancellationToken = Runner.Token},
+                             c => looper(c));
             Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 

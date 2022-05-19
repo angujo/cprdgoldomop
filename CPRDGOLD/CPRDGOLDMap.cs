@@ -17,7 +17,7 @@ namespace CPRDGOLD
     {
         private static AppDBMS appDBMS;
 
-        public static void Run(Action<bool> isUp)
+        public static void Run(Action<long, bool> isUp)
         {
             Log.Warning("Checking Workload to proccess...");
             appDBMS = new AppDBMS();
@@ -32,7 +32,7 @@ namespace CPRDGOLD
                 Log.Info("We are in a workload proccess...");
                 try
                 {
-                    isUp(true);
+                    isUp(appDBMS.workload.Id, true);
                     Chunk.WorkLoadId = appDBMS.workload.Id;
 
                     appDBMS.StartQueue();
@@ -71,7 +71,7 @@ namespace CPRDGOLD
                 }
                 finally
                 {
-                    isUp(false);
+                    isUp(appDBMS.workload.Id, false);
                 }
 
                 Log.Info("We are Done...");
@@ -100,7 +100,12 @@ namespace CPRDGOLD
             appDBMS.CleanUpChunks();
             var ordinals = appDBMS.ChunkOrdinals().ToArray();
 
-            Parallel.ForEach(ordinals, new ParallelOptions {MaxDegreeOfParallelism = appDBMS.workload.MaxParallels},
+            Parallel.ForEach(ordinals,
+                             new ParallelOptions
+                             {
+                                 MaxDegreeOfParallelism = appDBMS.workload.MaxParallels,
+                                 CancellationToken      = Runner.Token
+                             },
                              chunkOrdinal =>
                              {
                                  var chunk = new Chunk
@@ -139,7 +144,7 @@ namespace CPRDGOLD
                                          () => StemTableUsers(chunk),
                                          () => ChunkBased(chunk),
                                      };
-                                     Parallel.ForEach(actions, action => action());
+                                     Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
 
                                      chunk.Implemented();
                                  }
@@ -156,7 +161,7 @@ namespace CPRDGOLD
 
         private static void ChunkBased(Chunk chunk)
         {
-          chunk.Log.Info("Starting for Chunk entries...");
+            chunk.Log.Info("Starting for Chunk entries...");
             var actions = new List<Action>
             {
                 () => chunk.Implement(LoadType.PERSON, () => Person.InsertSets(chunk)),
@@ -165,7 +170,7 @@ namespace CPRDGOLD
                 () => chunk.Implement(LoadType.VISIT_OCCURRENCE, () => VisitOccurrence.InsertSets(chunk)),
                 () => chunk.Implement(LoadType.DEATH, () => Death.InsertSets(chunk)),
             };
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
             chunk.Log.Info("Finished Chunk entries!");
         }
 
@@ -199,7 +204,7 @@ namespace CPRDGOLD
                 () => chunk.Implement(LoadType.PROCEDUREEXPOSURE,
                                       () => ProcedureOccurrence.InsertSets(chunk, stemTable)),
             };
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
             Log.Info("Finished StemTable entries!");
         }
 
@@ -215,7 +220,7 @@ namespace CPRDGOLD
                 () => Chunk.SUImplement(LoadType.COHORTDEFINITION, () => CohortDefinition.InsertSets())
             };
 
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
         }
 
         private static void Setups()
@@ -280,7 +285,7 @@ namespace CPRDGOLD
                     })
             };
 
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
         }
 
         private static void InitializeLoaders()
@@ -301,7 +306,7 @@ namespace CPRDGOLD
                 SourceToConceptMapLoader.Initialize,
                 StaffLoader.Initialize,
             };
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
             Log.Info("Finished Full Initializers");
         }
 
@@ -319,7 +324,7 @@ namespace CPRDGOLD
                 () => Chunk.PostImplement(LoadType.P_VISIT_DETAIL, PostMap.Implement<PostVisitDetail>),
             };
 
-            Parallel.ForEach(actions, action => action());
+            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
             Log.Info("Finished Post Chunk Setup");
         }
 
@@ -373,7 +378,10 @@ namespace CPRDGOLD
                 // () => Chunk.IDXImplement(LoadType.IDX_DOMAIN, () => PostIndex.Implement("domain")),
                 // () => Chunk.IDXImplement(LoadType.IDX_RELATIONSHIP, () => PostIndex.Implement("relationship")),
             };
-            Parallel.ForEach(actions, new ParallelOptions {MaxDegreeOfParallelism = 5}, action => action());
+            Parallel.ForEach(
+                actions,
+                new ParallelOptions {MaxDegreeOfParallelism = 5, CancellationToken = Runner.Token},
+                action => action());
             Log.Info("Finished Indices Setup");
         }
     }

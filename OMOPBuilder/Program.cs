@@ -15,5 +15,5 @@ Log.Info($"Runtime Call {Path.GetDirectoryName(Process.GetCurrentProcess().MainM
 
 // var sts =Setting.SettingValue("app_conn");
 // var sts = Setting.AppSetting();
-CPRDGOLDMap.Run(v => { });
+CPRDGOLDMap.Run((i,v) => { });
 
