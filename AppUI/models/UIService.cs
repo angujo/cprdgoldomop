@@ -41,7 +41,7 @@ namespace AppUI.models
                         return (T) (object) "Status Changing";
                 }
             }
-            catch (Exception exception)
+            catch (Exception)
             {
                 if (typeof(T) == typeof(int)) return (T) (object) 0;
                 return (T) (object) "Not Installed!";

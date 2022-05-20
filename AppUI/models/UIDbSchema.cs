@@ -160,7 +160,7 @@ namespace AppUI.models
             {
                 target_test = _uiDb.TestSchema(SchemaType.TARGET);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 target.testsuccess = false;
                 target.Save();
@@ -174,7 +174,7 @@ namespace AppUI.models
             {
                 source_test = _uiDb.TestSchema(SchemaType.SOURCE);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 source.testsuccess = false;
                 source.Save();
@@ -188,7 +188,7 @@ namespace AppUI.models
             {
                 vocab_test = _uiDb.TestSchema(SchemaType.VOCABULARY);
             }
-            catch (Exception e)
+            catch (Exception)
             {
                 vocabulary.testsuccess = false;
                 vocabulary.Save();

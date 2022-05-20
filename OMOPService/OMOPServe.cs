@@ -21,7 +21,7 @@ namespace OMOPService
                 // Log.Info($"AppContext.BaseDir {AppContext.BaseDirectory}");
                 // Log.Info($"Runtime Call {Path.GetDirectoryName(Process.GetCurrentProcess().MainModule.FileName)}");
 
-                CPRDGOLDMap.Run(u => _up = u);
+                CPRDGOLDMap.Run((i, u) => _up = u);
             }
         }
     }

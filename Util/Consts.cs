@@ -11,7 +11,7 @@
          * during the life of a timer.
          * E.g. If 3 and timer is 60000, service will check every 20 secs
          */
-        public const int SERVICE_CHECKS = 3;
+        public const int SERVICE_CHECKS = 20;// 20 = Every 3 secs
 
         public static readonly string SERVICE_NAME = "OMOPBuilder";
 

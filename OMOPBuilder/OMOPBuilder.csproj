@@ -9,6 +9,10 @@
 		<AppendTargetFrameworkToOutputPath>false</AppendTargetFrameworkToOutputPath>
 	</PropertyGroup>
 
+	<PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+	  <OutputPath>..\bin\Debug\</OutputPath>
+	</PropertyGroup>
+
 	<ItemGroup>
 		<PackageReference Include="Dapper" Version="2.0.123" />
 		<PackageReference Include="System.Configuration.ConfigurationManager" Version="6.0.0" />
@@ -17,6 +21,7 @@
 	<ItemGroup>
 		<ProjectReference Include="..\AppControl\AppControl.csproj" />
 		<ProjectReference Include="..\CPRDGOLD\CPRDGOLD.csproj" />
+		<ProjectReference Include="..\Util\Util.csproj" />
 	</ItemGroup>
 
 	<ItemGroup>

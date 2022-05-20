@@ -27,6 +27,10 @@ namespace DBMS.systems
 
         public override string ConnectionString()
         {
+            if (string.IsNullOrEmpty(conn_string))
+            {
+                var str = conn_string;
+            }
             return string.IsNullOrEmpty(conn_string)
                 ? string.Join(";",
                               @"Server=" + schema.Server,

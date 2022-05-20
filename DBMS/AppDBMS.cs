@@ -14,7 +14,7 @@ namespace DBMS
 
         public AppDBMS()
         {
-            workload = DB.Internal.Load<WorkLoad>(new {cdmprocessed = false});
+            workload = DB.Internal.Load<WorkLoad>(new {cdmprocessed = false, status = Status.SCHEDULED});
             if (null != workload && workload.Exists()) Chunk.WorkLoadId = workload.Id;
         }
 
@@ -28,10 +28,8 @@ namespace DBMS
                 Status     = Status.RUNNING,
             };
             workqueue.Save();
-            DB.Internal.RunFactory(
-                nameof(WorkLoad),
-                (query, schemaName) => { query.WhereRaw("isrunning = true").Update(new {isrunning = false}); }
-            );
+
+            DB.Internal.Update<WorkLoad>(new {isrunning = false}, new {isrunning = true});
             workload.Isrunning = true;
             workload.intervene = false;
             workload.Status    = Status.RUNNING;
@@ -45,7 +43,7 @@ namespace DBMS
             workqueue.Save();
 
             workload.Isrunning = false;
-            workload.Status    = ex == null ? Status.STOPPED : Status.FINISHED;
+            workload.Status    = ex == null ? Status.FINISHED : Status.STOPPED;
             workload.Save();
         }
 

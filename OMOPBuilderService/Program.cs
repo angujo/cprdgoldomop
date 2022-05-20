@@ -23,7 +23,7 @@ namespace OMOPBuilderService
                 x.SetDescription(Consts.SERVICE_DESC);
                 x.SetDisplayName(Consts.SERVICE_NAME);
                 x.SetServiceName(Consts.SERVICE_NAME);
-                x.SetInstanceName(Consts.SERVICE_NAME);
+               // x.SetInstanceName(Consts.SERVICE_NAME);
             });
             Environment.ExitCode = (int) Convert.ChangeType(hf, hf.GetTypeCode());
         }

@@ -20,10 +20,30 @@
       }
     },
     "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj": {
+      "version": "1.0.0",
       "restore": {
         "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj",
         "projectName": "CPRDGOLD",
         "projectPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj",
+        "packagesPath": "C:\\Users\\bomondi\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bomondi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
         "frameworks": {
           "net48": {
             "projectReferences": {
@@ -38,14 +58,124 @@
         }
       },
       "frameworks": {
-        "net48": {}
+        "net48": {
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Humanizer.Core": {
+              "target": "Package",
+              "version": "[2.14.1, )"
+            },
+            "Microsoft.Bcl.AsyncInterfaces": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.Bcl.HashCode": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
+            "SqlKata": {
+              "target": "Package",
+              "version": "[2.3.7, )"
+            },
+            "SqlKata.Execution": {
+              "target": "Package",
+              "version": "[2.3.7, )"
+            },
+            "System.Buffers": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "System.Collections.Concurrent": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Collections.Immutable": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Diagnostics.DiagnosticSource": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Memory": {
+              "target": "Package",
+              "version": "[4.5.4, )"
+            },
+            "System.Numerics.Vectors": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Runtime.CompilerServices.Unsafe": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Text.Encodings.Web": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
+            "System.Threading.Channels": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Threading.Tasks.Extensions": {
+              "target": "Package",
+              "version": "[4.5.4, )"
+            },
+            "System.ValueTuple": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj": {
+      "version": "1.0.0",
       "restore": {
         "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj",
         "projectName": "DBMS",
         "projectPath": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj",
+        "packagesPath": "C:\\Users\\bomondi\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\OMOPBuilder\\DBMS\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bomondi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
         "frameworks": {
           "net48": {
             "projectReferences": {
@@ -57,7 +187,105 @@
         }
       },
       "frameworks": {
-        "net48": {}
+        "net48": {
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "Dapper.SimpleCRUD": {
+              "target": "Package",
+              "version": "[2.3.0, )"
+            },
+            "Humanizer.Core": {
+              "target": "Package",
+              "version": "[2.14.1, )"
+            },
+            "Microsoft.Bcl.AsyncInterfaces": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "Microsoft.Bcl.HashCode": {
+              "target": "Package",
+              "version": "[1.1.1, )"
+            },
+            "Microsoft.CSharp": {
+              "target": "Package",
+              "version": "[4.7.0, )"
+            },
+            "Npgsql": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
+            "SqlKata": {
+              "target": "Package",
+              "version": "[2.3.7, )"
+            },
+            "SqlKata.Execution": {
+              "target": "Package",
+              "version": "[2.3.7, )"
+            },
+            "System.Buffers": {
+              "target": "Package",
+              "version": "[4.5.1, )"
+            },
+            "System.Collections.Concurrent": {
+              "target": "Package",
+              "version": "[4.3.0, )"
+            },
+            "System.Collections.Immutable": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Diagnostics.DiagnosticSource": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Memory": {
+              "target": "Package",
+              "version": "[4.5.4, )"
+            },
+            "System.Numerics.Vectors": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            },
+            "System.Runtime.CompilerServices.Unsafe": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Text.Encodings.Web": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Text.Json": {
+              "target": "Package",
+              "version": "[6.0.4, )"
+            },
+            "System.Threading.Channels": {
+              "target": "Package",
+              "version": "[6.0.0, )"
+            },
+            "System.Threading.Tasks.Extensions": {
+              "target": "Package",
+              "version": "[4.5.4, )"
+            },
+            "System.ValueTuple": {
+              "target": "Package",
+              "version": "[4.5.0, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
       }
     },
     "D:\\VSProjects\\OMOPBuilder\\OMOPBuilder\\OMOPBuilder.csproj": {
@@ -93,6 +321,9 @@
               },
               "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj": {
                 "projectPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj"
+              },
+              "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+                "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj"
               }
             }
           }
@@ -136,10 +367,30 @@
       }
     },
     "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+      "version": "1.0.0",
       "restore": {
         "projectUniqueName": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj",
         "projectName": "Util",
         "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj",
+        "packagesPath": "C:\\Users\\bomondi\\.nuget\\packages\\",
+        "outputPath": "D:\\VSProjects\\OMOPBuilder\\Util\\obj\\",
+        "projectStyle": "PackageReference",
+        "skipContentFileWrite": true,
+        "fallbackFolders": [
+          "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
+        ],
+        "configFilePaths": [
+          "C:\\Users\\bomondi\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
+          "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+        ],
+        "originalTargetFrameworks": [
+          "net48"
+        ],
+        "sources": {
+          "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+          "https://api.nuget.org/v3/index.json": {}
+        },
         "frameworks": {
           "net48": {
             "projectReferences": {}
@@ -147,7 +398,41 @@
         }
       },
       "frameworks": {
-        "net48": {}
+        "net48": {
+          "dependencies": {
+            "Dapper": {
+              "target": "Package",
+              "version": "[2.0.123, )"
+            },
+            "NLog": {
+              "target": "Package",
+              "version": "[4.7.15, )"
+            },
+            "Serilog": {
+              "target": "Package",
+              "version": "[2.11.1-dev-01397, )"
+            },
+            "Serilog.Sinks.Console": {
+              "target": "Package",
+              "version": "[4.0.2-dev-00890, )"
+            },
+            "Serilog.Sinks.File": {
+              "target": "Package",
+              "version": "[5.0.1-dev-00947, )"
+            }
+          }
+        }
+      },
+      "runtimes": {
+        "win": {
+          "#import": []
+        },
+        "win-x64": {
+          "#import": []
+        },
+        "win-x86": {
+          "#import": []
+        }
       }
     }
   }

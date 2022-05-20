@@ -151,31 +151,17 @@
       },
       "CPRDGOLD/1.0.0": {
         "type": "project",
-        "dependencies": {
-          "DBMS": "1.0.0",
-          "Util": "1.0.0"
-        },
+        "framework": ".NETFramework,Version=v4.8",
         "compile": {
           "bin/placeholder/CPRDGOLD.dll": {}
         },
         "runtime": {
           "bin/placeholder/CPRDGOLD.dll": {}
-        }
-      },
-      "DBMS/1.0.0": {
-        "type": "project",
-        "dependencies": {
-          "Util": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/DBMS.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DBMS.dll": {}
         }
       },
       "Util/1.0.0": {
         "type": "project",
+        "framework": ".NETFramework,Version=v4.8",
         "compile": {
           "bin/placeholder/Util.dll": {}
         },
@@ -423,11 +409,6 @@
       "path": "../CPRDGOLD/CPRDGOLD.csproj",
       "msbuildProject": "../CPRDGOLD/CPRDGOLD.csproj"
     },
-    "DBMS/1.0.0": {
-      "type": "project",
-      "path": "../DBMS/DBMS.csproj",
-      "msbuildProject": "../DBMS/DBMS.csproj"
-    },
     "Util/1.0.0": {
       "type": "project",
       "path": "../Util/Util.csproj",
@@ -439,7 +420,8 @@
       "AppControl >= 1.0.0",
       "CPRDGOLD >= 1.0.0",
       "Dapper >= 2.0.123",
-      "System.Configuration.ConfigurationManager >= 6.0.0"
+      "System.Configuration.ConfigurationManager >= 6.0.0",
+      "Util >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -479,6 +461,9 @@
             },
             "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj": {
               "projectPath": "D:\\VSProjects\\OMOPBuilder\\CPRDGOLD\\CPRDGOLD.csproj"
+            },
+            "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
+              "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj"
             }
           }
         }

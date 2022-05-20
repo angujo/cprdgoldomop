@@ -164,16 +164,14 @@ namespace DBMS.systems
 
         public T Load<T>(object args)
         {
-            if (args.IsNumber())
+            if (!args.IsNumber())
+                return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).FirstOrDefault<T>();
+            using (var conn = GetConnection())
             {
-                using (var conn = GetConnection())
-                {
-                    conn.Open();
-                    return conn.Get<T>(args);
-                }
+                conn.Open();
+                return conn.Get<T>(args);
             }
 
-            return QueryFactory().Query(typeof(T).Name.ToSnakeCase()).Where(args).FirstOrDefault<T>();
         }
 
         public R Scalar<T, R>(string column, string where = null, object args = null)
@@ -192,8 +190,21 @@ namespace DBMS.systems
             using (var conn = GetConnection())
             {
                 conn.Open();
-                return new QueryFactory(conn, GetCompiler()).Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase()))
-                                                            .Where(where).Update(ColumnValues(obj));
+                return new QueryFactory(conn, GetCompiler())
+                       .Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase()))
+                       .Where(where).Update(ColumnValues(obj));
+            }
+        }
+
+        public int Update<T>(object updates, object where = null)
+        {
+            using (var conn = GetConnection())
+            {
+                conn.Open();
+                var query = new QueryFactory(conn, GetCompiler())
+                    .Query(Dot(schema.SchemaName, typeof(T).Name.ToSnakeCase()));
+                if (null != where) query.Where(where);
+                return query.Update(updates);
             }
         }
 

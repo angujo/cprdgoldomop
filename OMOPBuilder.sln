@@ -4,6 +4,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.0.32112.339
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OMOPBuilder", "OMOPBuilder\OMOPBuilder.csproj", "{94C78B1E-0A22-4EE3-890B-1181EFFAB340}"
+	ProjectSection(ProjectDependencies) = postProject
+		{93F5DF5A-170A-4FD8-B5BE-665C97B85352} = {93F5DF5A-170A-4FD8-B5BE-665C97B85352}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPRDGOLD", "CPRDGOLD\CPRDGOLD.csproj", "{9BCA6F36-0060-47B3-B5B4-785310629FEA}"
 EndProject
@@ -14,6 +17,7 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "TestProject", "TestProject\TestProject.csproj", "{CBD824CA-49B7-4D88-A560-6E730D900EED}"
 	ProjectSection(ProjectDependencies) = postProject
 		{93F5DF5A-170A-4FD8-B5BE-665C97B85352} = {93F5DF5A-170A-4FD8-B5BE-665C97B85352}
+		{810F0D0E-BA29-4977-B0BA-E60F6834A614} = {810F0D0E-BA29-4977-B0BA-E60F6834A614}
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppControl", "AppControl\AppControl.csproj", "{94EF5CA2-F614-4063-B10B-907918324FEF}"

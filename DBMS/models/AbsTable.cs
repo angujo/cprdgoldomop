@@ -6,7 +6,7 @@ namespace AppControl.models
     public abstract class AbsTable<T>
     {
         // Hold the ID here
-        private Int64? _id;
+        // private Int64? _id;
 
         public abstract bool Save();
         public abstract T Load();

@@ -651,31 +651,17 @@
       },
       "CPRDGOLD/1.0.0": {
         "type": "project",
-        "dependencies": {
-          "DBMS": "1.0.0",
-          "Util": "1.0.0"
-        },
+        "framework": ".NETFramework,Version=v4.8",
         "compile": {
           "bin/placeholder/CPRDGOLD.dll": {}
         },
         "runtime": {
           "bin/placeholder/CPRDGOLD.dll": {}
-        }
-      },
-      "DBMS/1.0.0": {
-        "type": "project",
-        "dependencies": {
-          "Util": "1.0.0"
-        },
-        "compile": {
-          "bin/placeholder/DBMS.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/DBMS.dll": {}
         }
       },
       "Util/1.0.0": {
         "type": "project",
+        "framework": ".NETFramework,Version=v4.8",
         "compile": {
           "bin/placeholder/Util.dll": {}
         },
@@ -1681,11 +1667,6 @@
       "type": "project",
       "path": "../CPRDGOLD/CPRDGOLD.csproj",
       "msbuildProject": "../CPRDGOLD/CPRDGOLD.csproj"
-    },
-    "DBMS/1.0.0": {
-      "type": "project",
-      "path": "../DBMS/DBMS.csproj",
-      "msbuildProject": "../DBMS/DBMS.csproj"
     },
     "Util/1.0.0": {
       "type": "project",

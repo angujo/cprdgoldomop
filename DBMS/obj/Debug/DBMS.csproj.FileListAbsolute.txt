@@ -37,9 +37,9 @@ D:\VSProjects\OMOPBuilder\DBMS\bin\Debug\System.Text.Json.xml
 D:\VSProjects\OMOPBuilder\DBMS\bin\Debug\System.Threading.Channels.xml
 D:\VSProjects\OMOPBuilder\DBMS\bin\Debug\System.Threading.Tasks.Extensions.xml
 D:\VSProjects\OMOPBuilder\DBMS\bin\Debug\System.ValueTuple.xml
-D:\VSProjects\OMOPBuilder\bin\Debug\DBMS.dll
 D:\VSProjects\OMOPBuilder\bin\Debug\NLog.config
 D:\VSProjects\OMOPBuilder\bin\Debug\DBMS.dll.config
+D:\VSProjects\OMOPBuilder\bin\Debug\DBMS.dll
 D:\VSProjects\OMOPBuilder\bin\Debug\DBMS.pdb
 D:\VSProjects\OMOPBuilder\DBMS\obj\Debug\DBMS.csproj.AssemblyReference.cache
 D:\VSProjects\OMOPBuilder\DBMS\obj\Debug\DBMS.csproj.CoreCompileInputs.cache

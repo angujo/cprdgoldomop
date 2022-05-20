@@ -11,16 +11,27 @@ namespace OMOPBuilderService
     {
         private          bool  _up;
         private readonly Timer _timer;
-        private          long  _workload_id;
+        private          long  _workload_id = 0;
+        private          bool  cancelled;
 
         public OBService()
         {
             long tick = Convert.ToInt64(Math.Ceiling((double) Consts.SERVICE_TIMER / Consts.SERVICE_CHECKS)),
                 r     = 0;
+            Log.Info("Action Time: {act}, Ticker Time {t}",
+                     TimeSpan.FromMilliseconds(Consts.SERVICE_TIMER).ToString(),
+                     TimeSpan.FromMilliseconds(tick).ToString());
             _timer         = new Timer(tick) {AutoReset = true};
             _timer.Enabled = true;
             _timer.Elapsed += (s, evt) =>
             {
+                if (0 == _workload_id)
+                {
+                    if (cancelled) cancelled = false;
+                    Action();
+                    return;
+                }
+
                 Intervene();
                 if (0 == r) Action();
                 r++;
@@ -30,20 +41,26 @@ namespace OMOPBuilderService
 
         private void Intervene()
         {
-            if (default == _workload_id) return;
+            if (cancelled)
+            {
+                Log.Info("Cancellation of workload ID #{wl} in progress...", +_workload_id);
+                cancelled = 0 != _workload_id;
+                return;
+            }
+
+            if (0 == _workload_id) return;
+            Log.Info("Checking Intervention on Workload ID #{wl}", _workload_id);
             WorkLoad wl;
-            if ((wl = DB.Internal.Load<WorkLoad>(_workload_id))?.Id == default ||
-                (wl.intervene && Status.RUNNING != wl.Status)) return;
-            wl.intervene = true;
+            if ((wl = DB.Internal.Load<WorkLoad>(new {id = _workload_id})) == default || !wl.intervene) return;
+            wl.intervene = false;
             wl.Status    = Status.STOPPED;
             wl.Save();
-
+            cancelled = true;
             Runner.TokenSource.Cancel();
         }
 
         private void Action()
         {
-            Log.Warning("Service Checkup Round...");
             // Do Cleanup in the system.
             GC.Collect();
             if (_up) return;
@@ -60,13 +77,20 @@ namespace OMOPBuilderService
             });
         }
 
+        private static void CleanRuns()
+        {
+            DB.Internal.Update<WorkLoad>(new {isrunning = false}, new {isrunning = true});
+        }
+
         public void Start()
         {
+            CleanRuns();
             _timer.Start();
         }
 
         public void Stop()
         {
+            Log.Warning("Service Is Stopping...");
             _timer.Stop();
             Runner.TokenSource.Cancel();
         }

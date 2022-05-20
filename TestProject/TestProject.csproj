@@ -42,6 +42,7 @@
   <ItemGroup>
     <ProjectReference Include="..\AppControl\AppControl.csproj" />
     <ProjectReference Include="..\CPRDGOLD\CPRDGOLD.csproj" />
+    <ProjectReference Include="..\DBMS\DBMS.csproj" />
     <ProjectReference Include="..\Util\Util.csproj" />
   </ItemGroup>
 

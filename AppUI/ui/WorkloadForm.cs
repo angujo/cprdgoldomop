@@ -386,9 +386,11 @@ namespace AppUI.ui
                 return;
             }
 
-            _workLoad.Cdmprocessed = false;
-            _workLoad.Isrunning    = false;
+            _workLoad.Cdmprocessed = _workLoad.Isrunning = _workLoad.intervene = false;
+            _workLoad.Status       = Status.SCHEDULED;
             _workLoad.Save();
+            btnQueue.Enabled = false;
+            btnStop.Enabled  = true;
             MessageBox.Show(@"Workload Scheduled!", @"Success", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
 
@@ -397,7 +399,8 @@ namespace AppUI.ui
             if (DialogResult.Cancel == MessageBox.Show(
                     @"Are you sure you wish to stop the workload from being executed?",
                     @"Stop", MessageBoxButtons.OK, MessageBoxIcon.Question)) return;
-            _workLoad.intervene = true;
+            _workLoad.intervene = btnQueue.Enabled = true;
+            btnStop.Enabled     = false;
             _workLoad.Save();
         }
     }

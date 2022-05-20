@@ -1246,7 +1246,7 @@ namespace AppUI.ui
         private System.Windows.Forms.TabPage tabSchema;
 
         private System.Windows.Forms.TabPage tabDetails;
-        private System.Windows.Forms.TabPage Details;
+        // private System.Windows.Forms.TabPage Details;
 
         #endregion
     }

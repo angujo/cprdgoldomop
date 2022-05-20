@@ -1,6 +1,3 @@
-using DBMS;
-using DBMS.models;
-using DBMS.systems;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using NLog;
 using NLog.Config;
@@ -12,9 +9,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using Util;
+using DBMS;
+using DBMS.models;
+using DBMS.systems;
 
 namespace TestProject
 {

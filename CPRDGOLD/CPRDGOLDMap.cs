@@ -32,7 +32,14 @@ namespace CPRDGOLD
                 Log.Info("We are in a workload proccess...");
                 try
                 {
+                    // We need to commit that we are working
+                    // If we don't commit the next service check will result to chaos!
                     isUp(appDBMS.workload.Id, true);
+                    //Ensure we have all schemas
+                    DB.FetchSchemas(appDBMS.workload.Id);
+
+                    // Now we roll...
+
                     Chunk.WorkLoadId = appDBMS.workload.Id;
 
                     appDBMS.StartQueue();
@@ -71,7 +78,7 @@ namespace CPRDGOLD
                 }
                 finally
                 {
-                    isUp(appDBMS.workload.Id, false);
+                    isUp(0, false);
                 }
 
                 Log.Info("We are Done...");

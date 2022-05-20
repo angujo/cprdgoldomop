@@ -1,4 +1,5 @@
-﻿using DBMS.systems;
+﻿using System;
+using DBMS.systems;
 using System.Collections.Concurrent;
 using System.Linq;
 using DBMS.models;
@@ -45,17 +46,18 @@ namespace DBMS
                     schema_name = Setting.VocabSchema;
                     break;
             }
-            return holder[sType.GetStringValue()] = GetOne(conn_string,schema_name);
+
+            return holder[sType.GetStringValue()] = GetOne(conn_string, schema_name);
         }
 
         public static void FetchSchemas(long workloadId)
         {
             SchemaType[] cleanable = {SchemaType.SOURCE, SchemaType.TARGET, SchemaType.VOCABULARY};
-            Internal.GetAll<DBSchema>("WHERE workloadid = @wlid", new {wlid = workloadId})
-                    .Where(sc => cleanable.Select(t => t.GetStringValue()).Contains(sc.Schematype))
+            Internal.GetAll<Dbschema>("WHERE workloadid = @wlid", new {wlid = workloadId})
+                    .Where(sc => cleanable.Select(t => t.GetStringValue()).Contains(sc.schematype))
                     .ToList()
-                    .ForEach(sc => holder.TryUpdate(sc.Schematype, GetOne(sc),
-                                                    holder.TryGetValue(sc.Schematype, out var osc) ? osc : default));
+                    .ForEach(sc => { holder[sc.schematype] = FromDbSchema(sc); });
+            if (holder.Count < (cleanable.Length + 1)) throw new Exception("Unable to load schemas for the workload!");
         }
 
         public static DBMSSystem FromDbSchema(Dbschema dbschema)
