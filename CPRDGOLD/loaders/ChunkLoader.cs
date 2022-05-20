@@ -167,9 +167,9 @@ namespace CPRDGOLD.loaders
         {
             var _inst = new T();// (T)Activator.CreateInstance(typeof(T), new object[] { chunk });// new T(chunk);
             ((ChunkLoader<T, C>)(object)_inst).chunk = chunk;
-            Log.Info($"Starting Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Starting Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
             ((ChunkLoader<T, C>)(object)_inst).LoadData();
-            Log.Info($"Finished Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Finished Chunk Data Load #ChunkLoader [{typeof(T).Name}]");
             return _inst;
         }
 
@@ -198,8 +198,8 @@ namespace CPRDGOLD.loaders
 
         public void LoopGroupData(Func<C, object> grouper, Action<C> looper)
         {
-            Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
-            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            chunk.Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
             var groups = dataset.GroupBy(grouper)
                 .Select(gr => gr.FirstOrDefault())
                 .Where(i => null != i);
@@ -207,27 +207,27 @@ namespace CPRDGOLD.loaders
             {
                 looper(c);
             }
-            Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
 
         }
 
         public void LoopAllFast(Action<C> looper)
         {
-            Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
-            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            chunk.Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
             Parallel.ForEach(dataset, new ParallelOptions { MaxDegreeOfParallelism = 10,CancellationToken = Runner.Token}, c => looper(c));
-            Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 
         public void LoopAllData(Action<C> looper)
         {
-            Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
-            Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
+            chunk.Log.Info($"Starting Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Total Data Chunk to LoopAll [{dataset.Count}] [{typeof(T).Name}]");
             foreach (C c in dataset)
             {
                 looper(c);
             }
-            Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
+            chunk.Log.Info($"Finished Chunk LoopAll #ChunkLoader [{typeof(T).Name}]");
         }
 
         public static new List<C> GetData() => throw new NotImplementedException();

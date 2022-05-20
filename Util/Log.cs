@@ -89,20 +89,11 @@ namespace Util
 
         public class LogWriter
         {
-            public void Error(string msg, params object[] args)
-            {return;
-                _logger.Error(msg, args);
-            }
+            public void Error(string msg, params object[] args)=>_logger.Error(msg, args);
 
-            public void Info(string msg, params object[] args)
-            {return;
-                _logger.Information(msg, args);
-            }
+            public void Info(string msg, params object[] args)=>                _logger.Information(msg, args);
 
-            public void Warning(string msg, params object[] args)
-            {
-                return; _logger.Warning(msg, args);
-            }
+            public void Warning(string msg, params object[] args)=> _logger.Warning(msg, args);
 
             public void Error(Exception exception, string msg = null) =>
                 _logger.Error(exception, msg ?? exception.Message);

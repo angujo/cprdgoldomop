@@ -28,9 +28,9 @@ namespace CPRDGOLD.mergers
         {
             var _inst = new T();
             ((ChunkMerger<T, C>) (object) _inst).chunk = chunk;
-            Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
+            chunk.Log.Info($"Starting Data Load #ChunkMerger [{typeof(T).Name}]");
             ((ChunkMerger<T, C>) (object) _inst).LoadData();
-            Log.Info($"Finished Data Load #ChunkMerger [{typeof(T).Name}]");
+            chunk.Log.Info($"Finished Data Load #ChunkMerger [{typeof(T).Name}]");
             return _inst;
         }
 
@@ -39,7 +39,7 @@ namespace CPRDGOLD.mergers
         public void Clear()
         {
             data = new ConcurrentBag<C>();
-            Log.Warning("Cleaning #{name}", typeof(T).Name);
+            chunk.Log.Warning("Cleaning #{name}", typeof(T).Name);
         }
 
         /*
@@ -62,20 +62,20 @@ namespace CPRDGOLD.mergers
 
         public void LoopAllData(Action<C> looper)
         {
-            Log.Info($"Starting LoopAll #{typeof(T).Name}");
-            Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
+            chunk.Log.Info($"Starting LoopAll #{typeof(T).Name}");
+            chunk.Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
             foreach (C c in data) looper(c);
-            Log.Info($"Finished LoopAll #{typeof(T).Name}");
+            chunk.Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 
         public void LoopAllFast(Action<C> looper)
         {
-            Log.Info($"Starting LoopAll #{typeof(T).Name}");
-            Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
+            chunk.Log.Info($"Starting LoopAll #{typeof(T).Name}");
+            chunk.Log.Info($"Total Data To LoopAll [{data.Count}] #{typeof(T).Name}");
             Parallel.ForEach(data,
                              new ParallelOptions {MaxDegreeOfParallelism = 10, CancellationToken = Runner.Token},
                              c => looper(c));
-            Log.Info($"Finished LoopAll #{typeof(T).Name}");
+            chunk.Log.Info($"Finished LoopAll #{typeof(T).Name}");
         }
 
         protected abstract void LoadData();

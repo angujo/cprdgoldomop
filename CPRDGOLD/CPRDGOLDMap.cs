@@ -190,15 +190,15 @@ namespace CPRDGOLD
                                      LoadType.PROCEDUREEXPOSURE)) return;
             var stemTable = StemTableMerger.Prepare(chunk);
 
-            Log.Info("StemTable Loaded!");
-            Log.Info("StemTable Start Stats:");
+            chunk.Log.Info("StemTable Loaded!");
+            chunk.Log.Info("StemTable Start Stats:");
             foreach (var s in stemTable.GetData().Where(sd => null != sd.domain_id && default != sd.domain_id)
                                        .OrderBy(dt => dt.domain_id).GroupBy(dt => dt.domain_id)
                                        .ToDictionary(kv => kv.Key, kv => kv.Count()))
-                Log.Info($"{s.Key} = {s.Value}");
-            Log.Info("StemTable END Stats:");
+                chunk.Log.Info($"{s.Key} = {s.Value}");
+            chunk.Log.Info("StemTable END Stats:");
 
-            Log.Info("Start StemTable entries!");
+            chunk.Log.Info("Start StemTable entries!");
             var actions = new List<Action>
             {
                 () => chunk.Implement(LoadType.CONDITIONOCCURRENCE,
@@ -212,7 +212,7 @@ namespace CPRDGOLD
                                       () => ProcedureOccurrence.InsertSets(chunk, stemTable)),
             };
             Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
-            Log.Info("Finished StemTable entries!");
+            chunk.Log.Info("Finished StemTable entries!");
         }
 
         //Only runs once in the life of the app

@@ -155,7 +155,9 @@ namespace CPRDGOLD.loaders
                                  foreach (var _keys in keys)
                                  {
                                      if (_keys.HasNullOrEmpty()) continue;
-                                     tupleChunk[String.Join(".", _keys)] = dt;
+                                     var ky = string.Join(".", _keys);
+                                     if (tupleChunk.ContainsKey(ky)) continue;
+                                     tupleChunk[ky] = dt;
                                  }
 
                                  var br = Interlocked.Increment(ref count);

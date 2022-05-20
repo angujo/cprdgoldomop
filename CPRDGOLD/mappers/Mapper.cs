@@ -17,7 +17,7 @@ namespace CPRDGOLD.mappers
                 me.chunk = chunk;
                 me.chunk.AddCleaner(() => me.Clean());
             }
-            Log.Info($"Starting Data Load [{typeof(T).Name}]");
+            chunk?.Log.Info($"Starting Data Load [{typeof(T).Name}]");
             if (null != me.GetType().GetMethod("QueryInsert")) me.GetType().GetMethod("QueryInsert").Invoke(me, null);
             else me.LoadData(refSource);
 
@@ -46,7 +46,7 @@ namespace CPRDGOLD.mappers
 
             if (0 < values.Count) insert();
             */
-            Log.Info($"Finished Inserts for #{typeof(T).Name}");
+            chunk?.Log.Info($"Finished Inserts for #{typeof(T).Name}");
             if (null != me.GetType().GetMethod("Dependency")) me.GetType().GetMethod("Dependency").Invoke(me, null);
         }
     }

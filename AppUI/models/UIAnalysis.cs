@@ -40,6 +40,7 @@ namespace AppUI.models
             foreach (var statusView in DB.Internal.GetAll<StatusView>("WHERE workloadid = @wlid",
                                                                       new {wlid = workload_id}))
             {
+                if (null == statusView.code || statusView.code.Trim().Length <= 0) continue;
                 var key = Regex.Replace(statusView.code, @"([A-Za-z_]+)(_(.*?))?$", @"$1");
                 var num = Int64.TryParse(Regex.Replace(statusView.code, @"([A-Za-z_]+)(_(.*?))?$", @"$3"), out long nm)
                     ? nm

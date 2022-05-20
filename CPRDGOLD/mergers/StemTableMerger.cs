@@ -19,7 +19,7 @@ namespace CPRDGOLD.mergers
         public static StemTableMerger Prepare(Chunk chunk)
         {
             var stem = Init(chunk);
-            Log.Info("Starting StemTable Creator");
+            chunk.Log.Info("Starting StemTable Creator");
             List<Action> actions = new List<Action> {
                 ()=>stem.Additional(),
                 ()=>stem.Clinical(),
@@ -29,8 +29,8 @@ namespace CPRDGOLD.mergers
                 ()=>stem.Therapy(),
             };
             Parallel.ForEach(actions,Runner.ParallelOptions, action => action());
-            Log.Info($"Total Data StemTable [{stem.data.Count}]");
-            Log.Info("Finished StemTable Creator");
+            chunk.Log.Info($"Total Data StemTable [{stem.data.Count}]");
+            chunk.Log.Info("Finished StemTable Creator");
             return stem;
         }
 

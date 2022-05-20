@@ -25,7 +25,7 @@ namespace CPRDGOLD.mergers
             var bm = new AddInBaseMerger(chunk);
 
             //  if (0 < data.Count) return;
-            Log.Info("Starting AddInBase Loader!");
+            chunk.Log.Info("Starting AddInBase Loader!");
             for (int i = 0; i < 7; i++) bm.unions[i + 1] = new List<AddInBase>();
             chunk.GetLoader<AdditionalLoader>(ChunkLoadType.ADDITIONAL).LoopAllData(addt =>
            {
@@ -84,8 +84,8 @@ namespace CPRDGOLD.mergers
                 };
                Parallel.ForEach(actions,Runner.ParallelOptions, action => action());
            });
-            foreach (var un in bm.unions) Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
-            Log.Info("Finished AddInBase Loader!");
+            foreach (var un in bm.unions) chunk.Log.Info($"Union #{un.Key} Data: {un.Value.Count}");
+            chunk.Log.Info("Finished AddInBase Loader!");
             return bm;
         }
 
@@ -93,13 +93,13 @@ namespace CPRDGOLD.mergers
         {
             if (!unions.ContainsKey(union))
             {
-                Log.Info($"Union {union} Was not Loaded. Skipped!");
+                chunk.Log.Info($"Union {union} Was not Loaded. Skipped!");
                 return;
             }
-            Log.Info($"Started Loading Union #{union} Data: [{unions[union].Count}]!");
+            chunk.Log.Info($"Started Loading Union #{union} Data: [{unions[union].Count}]!");
             Parallel.ForEach(unions[union],Runner.ParallelOptions, abAct);
             // foreach (var item in GetMe(chunk).unions[union]) abAct(item);
-            Log.Info($"Finished Loading Union #{union}!");
+            chunk.Log.Info($"Finished Loading Union #{union}!");
         }
 
         #region Unions

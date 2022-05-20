@@ -26,7 +26,7 @@ namespace CPRDGOLD.mergers
             var addM = new AddInMerger(chunk);
             addM.baseMerger = AddInBaseMerger.prepare(chunk);
 
-            Log.Info("Starting AddIn Table");
+            chunk.Log.Info("Starting AddIn Table");
             List<Action> unions = new List<Action>
             {
                 ()=>addM.Union1(),
@@ -42,11 +42,11 @@ namespace CPRDGOLD.mergers
                 ()=>addM.Union11(),
             };
             Parallel.ForEach(unions,Runner.ParallelOptions, union => union());
-            Log.Info($"Total AddIn Table Data: {addM.data.Count}");
-            if (0 == addM.data.Count) Log.Info("No AddIn Data for Source to standards");
+            chunk.Log.Info($"Total AddIn Table Data: {addM.data.Count}");
+            if (0 == addM.data.Count) chunk.Log.Info("No AddIn Data for Source to standards");
             else
             {
-                Log.Info("Looping AddIn Source to standards");
+                chunk.Log.Info("Looping AddIn Source to standards");
                 Dictionary<string, SourceToStandard> sourceStds = new Dictionary<string, SourceToStandard>();
                 DB.Source.RunFactory("source_to_standard", (query, schema_name) =>
                 {
@@ -62,9 +62,9 @@ namespace CPRDGOLD.mergers
                     dt.st_target_concept_id = stStd.target_concept_id;
                 }
             }
-            Log.Info("Finished Looping AddIn Source to standards");
+            chunk.Log.Info("Finished Looping AddIn Source to standards");
 
-            Log.Info("Finished AddIn Table");
+            chunk.Log.Info("Finished AddIn Table");
             return addM;
         }
 

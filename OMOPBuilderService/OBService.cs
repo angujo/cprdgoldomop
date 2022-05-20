@@ -62,7 +62,7 @@ namespace OMOPBuilderService
         private void Action()
         {
             // Do Cleanup in the system.
-            GC.Collect();
+            // GC.Collect();
             if (_up) return;
             Log.Info("Initiating workload checkup...");
             // Log.Info($"Launched from {Environment.CurrentDirectory}");
