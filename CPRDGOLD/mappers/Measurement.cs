@@ -54,7 +54,7 @@ namespace CPRDGOLD.mappers
                    write(stem.start_datetime);
                    write(stem.type_concept_id);
                    write(int.TryParse(stem.operator_concept_id, out int cid) ? cid : default);
-                   write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
+                   write(decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
                    write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
                    write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
                    write(Decimal.TryParse(stem.range_high, out Decimal rh) ? rh : default);

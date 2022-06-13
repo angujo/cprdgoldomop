@@ -128,7 +128,7 @@ namespace TestProject
         public void TestStates()
         {
             var arrays = new string[][] {
-            new string[] { "job",Consts.TUPLE_MISS},
+            new string[] { "job",Consts.TUPLE_MISS_STR},
             new string[] { "job","doe"},
             new string[] { "job",""},
             new string[] { "","doe"},
@@ -142,7 +142,7 @@ namespace TestProject
             var ss = arrays[0].LooselySameAs(arrays[1]);
             List<Tuple<string>> ts = new List<Tuple<string>>
             {
-                Tuple.Create(Consts.TUPLE_MISS),
+                Tuple.Create(Consts.TUPLE_MISS_STR),
                 Tuple.Create("john"),
                 Tuple.Create("doe"),
             };

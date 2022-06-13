@@ -5,11 +5,16 @@ namespace CPRDGOLD.loaders
 {
     public class DaySupplyModeLoader : FullLoader<DaySupplyModeLoader, DaySupplyMode>
     {
-        public DaySupplyModeLoader() : base("daysupply_modes") { }
+        public DaySupplyModeLoader() : base("daysupply_modes")
+        {
+        }
+
         public override void ChunkData(IEnumerable<DaySupplyMode> items = null)
         {
-            ParallelChunk(item => new[] { $"{item.prodcode}" }, items);
+            DataTableChunk(items, "prodcode");
+            //ParallelChunk(item => new[] { $"{item.prodcode}" }, items);
         }
-        public static DaySupplyMode ByProdcode(int code) => ChunkValue($"{code}");
+
+        public static DaySupplyMode ByProdcode(int code) => DataTableValue(new {prodcode = code});
     }
 }

@@ -7,21 +7,26 @@ namespace CPRDGOLD.loaders
 {
     public class LookupLoader : FullLoader<LookupLoader, Lookup>
     {
-        public LookupLoader() : base("lookup") { }
+        public LookupLoader() : base("lookup")
+        {
+        }
 
         public override void ChunkData(IEnumerable<Lookup> items = null)
         {
-            ParallelChunk(sstd => new[]
+            DataTableChunk(items, new[] {"code", "name", "lookup_type_id",});
+            /*ParallelChunk(sstd => new[]
             {
-                new[] { $"{sstd.code}",Consts.TUPLE_MISS, sstd.name },
-                new[] { $"{sstd.code}", $"{sstd.lookup_type_id}" },
-            }, items);
+                new[] {$"{sstd.code}", Consts.TUPLE_MISS_STR, sstd.name},
+                new[] {$"{sstd.code}", $"{sstd.lookup_type_id}"},
+            }, items);*/
         }
 
-        public static Lookup ByNameCode(string name, string code) => ChunkValue(code, Consts.TUPLE_MISS, name);
+        public static Lookup ByNameCode(string name, string code) => DataTableValue(new {code, name,});
 
-        public static Lookup ByCodeType(string code, long[] type_id) => ChunkValue(type_id.Select(v => new[] { code, $"{v}"}));
+        public static Lookup ByCodeType(string code, long[] type_id) =>
+            DataTableValue(new {code, lookup_type_id = type_id});
 
-        public static Lookup ByCodeType(string code, long type_id) => ByCodeType(code, new[] { type_id });
+        public static Lookup ByCodeType(string code, long type_id) =>
+            DataTableValue(new {code, lookup_type_id = type_id});
     }
 }

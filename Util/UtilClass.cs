@@ -8,6 +8,15 @@ namespace Util
 {
     public static class UtilClass
     {
+        public static object MissValue(Type type, object value = null)
+        {
+            if (null != value && !DBNull.Value.Equals(value)) return value;
+            if (type == typeof(string)) return Consts.TUPLE_MISS_STR;
+            if (type.IsNumber()) return int.MinValue;
+            if (type == typeof(DateTime)) return DateTime.MinValue;
+            return null;
+        }
+
         public static T[] Prepend<T>(this T[] items, params T[] args)
         {
             return args.Reverse().Aggregate(new List<T>(items), (current, rarg) => current.Prepend(rarg).ToList())

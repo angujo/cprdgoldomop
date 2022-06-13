@@ -35,15 +35,15 @@ namespace AppUI.ui
             InitializeComponent();
             _workLoad = workLoad ?? new WorkLoad
             {
-                Name            = Guid.NewGuid().ToString(),
-                Fileslocked     = false,
-                Sourceprocessed = false,
-                Cdmloaded       = false,
-                Chunkssetup     = false,
-                Chunksloaded    = false,
-                Cdmprocessed    = false,
-                Isrunning       = false,
-                Maxparallels    = 3,
+                Name = Guid.NewGuid().ToString(),
+                //  Fileslocked     = false,
+                // Sourceprocessed = false,
+                Cdmloaded    = false,
+                Chunkssetup  = false,
+                Chunksloaded = false,
+                Cdmprocessed = false,
+                Isrunning    = false,
+                Maxparallels = 3,
             };
             nmCOrdinal.Maximum = nmIOrdinal.Maximum = ndChunkSize.Maximum = int.MaxValue;
 

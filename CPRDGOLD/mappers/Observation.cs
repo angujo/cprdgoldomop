@@ -28,7 +28,7 @@ namespace CPRDGOLD.mappers
 
         protected override void LoadData(dynamic stemSource)
         {
-            StemTableMerger stemTable = stemSource as StemTableMerger;
+            var stemTable = stemSource as StemTableMerger;
             string[] cols = { "provider_id",  "unit_source_value", "observation_id", "observation_source_value",
                 "person_id", "observation_source_concept_id", "observation_date", "observation_concept_id", "observation_datetime", "observation_type_concept_id",
                 "value_as_number", "value_as_concept_id", "unit_concept_id", "value_as_string","visit_occurrence_id" };
@@ -49,9 +49,9 @@ namespace CPRDGOLD.mappers
                    write(stem.concept_id);
                    write(stem.start_datetime);
                    write(stem.type_concept_id);
-                   write(Decimal.TryParse(stem.value_as_number, out Decimal vn) ? vn : default);
-                   write(int.TryParse(stem.value_as_concept_id, out int vc) ? vc : default);
-                   write(int.TryParse(stem.unit_concept_id, out int uc) ? uc : default);
+                   write(decimal.TryParse(stem.value_as_number, out var vn) ? vn : default);
+                   write(int.TryParse(stem.value_as_concept_id, out var vc) ? vc : default);
+                   write(int.TryParse(stem.unit_concept_id, out var uc) ? uc : default);
                    write(stem.value_as_string);
                    write(stem.chunk_identifier);
                });

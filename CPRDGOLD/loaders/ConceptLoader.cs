@@ -7,8 +7,11 @@ namespace CPRDGOLD.loaders
 {
     internal class ConceptLoader : FullLoader<ConceptLoader, Concept>
     {
-        public ConceptLoader() : base(DB.Vocabulary, "concept") { }
-        public override void ChunkData(IEnumerable<Concept> items = null)
+        public ConceptLoader() : base(DB.Vocabulary, "concept")
+        {
+        }
+
+        /*public override void ChunkData(IEnumerable<Concept> items = null)
         {
             ParallelChunk(item => new[]
                           {
@@ -19,12 +22,23 @@ namespace CPRDGOLD.loaders
                 null!= item.standard_concept && item.standard_concept.Equals("S",StringComparison.OrdinalIgnoreCase)?  new[] { item.concept_code, "S" }:new string[]{},
             },
                 items);
-        }
+        }*/
 
-        public static Concept ByCode(string code) => ChunkValue(code);
-        public static Concept ByCodeVocab(string code, string vocab) => ChunkValue(code, vocab);
-        public static Concept ByStdCodeVocab(string code, string vocab) => ChunkValue(code, vocab, "S");
-        public static Concept ByStdNameDomain(string name, string domain) => ChunkValue(name, domain, "ND");
-        public static Concept ByStdCode(string code) => ChunkValue(code, "S");
+        public override void ChunkData(IEnumerable<Concept> items = null) => DataTableChunk(
+            items, new[] {"concept_code", "vocabulary_id", "standard_concept", "concept_name", "domain_id",}
+        );
+
+        public static Concept ByCode(string code) => DataTableValue(new {concept_code = code});
+
+        public static Concept ByStdCodeVocab(string code, string vocab) =>
+            DataTableValue(new {concept_code = code, vocabulary_id = vocab, standard_concept = "S"});
+
+        public static Concept ByStdNameDomain(string name, string domain) =>
+            DataTableValue(new {concept_name = name, domain_id = domain, standard_concept = "S"});
+
+        /*public static Concept ByCodeVocab(string code, string vocab) =>
+            DataTableValue(new {concept_code = code, vocabulary_id = vocab});
+        public static Concept ByStdCode(string code) =>
+            DataTableValue(new {concept_code = code, standard_concept = "S"});*/
     }
 }

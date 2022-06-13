@@ -25,8 +25,8 @@ namespace DBMS.models
 
         public int Maxparallels
         {
-            get { return _parallels; }
-            set { _parallels = value > 1 ? value : _parallels; }
+            get => _parallels;
+            set => _parallels = value > 1 ? value : 3;
         }
 
         public int Testchunkcount { get; set; }

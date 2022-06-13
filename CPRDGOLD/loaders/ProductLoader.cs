@@ -5,14 +5,19 @@ namespace CPRDGOLD.loaders
 {
     internal class ProductLoader : FullLoader<ProductLoader, Product>
     {
-        public ProductLoader() : base("product") { }
-        public override void ChunkData(IEnumerable<Product> items = null)
+        public ProductLoader() : base("product")
         {
-            ParallelChunk(sstd => new[] { $"{sstd.prodcode}" }, items);
         }
 
-        public static Product ByProdcode(string prodcode) => (!long.TryParse(prodcode, out long mc)) ? null : ByProdcode(mc);
+        public override void ChunkData(IEnumerable<Product> items = null)
+        {
+            DataTableChunk(items, "prodcode");
+            // ParallelChunk(sstd => new[] { $"{sstd.prodcode}" }, items);
+        }
 
-        public static Product ByProdcode(long prodcode) => ChunkValue($"{prodcode}");
+        public static Product ByProdcode(string prodcode) =>
+            (!long.TryParse(prodcode, out long mc)) ? null : ByProdcode(mc);
+
+        public static Product ByProdcode(long prodcode) => DataTableValue(new {prodcode});
     }
 }
