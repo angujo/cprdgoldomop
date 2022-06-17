@@ -31,17 +31,25 @@ namespace AppUI
 
         private void loadWorkPlans()
         {
-            lvWorkplans.Items.Clear();
-            var plans = DB.Internal.GetAll<WorkLoad>();
-            Log.Info("Reloading the Workplans...");
-            foreach (var workLoad in plans)
+            try
             {
-                var listViewItem = new ListViewItem(workLoad.Name);
-                listViewItem.SubItems.Add(workLoad.Releasedate.ToString("yy-MMM-dd ddd"));
-                listViewItem.SubItems.Add(workLoad.Isrunning ? "Running" : "Not Running");
-                listViewItem.Tag = workLoad;
+                lvWorkplans.Items.Clear();
+                var plans = DB.Internal.GetAll<WorkLoad>();
+                Log.Info("Reloading the Workplans...");
+                foreach (var workLoad in plans)
+                {
+                    var listViewItem = new ListViewItem(workLoad.Name);
+                    listViewItem.SubItems.Add(workLoad.Releasedate.ToString("yy-MMM-dd ddd"));
+                    listViewItem.SubItems.Add(workLoad.Isrunning ? "Running" : "Not Running");
+                    listViewItem.Tag = workLoad;
 
-                lvWorkplans.Items.Add(listViewItem);
+                    lvWorkplans.Items.Add(listViewItem);
+                }
+            }
+            catch (Exception e)
+            {
+                Log.Error(e);
+                throw;
             }
         }
 

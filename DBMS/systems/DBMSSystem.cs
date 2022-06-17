@@ -17,8 +17,8 @@ namespace DBMS.systems
 {
     public abstract class DBMSSystem : IDBMSSystem
     {
-        public    DBSchema schema      { get; set; }
-        protected string   conn_string { get; set; }
+        public DBSchema schema { get; set; }
+        // protected string   conn_string { get; set; }
 
         ConcurrentDictionary<string, PropertyInfo[]> columns = new ConcurrentDictionary<string, PropertyInfo[]>();
 
@@ -34,10 +34,10 @@ namespace DBMS.systems
             this.schema = schema;
         }
 
-        public DBMSSystem(string conn_string) : this()
+        /*public DBMSSystem(string conn_string) : this()
         {
             this.conn_string = conn_string;
-        }
+        }*/
 
         public abstract string ConnectionString();
 
@@ -132,6 +132,7 @@ namespace DBMS.systems
         {
             try
             {
+                Log.Info("Testing [{conn}]", ConnectionString());
                 RunQuery("/** ping **/");
                 Log.Info("Connection Test Success!");
                 return true;
@@ -171,7 +172,6 @@ namespace DBMS.systems
                 conn.Open();
                 return conn.Get<T>(args);
             }
-
         }
 
         public R Scalar<T, R>(string column, string where = null, object args = null)

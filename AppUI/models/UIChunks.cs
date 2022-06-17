@@ -43,11 +43,11 @@ namespace AppUI.models
                 action(new Object[]
                 {
                     chunktimer.Chunkid,
-                    chunktimer.Starttime?.ToString("yy-MMM-dd ddd HH:m:s"),
-                    chunktimer.Endtime?.ToString("yy-MMM-dd ddd HH:m:s"),
+                    chunktimer.Starttime,
+                    chunktimer.Endtime,
                     null != chunktimer.Starttime
-                        ? chunktimer.Endtime?.Subtract((DateTime) chunktimer.Starttime).ToString()
-                        : "",
+                        ? chunktimer.Endtime?.Subtract((DateTime) chunktimer.Starttime)
+                        : null,
                     chunktimer.Status.GetStringValue(),
                 });
             }

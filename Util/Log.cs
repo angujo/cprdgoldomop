@@ -1,8 +1,4 @@
-﻿using NLog;
-using NLog.Config;
-using NLog.Targets;
-using System;
-using System.Collections.Concurrent;
+﻿using System;
 using System.IO;
 using Serilog;
 
@@ -10,10 +6,9 @@ namespace Util
 {
     public static class Log
     {
-        private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+       // private static NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        private static readonly ConcurrentDictionary<int, Logger> _instances =
-            new ConcurrentDictionary<int, NLog.Logger>();
+        // private static readonly ConcurrentDictionary<int, Logger> _instances = new ConcurrentDictionary<int, NLog.Logger>();
 
 
         public static void Error(string msg) => File.Error(msg);

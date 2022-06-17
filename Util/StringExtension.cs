@@ -99,13 +99,12 @@ namespace Util
 
         private static string DTValue(object value, string opr = null)
         {
-            if (null == value) return "IS NULL";
+            if (null == value || value is DBNull) return "IS NULL";
             if (value.IsNumber()) return $"{opr ?? "="} {value}";
             if (value is DateTime d) return $"{opr ?? "="} #{d.ToString("yyyy-M-d HH:m:s")}#";
-            if (value.GetType().IsArray)
-                return
-                    $"{opr ?? "IN"} ({string.Join(", ", ((IEnumerable) value).Cast<object>().Select(av => av.IsNumber() ? av : $"'{av}'"))})";
-            return $"{opr ?? "="} '{value}'";
+            return value.GetType().IsArray
+                ? $"{opr ?? "IN"} ({string.Join(", ", ((IEnumerable) value).Cast<object>().Select(av => av.IsNumber() ? av : $"'{av}'"))})"
+                : $"{opr ?? "="} '{value}'";
         }
 
         public static bool IsPrimaryKey(this DataTable dataTable, string name) =>
@@ -147,20 +146,11 @@ namespace Util
             }
         }
 
-        public static bool IsNumber(this object value)
-        {
-            return value is sbyte
-                   || value is byte
-                   || value is short
-                   || value is ushort
-                   || value is int
-                   || value is uint
-                   || value is long
-                   || value is ulong
-                   || value is float
-                   || value is double
-                   || value is decimal;
-        }
+        public static bool IsNumber(this object value) =>
+            value is sbyte || value is byte || value is short || value is ushort || value is int || value is uint ||
+            value is long || value is ulong || value is float || value is double || value is decimal ||
+            decimal.TryParse(value.ToString(), out var dc);
+
 
         public static string GetStringValue(this Enum value)
         {

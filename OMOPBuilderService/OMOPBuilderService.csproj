@@ -9,9 +9,10 @@
         <AppDesignerFolder>Properties</AppDesignerFolder>
         <RootNamespace>OMOPBuilderService</RootNamespace>
         <AssemblyName>OMOPBuilderService</AssemblyName>
-        <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+        <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
         <FileAlignment>512</FileAlignment>
         <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+        <ApplicationIcon>ndorms.ico</ApplicationIcon>
     </PropertyGroup>
     <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
         <PlatformTarget>AnyCPU</PlatformTarget>
@@ -74,6 +75,7 @@
     </ItemGroup>
     <ItemGroup>
       <None Include="App.config" />
+      <None Include="ndorms.ico" />
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

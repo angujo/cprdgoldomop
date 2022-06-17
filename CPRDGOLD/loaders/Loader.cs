@@ -35,8 +35,8 @@ namespace CPRDGOLD.loaders
             {
                 var column = new DataColumn
                 {
-                    DataType   = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType,
-                    ColumnName = prop.Name.ToLower(),
+                    DataType    = Nullable.GetUnderlyingType(prop.PropertyType) ?? prop.PropertyType,
+                    ColumnName  = prop.Name.ToLower(),
                     AllowDBNull = true,
                 };
                 _dataTable.Columns.Add(column);
@@ -176,9 +176,18 @@ namespace CPRDGOLD.loaders
         {
             var filter = search.ToDataTableFilter(_dataTable);
 
-            DataRow[] rows;
-            if (filter.Length <= 0 || (rows = _dataTable.Select(filter)).Length <= 0) return default;
-            return rows.First().Convert<C>();
+            try
+            {
+                DataRow[] rows;
+                if (filter.Length <= 0 || (rows = _dataTable.Select(filter)).Length <= 0) return default;
+                return rows.First().Convert<C>();
+            }
+            catch (Exception e)
+            {
+                Log.Error(filter);
+                Log.Error(e);
+                throw;
+            }
         }
 
         private void IDataTableChunk(IEnumerable<C> items = null, params string[] idxCols)

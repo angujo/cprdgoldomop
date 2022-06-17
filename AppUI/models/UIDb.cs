@@ -35,7 +35,9 @@ namespace AppUI.models
 
         public bool TestSchema(SchemaType type)
         {
-            return _schemata.TryGetValue(type.GetStringValue(), out var dbschema) && DB.FromDbSchema(dbschema).TestConnection();
+            if(!(_schemata.TryGetValue(type.GetStringValue(), out var dbschema) && DB.FromDbSchema(dbschema).TestConnection()))
+                throw new Exception("Invalid Connection parameters set! Connection Failed!");
+            return true;
         }
     }
 }

@@ -99,57 +99,70 @@ namespace CPRDGOLD
 
         private static void RunChunks()
         {
+            Log.Info("Starting chunk runs...");
             while (true)
             {
                 if (!appDBMS.workload.Chunkssetup)
                 {
+                    Log.Info("Exiting chunk runs at !appDBMS.workload.Chunkssetup");
                     appDBMS.workload.Chunksloaded = false;
                     return;
                 }
 
                 appDBMS.CleanUpChunks();
                 var ordinals = appDBMS.ChunkOrdinals().ToArray();
+                Log.Info("Total Chunks to run #{ch}", ordinals.Length);
 
-                Parallel.ForEach(ordinals, new ParallelOptions {MaxDegreeOfParallelism = appDBMS.workload.Maxparallels, CancellationToken = Runner.Token}, chunkOrdinal =>
-                {
-                    var chunk = new Chunk {ordinal = chunkOrdinal}; // 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
-
-                    //Initialize all data loader for the chunk.
-                    try
+                Parallel.ForEach(
+                    ordinals,
+                    new ParallelOptions
+                        {MaxDegreeOfParallelism = appDBMS.workload.Maxparallels, CancellationToken = Runner.Token},
+                    chunkOrdinal =>
                     {
-                        chunk.Start();
+                        var chunk = new Chunk
+                            {ordinal = chunkOrdinal}; // 12 };// ordinals[new Random().Next(0, ordinals.Length)] };
 
-                        if (chunk.Implementable(LoadType.DEATH, LoadType.PERSON)) chunk.InitLoader(ChunkLoadType.ACTIVE_PATIENT, ActivePatientLoader.Initialize(chunk));
-                        if (chunk.Implementable(LoadType.VISITDETAIL, LoadType.VISIT_OCCURRENCE)) chunk.InitLoader(ChunkLoadType.CONSULTATION, ConsultationLoader.Initialize(chunk));
-
-                        if (chunk.ImplementableStemTable())
+                        //Initialize all data loader for the chunk.
+                        try
                         {
-                            chunk.InitLoader(ChunkLoadType.IMMUNISATION, ImmunisationLoader.Initialize(chunk))
-                                 .InitLoader(ChunkLoadType.THERAPY, TherapyLoader.Initialize(chunk))
-                                 .InitLoader(ChunkLoadType.ADDITIONAL, AdditionalLoader.Initialize(chunk))
-                                 .InitLoader(ChunkLoadType.TEST, TestLoader.Initialize(chunk))
-                                 .InitLoader(ChunkLoadType.REFERRAL, ReferralLoader.Initialize(chunk))
-                                 .InitLoader(ChunkLoadType.CLINICAL, ClinicalLoader.Initialize(chunk));
+                            chunk.Start();
+
+                            if (chunk.Implementable(LoadType.DEATH, LoadType.PERSON))
+                                chunk.InitLoader(ChunkLoadType.ACTIVE_PATIENT, ActivePatientLoader.Initialize(chunk));
+                            if (chunk.Implementable(LoadType.VISITDETAIL, LoadType.VISIT_OCCURRENCE))
+                                chunk.InitLoader(ChunkLoadType.CONSULTATION, ConsultationLoader.Initialize(chunk));
+
+                            if (chunk.ImplementableStemTable())
+                            {
+                                chunk.InitLoader(ChunkLoadType.IMMUNISATION, ImmunisationLoader.Initialize(chunk))
+                                     .InitLoader(ChunkLoadType.THERAPY, TherapyLoader.Initialize(chunk))
+                                     .InitLoader(ChunkLoadType.ADDITIONAL, AdditionalLoader.Initialize(chunk))
+                                     .InitLoader(ChunkLoadType.TEST, TestLoader.Initialize(chunk))
+                                     .InitLoader(ChunkLoadType.REFERRAL, ReferralLoader.Initialize(chunk))
+                                     .InitLoader(ChunkLoadType.CLINICAL, ClinicalLoader.Initialize(chunk));
+                            }
+
+                            if (chunk.Implementable(LoadType.OBSERVATIONPERIOD))
+                                chunk.InitLoader(ChunkLoadType.PATIENT, PatientLoader.Initialize(chunk));
+
+                            var actions = new List<Action> {() => StemTableUsers(chunk), () => ChunkBased(chunk),};
+                            Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
+
+                            chunk.Implemented();
                         }
-
-                        if (chunk.Implementable(LoadType.OBSERVATIONPERIOD)) chunk.InitLoader(ChunkLoadType.PATIENT, PatientLoader.Initialize(chunk));
-
-                        var actions = new List<Action> {() => StemTableUsers(chunk), () => ChunkBased(chunk),};
-                        Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
-
-                        chunk.Implemented();
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex);
-                        chunk.Stop(ex);
-                    }
-                });
+                        catch (Exception ex)
+                        {
+                            Log.Error(ex);
+                            chunk.Stop(ex);
+                        }
+                    });
 
                 appDBMS.CleanUpChunks();
                 if (!appDBMS.workload.Chunksloaded) continue;
                 break;
             }
+
+            Log.Info("Finished chunk runs!");
         }
 
         private static void ChunkBased(Chunk chunk)
@@ -204,6 +217,7 @@ namespace CPRDGOLD
         //Only runs once in the life of the app
         private static void SingleRuns()
         {
+            Log.Info("Starting Single Runs...");
             var actions = new List<Action>
             {
                 () => Chunk.SUImplement(LoadType.PROVIDER, () => Provider.InsertSets()),
@@ -214,6 +228,7 @@ namespace CPRDGOLD
             };
 
             Parallel.ForEach(actions, Runner.ParallelOptions, action => action());
+            Log.Info("Finished Single Runs!");
         }
 
         private static void Setups()

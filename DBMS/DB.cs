@@ -1,7 +1,9 @@
 ﻿using System;
 using DBMS.systems;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using DBMS.models;
 using Util;
 
@@ -24,30 +26,9 @@ namespace DBMS
         private static DBMSSystem GetSchema(SchemaType sType)
         {
             if (holder.ContainsKey(sType.GetStringValue())) return holder[sType.GetStringValue()];
-            string conn_string;
-            string schema_name;
-            switch (sType)
-            {
-                case SchemaType.TARGET:
-                    conn_string = Setting.TargetConnection;
-                    schema_name = Setting.TargetSchema;
-                    break;
-                case SchemaType.SOURCE:
-                    conn_string = Setting.SourceConnection;
-                    schema_name = Setting.SourceSchema;
-                    break;
-                case SchemaType.INTERNAL:
-                    conn_string = Setting.AppConnection;
-                    schema_name = Setting.AppSchema;
-                    break;
-                case SchemaType.VOCABULARY:
-                default:
-                    conn_string = Setting.VocabConnection;
-                    schema_name = Setting.VocabSchema;
-                    break;
-            }
+            if (!sType.Equals(SchemaType.INTERNAL)) throw new Exception("Schemas need to be fetched and loaded!");
 
-            return holder[sType.GetStringValue()] = GetOne(conn_string, schema_name);
+            return holder[sType.GetStringValue()] = GetOne(ToDBSchema(Setting.AppConnection, Setting.AppSchema));
         }
 
         public static void FetchSchemas(long workloadId)
@@ -76,10 +57,84 @@ namespace DBMS
 
         private static DBMSSystem GetOne(DBSchema schema) => new PostgreSQL(schema);
 
-        private static DBMSSystem GetOne(string conn_string, string schema_name)
+        /*private static DBMSSystem GetOne(string conn_string, string schema_name)
         {
             //Switch depending on DBMS System
             return new PostgreSQL(conn_string) {schema = new DBSchema {SchemaName = schema_name,}};
+        }*/
+
+        public static DBSchema ToDBSchema(string conn_str, string name, SchemaType type = SchemaType.INTERNAL)
+        {
+            // var conn_str="AuthType=AD;Url=http://crm.xxx.com/CRM365; Domain='test'; Username=&quotetestuser&quote; Password='T,jL4O&amp;vc%t;30'";
+            //=localhost;=5432;=postgres;=postgres;=omopapp;
+            var new_conn  = conn_str;
+            var regexes   = new[] {@"(\$\d+)", @"("")(.*?)("")", @"(')(.*?)(')", @"(&quote)(.*?)(&quote)",};
+            var escHolder = new Dictionary<int, string>();
+            foreach (var regStr in regexes)
+            {
+                var qRegex = new Regex(regStr, RegexOptions.IgnoreCase);
+                var match  = qRegex.Match(conn_str??"");
+                Console.WriteLine(regStr + $": {match.Groups.Count}");
+                if (!match.Success) continue;
+                foreach (var g in match.Groups) Console.WriteLine($"\t:gg {g}");
+                var grCount = match.Groups.Count;
+                do
+                {
+                    var i = escHolder.Count;
+                    var c = grCount <= 1 ? 0 : (int) Math.Floor((double) grCount / 2);
+
+                    var str = match.Groups[c].ToString();
+                    Console.WriteLine(match.Groups[1]);
+                    escHolder.Add(i, str);
+                    new_conn = new_conn.Replace(match.Groups[0].ToString(), $"${i}");
+                } while ((match = match.NextMatch()).Success);
+            }
+
+            var parts    = new_conn.Split(';');
+            var dbSchema = new DBSchema();
+            foreach (var part in parts)
+            {
+                var entries = part.Split('=');
+                if (entries.Length != 2) continue;
+                var value = entries[1];
+                // Console.WriteLine(part+$": {entries.Length} ({entries[0]}, {val})");
+                var rInt = new Regex(@"^(\s+)?\$(\d+)(\s+)?$").Match(value);
+                if (rInt.Success && int.TryParse(rInt.Groups[2].ToString(), out var i) && escHolder.ContainsKey(i))
+                    value = escHolder[i];
+
+                switch (entries[0].ToLower())
+                {
+                    case "datas source":
+                    case "address":
+                    case "addr":
+                    case "network address": break;
+                    case "host":
+                    case "server":
+                        dbSchema.Server = value;
+                        break;
+                    case "port":
+                        dbSchema.Port = int.Parse(value);
+                        break;
+                    case "user":
+                    case "uid":
+                    case "user id":
+                        dbSchema.Username = value;
+                        break;
+                    case "pwd":
+                    case "password":
+                        dbSchema.Password = value;
+                        break;
+                    case "initial catalog":
+                    case "database":
+                        dbSchema.DBName = value;
+                        break;
+                }
+            }
+
+            dbSchema.Schematype = type.GetStringValue();
+            dbSchema.SchemaName = name;
+
+            return dbSchema;
         }
     }
 

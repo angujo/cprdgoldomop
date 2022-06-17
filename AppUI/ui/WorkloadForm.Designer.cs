@@ -129,7 +129,7 @@ namespace AppUI.ui
             this.clmDur            = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmStatus         = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.clmError          = new System.Windows.Forms.DataGridViewLinkColumn();
-            this.statusStrip1      = new System.Windows.Forms.StatusStrip();
+            this.miniToolStrip     = new System.Windows.Forms.StatusStrip();
             this.tsProgressBar     = new System.Windows.Forms.ToolStripProgressBar();
             this.linkLabel1        = new System.Windows.Forms.LinkLabel();
             this.tabWorkload.SuspendLayout();
@@ -151,7 +151,7 @@ namespace AppUI.ui
             this.groupBox2.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize) (this.nmIOrdinal)).BeginInit();
             ((System.ComponentModel.ISupportInitialize) (this.dgvItems)).BeginInit();
-            this.statusStrip1.SuspendLayout();
+            this.miniToolStrip.SuspendLayout();
             this.SuspendLayout();
             // 
             // tabWorkload
@@ -165,7 +165,7 @@ namespace AppUI.ui
             this.tabWorkload.Location      =  new System.Drawing.Point(12, 36);
             this.tabWorkload.Name          =  "tabWorkload";
             this.tabWorkload.SelectedIndex =  0;
-            this.tabWorkload.Size          =  new System.Drawing.Size(776, 402);
+            this.tabWorkload.Size          =  new System.Drawing.Size(782, 419);
             this.tabWorkload.TabIndex      =  0;
             this.tabWorkload.Selected      += new System.Windows.Forms.TabControlEventHandler(this.tabWorkload_Selected);
             this.tabWorkload.Deselected    += new System.Windows.Forms.TabControlEventHandler(this.tabWorkload_Deselected);
@@ -183,7 +183,7 @@ namespace AppUI.ui
             this.tabDetails.Location                = new System.Drawing.Point(4, 22);
             this.tabDetails.Name                    = "tabDetails";
             this.tabDetails.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabDetails.Size                    = new System.Drawing.Size(768, 376);
+            this.tabDetails.Size                    = new System.Drawing.Size(774, 393);
             this.tabDetails.TabIndex                = 0;
             this.tabDetails.Text                    = "Details";
             this.tabDetails.UseVisualStyleBackColor = true;
@@ -465,7 +465,7 @@ namespace AppUI.ui
             this.tabSchema.Location                = new System.Drawing.Point(4, 22);
             this.tabSchema.Name                    = "tabSchema";
             this.tabSchema.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabSchema.Size                    = new System.Drawing.Size(768, 376);
+            this.tabSchema.Size                    = new System.Drawing.Size(774, 393);
             this.tabSchema.TabIndex                = 1;
             this.tabSchema.Text                    = "Schema Connections";
             this.tabSchema.UseVisualStyleBackColor = true;
@@ -602,6 +602,7 @@ namespace AppUI.ui
             this.scServer.Name     = "scServer";
             this.scServer.Size     = new System.Drawing.Size(265, 20);
             this.scServer.TabIndex = 5;
+            this.scServer.Text     = "scser";
             // 
             // label7
             // 
@@ -652,7 +653,7 @@ namespace AppUI.ui
             this.tabProgress.Location                = new System.Drawing.Point(4, 22);
             this.tabProgress.Name                    = "tabProgress";
             this.tabProgress.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabProgress.Size                    = new System.Drawing.Size(768, 376);
+            this.tabProgress.Size                    = new System.Drawing.Size(774, 393);
             this.tabProgress.TabIndex                = 2;
             this.tabProgress.Text                    = "Progress";
             this.tabProgress.UseVisualStyleBackColor = true;
@@ -691,7 +692,7 @@ namespace AppUI.ui
             dataGridViewCellStyle3.SelectionForeColor   = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle3.WrapMode             = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvProgress.RowHeadersDefaultCellStyle = dataGridViewCellStyle3;
-            this.dgvProgress.Size                       = new System.Drawing.Size(756, 334);
+            this.dgvProgress.Size                       = new System.Drawing.Size(762, 334);
             this.dgvProgress.TabIndex                   = 3;
             // 
             // clmPName
@@ -723,7 +724,7 @@ namespace AppUI.ui
             this.pbItems.Anchor   = ((System.Windows.Forms.AnchorStyles) (((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) | System.Windows.Forms.AnchorStyles.Right)));
             this.pbItems.Location = new System.Drawing.Point(120, 11);
             this.pbItems.Name     = "pbItems";
-            this.pbItems.Size     = new System.Drawing.Size(642, 16);
+            this.pbItems.Size     = new System.Drawing.Size(648, 16);
             this.pbItems.TabIndex = 0;
             // 
             // tabChunks
@@ -738,7 +739,7 @@ namespace AppUI.ui
             this.tabChunks.Location                = new System.Drawing.Point(4, 22);
             this.tabChunks.Name                    = "tabChunks";
             this.tabChunks.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabChunks.Size                    = new System.Drawing.Size(768, 376);
+            this.tabChunks.Size                    = new System.Drawing.Size(774, 393);
             this.tabChunks.TabIndex                = 4;
             this.tabChunks.Text                    = "Chunks\' Status";
             this.tabChunks.UseVisualStyleBackColor = true;
@@ -777,7 +778,7 @@ namespace AppUI.ui
             dataGridViewCellStyle6.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle6.WrapMode           = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvChunks.RowHeadersDefaultCellStyle = dataGridViewCellStyle6;
-            this.dgvChunks.Size                       = new System.Drawing.Size(756, 335);
+            this.dgvChunks.Size                       = new System.Drawing.Size(762, 352);
             this.dgvChunks.TabIndex                   = 6;
             // 
             // clcOrdinal
@@ -869,7 +870,7 @@ namespace AppUI.ui
             this.tabItems.Location                = new System.Drawing.Point(4, 22);
             this.tabItems.Name                    = "tabItems";
             this.tabItems.Padding                 = new System.Windows.Forms.Padding(3);
-            this.tabItems.Size                    = new System.Drawing.Size(768, 376);
+            this.tabItems.Size                    = new System.Drawing.Size(774, 393);
             this.tabItems.TabIndex                = 5;
             this.tabItems.Text                    = "Items\' Status";
             this.tabItems.UseVisualStyleBackColor = true;
@@ -1004,7 +1005,7 @@ namespace AppUI.ui
             dataGridViewCellStyle9.SelectionForeColor = System.Drawing.SystemColors.HighlightText;
             dataGridViewCellStyle9.WrapMode           = System.Windows.Forms.DataGridViewTriState.True;
             this.dgvItems.RowHeadersDefaultCellStyle  = dataGridViewCellStyle9;
-            this.dgvItems.Size                        = new System.Drawing.Size(756, 285);
+            this.dgvItems.Size                        = new System.Drawing.Size(762, 302);
             this.dgvItems.TabIndex                    = 12;
             // 
             // clmChunk
@@ -1053,20 +1054,21 @@ namespace AppUI.ui
             this.clmError.ReadOnly     = true;
             this.clmError.Resizable    = System.Windows.Forms.DataGridViewTriState.True;
             // 
-            // statusStrip1
+            // miniToolStrip
             // 
-            this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.tsProgressBar});
-            this.statusStrip1.Location = new System.Drawing.Point(0, 428);
-            this.statusStrip1.Name     = "statusStrip1";
-            this.statusStrip1.Size     = new System.Drawing.Size(800, 22);
-            this.statusStrip1.TabIndex = 1;
-            this.statusStrip1.Text     = "statusStrip1";
+            this.miniToolStrip.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {this.tsProgressBar});
+            this.miniToolStrip.Location = new System.Drawing.Point(0, 445);
+            this.miniToolStrip.Name     = "miniToolStrip";
+            this.miniToolStrip.Size     = new System.Drawing.Size(806, 22);
+            this.miniToolStrip.TabIndex = 1;
+            this.miniToolStrip.Text     = "statusStrip1";
             // 
             // tsProgressBar
             // 
-            this.tsProgressBar.Alignment = System.Windows.Forms.ToolStripItemAlignment.Right;
-            this.tsProgressBar.Name      = "tsProgressBar";
-            this.tsProgressBar.Size      = new System.Drawing.Size(100, 16);
+            this.tsProgressBar.Alignment             = System.Windows.Forms.ToolStripItemAlignment.Right;
+            this.tsProgressBar.MarqueeAnimationSpeed = 50;
+            this.tsProgressBar.Name                  = "tsProgressBar";
+            this.tsProgressBar.Size                  = new System.Drawing.Size(100, 16);
             // 
             // linkLabel1
             // 
@@ -1083,9 +1085,9 @@ namespace AppUI.ui
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode       = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor           = System.Drawing.SystemColors.Control;
-            this.ClientSize          = new System.Drawing.Size(800, 450);
+            this.ClientSize          = new System.Drawing.Size(806, 467);
             this.Controls.Add(this.linkLabel1);
-            this.Controls.Add(this.statusStrip1);
+            this.Controls.Add(this.miniToolStrip);
             this.Controls.Add(this.tabWorkload);
             this.Location    = new System.Drawing.Point(15, 15);
             this.MinimumSize = new System.Drawing.Size(300, 200);
@@ -1113,8 +1115,8 @@ namespace AppUI.ui
             this.groupBox2.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize) (this.nmIOrdinal)).EndInit();
             ((System.ComponentModel.ISupportInitialize) (this.dgvItems)).EndInit();
-            this.statusStrip1.ResumeLayout(false);
-            this.statusStrip1.PerformLayout();
+            this.miniToolStrip.ResumeLayout(false);
+            this.miniToolStrip.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
         }
@@ -1190,7 +1192,7 @@ namespace AppUI.ui
 
         private System.Windows.Forms.ToolStripProgressBar tsProgressBar;
 
-        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.StatusStrip miniToolStrip;
 
         private System.Windows.Forms.ComboBox cbINames;
 

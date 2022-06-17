@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using AppUI.models;
 using DBMS;
 using DBMS.models;
 using Util;
+using SchemaType = DBMS.SchemaType;
 using Timer = System.Windows.Forms.Timer;
 
 namespace AppUI.ui
@@ -76,10 +78,10 @@ namespace AppUI.ui
             tbWlName.DataBindings.Add("Text", _uiWorkLoad, "Name");
             dtWlDate.DataBindings.Add("Value", _uiWorkLoad, "ReleaseDate");
 
-            txtFull.Text      = _workLoad.Cdmprocessed.ToString();
-            txtIdx.Text       = _workLoad.indices_loaded.ToString();
-            txtRun.Text       = _workLoad.Isrunning.ToString();
-            txtChunkLoad.Text = _workLoad.Chunksloaded.ToString();
+            txtFull.Text      = _workLoad.Cdmprocessed.ToString();   //
+            txtIdx.Text       = _workLoad.indices_loaded.ToString(); //
+            txtRun.Text       = _workLoad.Isrunning.ToString();      //
+            txtChunkLoad.Text = _workLoad.Chunksloaded.ToString();   //
             txtPsChunk.Text   = _workLoad.post_chunk_loaded.ToString();
             txtPChunk.Text    = _workLoad.Cdmloaded.ToString();
             txtChunkSet.Text  = _workLoad.Chunkssetup.ToString();
@@ -149,17 +151,12 @@ namespace AppUI.ui
                 Log.Info("Start Analysis!!");
                 Task.Run(async () =>
                 {
-                    Log.Info("Start Analysis Loop!!");
                     ctAnalysis.ThrowIfCancellationRequested();
                     while (true)
                     {
-                        //TsProgressIncr(0);
                         if (ctAnalysis.IsCancellationRequested) ctAnalysis.ThrowIfCancellationRequested();
 
-                        // TsProgressIncr(50);
-                        Log.Info("Start sleeper!");
                         await SleepProgress(analysisSleep, tsAnalysis.Token);
-                        Log.Info("Am awake again!!");
                         AnalysisContent();
                     }
                 }, tsAnalysis.Token);
@@ -198,13 +195,28 @@ namespace AppUI.ui
 
         private void ChunksContent()
         {
-            dgvChunks.Rows.Clear();
-            cbCStatuses.DataBindings.Clear();
-            nmCOrdinal.DataBindings.Clear();
+            TsProgressIndeterminate(() =>
+            {
+                // dgvChunks.Rows.Clear();
+                dgvChunks.Columns.Clear();
+                cbCStatuses.DataBindings.Clear();
+                nmCOrdinal.DataBindings.Clear();
 
-            cbCStatuses.DataBindings.Add("SelectedValue", _uiChunks, "status");
-            nmCOrdinal.DataBindings.Add("Value", _uiChunks, "chunkId");
-            _uiChunks.LoadChunks(lv => dgvChunks.Rows.Add(lv));
+                cbCStatuses.DataBindings.Add("SelectedValue", _uiChunks, "status");
+                nmCOrdinal.DataBindings.Add("Value", _uiChunks, "chunkId");
+
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("Chunk", typeof(int));
+                dataTable.Columns.Add("Start", typeof(DateTime));
+                dataTable.Columns.Add("End", typeof(DateTime));
+                dataTable.Columns.Add("Duration", typeof(TimeSpan));
+                dataTable.Columns.Add("Status", typeof(string));
+                dataTable.Columns.Add("Error", typeof(string));
+
+                //_uiChunks.LoadChunks(lv => dgvChunks.Rows.Add(lv));
+                _uiChunks.LoadChunks(lv => dataTable.Rows.Add(lv));
+                dgvChunks.DataSource = new DataView(dataTable);
+            });
         }
 
         private void ItemsTab()
@@ -237,18 +249,34 @@ namespace AppUI.ui
 
         private void ItemsContent()
         {
-            cbINames.DataBindings.Clear();
-            cbIStatuses.DataBindings.Clear();
-            cbITypes.DataBindings.Clear();
-            nmIOrdinal.DataBindings.Clear();
+            TsProgressIndeterminate(() =>
+            {
+                cbINames.DataBindings.Clear();
+                cbIStatuses.DataBindings.Clear();
+                cbITypes.DataBindings.Clear();
+                nmIOrdinal.DataBindings.Clear();
 
-            cbINames.DataBindings.Add("SelectedValue", _uiItems, "name");
-            cbIStatuses.DataBindings.Add("SelectedValue", _uiItems, "status");
-            cbITypes.DataBindings.Add("SelectedValue", _uiItems, "type");
-            nmIOrdinal.DataBindings.Add("Value", _uiItems, "chunkId");
+                cbINames.DataBindings.Add("SelectedValue", _uiItems, "name");
+                cbIStatuses.DataBindings.Add("SelectedValue", _uiItems, "status");
+                cbITypes.DataBindings.Add("SelectedValue", _uiItems, "type");
+                nmIOrdinal.DataBindings.Add("Value", _uiItems, "chunkId");
 
-            dgvItems.Rows.Clear();
-            _uiItems.LoadItems(lv => dgvItems.Rows.Add(lv));
+                // dgvItems.Rows.Clear();
+                dgvItems.Columns.Clear();
+
+                var dataTable = new DataTable();
+                dataTable.Columns.Add("Chunk", typeof(int));
+                dataTable.Columns.Add("Name", typeof(string));
+                dataTable.Columns.Add("Start", typeof(DateTime));
+                dataTable.Columns.Add("End", typeof(DateTime));
+                dataTable.Columns.Add("Duration", typeof(TimeSpan));
+                dataTable.Columns.Add("Status", typeof(string));
+                dataTable.Columns.Add("Error", typeof(string));
+
+                _uiItems.LoadItems(lv => dataTable.Rows.Add(lv));
+                dgvItems.DataSource = new DataView(dataTable);
+                // _uiItems.LoadItems(lv => dgvItems.Rows.Add(lv));
+            });
         }
 
         private void linkLabel1_LinkClicked(object sender, LinkLabelLinkClickedEventArgs e)
@@ -322,16 +350,40 @@ namespace AppUI.ui
             AnalysisTab();
         }
 
-        private void TsProgressIncr(int v = 1, int max = 0)
-        {
+        private void TsProgressIncr(int v = 1, int max = 0) =>
             Invoke(new Action(delegate
             {
+                if (tsProgressBar.Style != ProgressBarStyle.Blocks) tsProgressBar.Style = ProgressBarStyle.Blocks;
+
                 if (0 < max) tsProgressBar.Maximum = max;
                 if (0 != v && tsProgressBar.Value == tsProgressBar.Maximum) return;
                 if (0 == v) tsProgressBar.Value =  0;
                 else tsProgressBar.Value        += v;
             }));
-        }
+
+        private void TsProgressIndeterminate(Action action = null) => Invoke(new Action(delegate
+        {
+            if (null != action)
+            {
+                TsProgressIndeterminate();
+                action();
+                TsProgressIndeterminate();
+                return;
+            }
+
+            if (tsProgressBar.Style != ProgressBarStyle.Marquee)
+            {
+                tsProgressBar.Style                 = ProgressBarStyle.Marquee;
+                tsProgressBar.MarqueeAnimationSpeed = 60;
+                Log.Info("Started Indeterminate...");
+            }
+            else
+            {
+                tsProgressBar.Style                 = ProgressBarStyle.Blocks;
+                tsProgressBar.MarqueeAnimationSpeed = 0;
+                Log.Info("Stopped Indeterminate...");
+            }
+        }));
 
         private async Task SleepProgress(int milliseconds, CancellationToken token)
         {
