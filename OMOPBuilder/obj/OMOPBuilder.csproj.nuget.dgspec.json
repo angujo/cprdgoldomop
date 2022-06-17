@@ -38,14 +38,14 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net48"
+          "net472"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net48": {
+          "net472": {
             "projectReferences": {
               "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj": {
                 "projectPath": "D:\\VSProjects\\OMOPBuilder\\DBMS\\DBMS.csproj"
@@ -58,7 +58,7 @@
         }
       },
       "frameworks": {
-        "net48": {
+        "net472": {
           "dependencies": {
             "Dapper": {
               "target": "Package",
@@ -170,14 +170,14 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net48"
+          "net472"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net48": {
+          "net472": {
             "projectReferences": {
               "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj": {
                 "projectPath": "D:\\VSProjects\\OMOPBuilder\\Util\\Util.csproj"
@@ -187,7 +187,7 @@
         }
       },
       "frameworks": {
-        "net48": {
+        "net472": {
           "dependencies": {
             "Dapper": {
               "target": "Package",
@@ -362,7 +362,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
         }
       }
     },
@@ -385,28 +385,24 @@
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
-          "net48"
+          "net472"
         ],
         "sources": {
           "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
           "https://api.nuget.org/v3/index.json": {}
         },
         "frameworks": {
-          "net48": {
+          "net472": {
             "projectReferences": {}
           }
         }
       },
       "frameworks": {
-        "net48": {
+        "net472": {
           "dependencies": {
             "Dapper": {
               "target": "Package",
               "version": "[2.0.123, )"
-            },
-            "NLog": {
-              "target": "Package",
-              "version": "[4.7.15, )"
             },
             "Serilog": {
               "target": "Package",

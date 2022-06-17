@@ -151,7 +151,7 @@
       },
       "CPRDGOLD/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.8",
+        "framework": ".NETFramework,Version=v4.7.2",
         "compile": {
           "bin/placeholder/CPRDGOLD.dll": {}
         },
@@ -161,7 +161,7 @@
       },
       "Util/1.0.0": {
         "type": "project",
-        "framework": ".NETFramework,Version=v4.8",
+        "framework": ".NETFramework,Version=v4.7.2",
         "compile": {
           "bin/placeholder/Util.dll": {}
         },
@@ -502,7 +502,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.203\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\6.0.301\\RuntimeIdentifierGraph.json"
       }
     }
   }

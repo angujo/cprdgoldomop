@@ -361,12 +361,12 @@ namespace AppUI.ui
                 else tsProgressBar.Value        += v;
             }));
 
-        private void TsProgressIndeterminate(Action action = null) => Invoke(new Action(delegate
+        private void TsProgressIndeterminate(Action action = null) => Invoke(new Action(async delegate
         {
             if (null != action)
             {
                 TsProgressIndeterminate();
-                action();
+                await Task.Run(() => Invoke(action));
                 TsProgressIndeterminate();
                 return;
             }
@@ -375,13 +375,11 @@ namespace AppUI.ui
             {
                 tsProgressBar.Style                 = ProgressBarStyle.Marquee;
                 tsProgressBar.MarqueeAnimationSpeed = 60;
-                Log.Info("Started Indeterminate...");
             }
             else
             {
                 tsProgressBar.Style                 = ProgressBarStyle.Blocks;
                 tsProgressBar.MarqueeAnimationSpeed = 0;
-                Log.Info("Stopped Indeterminate...");
             }
         }));
 
